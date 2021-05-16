@@ -1,0 +1,94 @@
+import 'package:flutter/material.dart';
+import 'main.dart';
+
+
+
+class users extends StatefulWidget {
+  const users({Key key}) : super(key: key);
+
+  @override
+  _usersState createState() => _usersState();
+}
+
+class _usersState extends State<users> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () =>
+                Navigator.popUntil(context, ModalRoute.withName("/homepage")),
+          ),
+          title: Text("USERS"),
+          backgroundColor: Color(0xff67acb0),
+        ),
+        backgroundColor: Color(0xff518199),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    width: 200.0,
+                    height: 50.0,
+                    color: Color(0xffe48e55),
+                    child: MaterialButton(
+                      textColor: Colors.white,
+                      child: Text("Search User"),
+                      onPressed: () => {},
+                    )
+                )
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),//1
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: 200.0,
+                  height: 50.0,
+                  color: Color(0xffe48e55),
+                  child: MaterialButton(
+                    textColor: Colors.white,
+                    child: Text("Add User"),
+                    onPressed: () =>{
+                      Navigator.pushNamed(context, "/addUser")
+                    },
+                  ),
+                )
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),//2
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: 200.0,
+                  height: 50.0,
+                  color: Color(0xffe48e55),
+                  child: MaterialButton(
+                    textColor: Colors.white,
+                    child: Text("Remove User"),
+                    onPressed: () => {},
+                  ),
+                )
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
+
+            //3
+          ],
+        )
+    );
+  }
+}
+
+
