@@ -66,7 +66,7 @@ class _searchDebitsState extends State<searchDebits> {
                     items: <String>[
                       'Fiziksel',
                       'Dijital',
-                      'İnsan Kaynağı',
+                      'İnsan',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -99,8 +99,8 @@ class _searchDebitsState extends State<searchDebits> {
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
-                      'Eskiden Yeniye',
-                      'Yeniden Eskiye',
+                      'Önce Yeni',
+                      'Önce Eski',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -125,7 +125,7 @@ class _searchDebitsState extends State<searchDebits> {
                   ),
                 ),
                 Container(
-                  width: 85.0,
+                  width: 90.0,
                   height: 30.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
@@ -133,8 +133,8 @@ class _searchDebitsState extends State<searchDebits> {
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
-                      'Eskiden Yeniye',
-                      'Yeniden Eskiye',
+                      'Önce Yeni',
+                      'Önce Eski',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

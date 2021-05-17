@@ -63,7 +63,7 @@ class _removeDebitState extends State<removeDebit> {
                     items: <String>[
                       'Fiziksel',
                       'Dijital',
-                      'İnsan Kaynağı',
+                      'İnsan ',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -96,8 +96,8 @@ class _removeDebitState extends State<removeDebit> {
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
-                      'Eskiden Yeniye',
-                      'Yeniden Eskiye',
+                      'En Yeni',
+                      'En Eski',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -122,7 +122,7 @@ class _removeDebitState extends State<removeDebit> {
                   ),
                 ),
                 Container(
-                  width: 85.0,
+                  width: 100.0,
                   height: 30.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
@@ -130,8 +130,8 @@ class _removeDebitState extends State<removeDebit> {
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
-                      'Eskiden Yeniye',
-                      'Yeniden Eskiye',
+                      'En Yeni',
+                      'En Eski',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
