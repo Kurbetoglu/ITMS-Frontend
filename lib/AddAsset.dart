@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-String _chosenValue;
+
+import 'models/BaseResponse.dart';
+import 'network/NetworkFunctions.dart';
+
+String typeValue;
+DateTime selectedDate = DateTime.now();
 
 class AddAsset extends StatefulWidget {
   const AddAsset({Key key}) : super(key: key);
@@ -9,6 +14,24 @@ class AddAsset extends StatefulWidget {
 }
 
 class _AddAssetState extends State<AddAsset> {
+  final nameTextEditingController = TextEditingController();
+  final descriptionTextEditingController = TextEditingController();
+  final expiryDateTextEditingController = TextEditingController();
+  final personNameTextEditingController = TextEditingController();
+  final personSurnameTextEditingController = TextEditingController();
+  final personEmailTextEditingController = TextEditingController();
+  Future<BaseResponse> _futureBaseResponse;
+
+  @override
+  void dispose() {
+    nameTextEditingController.dispose();
+    descriptionTextEditingController.dispose();
+    expiryDateTextEditingController.dispose();
+    personNameTextEditingController.dispose();
+    personSurnameTextEditingController.dispose();
+    personEmailTextEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,172 +46,234 @@ class _AddAssetState extends State<AddAsset> {
           title: Text("ADD ASSET"),
           backgroundColor: Color(0xff67acb0),
         ),
-        backgroundColor: Color(0xff518199),   body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                width: 300.0,
-                height: 30.0,
-                color: Color(0xfff0e8ca),
-                child:
-                DropdownButton<String>(
-                  value: _chosenValue,
-                  style: TextStyle(color: Colors.white),
-                  iconEnabledColor:Colors.black,
-                  items: <String>[
-                    'Fiziksel',
-                    'Dijital',
-                    'İnsan Kaynağı',
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value,style:TextStyle(color:Colors.black,fontSize: 14),),
-                    );
-                  }).toList(),
-                  hint:Text(
-                    "Type",
-                    style: TextStyle(
-                        color: Colors.grey[700],
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500),
+        backgroundColor: Color(0xff518199),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: 300.0,
+                  height: 30.0,
+                  color: Color(0xfff0e8ca),
+                  child: DropdownButton<String>(
+                    value: typeValue,
+                    style: TextStyle(color: Colors.white),
+                    iconEnabledColor: Colors.black,
+                    items: <String>[
+                      'Fiziksel',
+                      'Dijital',
+                      'İnsan Kaynağı',
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(color: Colors.black, fontSize: 14),
+                        ),
+                      );
+                    }).toList(),
+                    hint: Text(
+                      "Type",
+                      style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    onChanged: (String value) {
+                      setState(() {
+                        typeValue = value;
+                      });
+                    },
                   ),
-                  onChanged: (String value) {
-                    setState(() {
-                      _chosenValue = value;
-                    }); },
                 ),
+              ],
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    width: 300.0,
+                    height: 30.0,
+                    color: Color(0xfff0e8ca),
+                    child: TextFormField(
+                      controller: nameTextEditingController,
+                      decoration: InputDecoration(hintText: "Name"),
+                    ))
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ), //1
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    width: 300.0,
+                    height: 30.0,
+                    color: Color(0xfff0e8ca),
+                    child: Center(
+                        child: TextFormField(
+                      controller: descriptionTextEditingController,
+                      decoration: InputDecoration(hintText: "Description"),
+                    )))
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
+            Visibility(
+                visible: typeValue == "Dijital" ? true : false,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xfff0e8ca),
+                  ),
+                  onPressed: () {
+                    selectDate(context);
+                  },
+                  child: const Text(
+                    "Pick Expiry Date",
+                    style: TextStyle(
+                      color: Color(0xff707070),
+                    ),
+                  ),
+                )
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
+            Visibility(
+              visible: typeValue == "İnsan Kaynağı" ? true : false,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                      width: 300.0,
+                      height: 30.0,
+                      color: Color(0xfff0e8ca),
+                      child: Center(
+                          child: TextFormField(
+                        controller: personNameTextEditingController,
+                        decoration: InputDecoration(hintText: "Person Name"),
+                      )))
+                ],
               ),
-
-            ],
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-          ),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                  width: 300.0,
-                  height: 30.0,
-                  color: Color(0xfff0e8ca),
-                  child: TextFormField( decoration: InputDecoration(hintText: "Name"),)
-
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-          ),//1
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                  width: 300.0,
-                  height: 30.0,
-                  color: Color(0xfff0e8ca),
-                  child: Center(child: TextFormField( decoration: InputDecoration(hintText: "Desctription"),)
-                  )
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-          ),//2
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                  width: 300.0,
-                  height: 30.0,
-                  color: Color(0xfff0e8ca),
-                  child: Center(child: TextFormField( decoration: InputDecoration(hintText: "Expiry Date(if type is equal tı digital)"),)
-                  )
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                  width: 300.0,
-                  height: 30.0,
-                  color: Color(0xfff0e8ca),
-                  child: Center(child: TextFormField( decoration: InputDecoration(hintText: "Person Name(if type is equal to HR)"),)
-                  )
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                  width: 300.0,
-                  height: 30.0,
-                  color: Color(0xfff0e8ca),
-                  child: Center(child: TextFormField( decoration: InputDecoration(hintText: "Person Surname(if type is equal to HR)"),)
-                  )
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                  width: 300.0,
-                  height: 30.0,
-                  color: Color(0xfff0e8ca),
-                  child: Center(child: TextFormField( decoration: InputDecoration(hintText: "Person Email(if type is equal to HR)"),)
-                  )
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-          ),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                width: 120.0,
-                height: 50.0,
-                color: Color(0xff4e9b2b),
-                child: MaterialButton(
-                  textColor: Colors.white,
-                  child: Text("Add Asset"),
-                  onPressed: () => {},
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
+            Visibility(
+              visible: typeValue == "İnsan Kaynağı" ? true : false,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                      width: 300.0,
+                      height: 30.0,
+                      color: Color(0xfff0e8ca),
+                      child: Center(
+                          child: TextFormField(
+                        controller: personSurnameTextEditingController,
+                        decoration: InputDecoration(hintText: "Person Surname"),
+                      )))
+                ],
               ),
-              Container(
-                width: 120.0,
-                height: 50.0,
-                color: Color(0xffc53737),
-                child: MaterialButton(
-                  textColor: Colors.white,
-                  child: Text("Cancel"),
-                  onPressed: () =>
-                  Navigator.popUntil(context, ModalRoute.withName("/homepage")),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
+            Visibility(
+              visible: typeValue == "İnsan Kaynağı" ? true : false,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                      width: 300.0,
+                      height: 30.0,
+                      color: Color(0xfff0e8ca),
+                      child: Center(
+                          child: TextFormField(
+                        controller: personEmailTextEditingController,
+                        decoration: InputDecoration(hintText: "Person Email"),
+                      )))
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: 120.0,
+                  height: 50.0,
+                  color: Color(0xff4e9b2b),
+                  child: MaterialButton(
+                    textColor: Colors.white,
+                    child: Text("Add Asset"),
+                    onPressed: () {
+                      _futureBaseResponse = NetworkFunctions.addAsset(
+                          typeValue,
+                          nameTextEditingController.text,
+                          descriptionTextEditingController.text,
+                          typeValue == "Dijital" ? selectedDate.toUtc().microsecondsSinceEpoch : 0,
+                          personNameTextEditingController.text.isEmpty ? null : personNameTextEditingController.text,
+                          personSurnameTextEditingController.text.isEmpty ? null : personSurnameTextEditingController.text,
+                          personEmailTextEditingController.text.isEmpty ? null : personEmailTextEditingController.text
+                      );
+                      _futureBaseResponse.then((value) {
+                        print(value.success);
+                        if (value.success) {
+                          Navigator.popUntil(context, ModalRoute.withName("/homepage"));
+                        }
+                      });
+                    },
+                  ),
                 ),
-              )
-            ],
-          ),
-          //3
-        ],
-      )
-    );
+                Container(
+                  width: 120.0,
+                  height: 50.0,
+                  color: Color(0xffc53737),
+                  child: MaterialButton(
+                    textColor: Colors.white,
+                    child: Text("Cancel"),
+                    onPressed: () {
+                      // print(typeValue);
+                      // print(nameTextEditingController.text);
+                      // print(descriptionTextEditingController.text);
+                      // print(typeValue == "Dijital" ? selectedDate.toUtc().microsecondsSinceEpoch : 0);
+                      // print(personNameTextEditingController.text);
+                      // print(personSurnameTextEditingController.text);
+                      // print(personEmailTextEditingController.text);
+                      Navigator.popUntil(context, ModalRoute.withName("/homepage"));
+                    }
+                  ),
+                )
+              ],
+            ),
+            //3
+          ],
+        ));
+  }
+  Future selectDate(BuildContext context) async {
+    DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: new DateTime(2016),
+        lastDate: new DateTime(2222));
+    if (picked != null && picked!= selectedDate) {
+      setState(() => selectedDate = picked);
+      print(picked);
+    }
+    else{
+      print(picked);
+    }
   }
 }

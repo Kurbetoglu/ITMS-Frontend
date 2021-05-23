@@ -27,7 +27,7 @@ class NetworkFunctions {
       }
       return object;
     } else {
-      throw Exception('Failed to admin login.');
+      throw Exception("Failed to admin login.");
     }
   }
 
@@ -47,10 +47,40 @@ class NetworkFunctions {
     if (response.statusCode == 200) {
       return BaseResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Failed to admin login.');
+      throw Exception('Failed to add user.');
     }
   }
 
+  static Future<BaseResponse> addAsset(
+      String type,
+      String name,
+      String description,
+      int expiryDate,
+      String personName,
+      String personSurname,
+      String email ) async {
+
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/AddAsset"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "type": type,
+        "name": name,
+        "description": description,
+        "expiryDate": expiryDate,
+        "personName": personName,
+        "personSurname": personSurname,
+        "email": email,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to add asset.");
+    }
+  }
 
   void updateCookie(http.Response response) {
     String rawCookie = response.headers['set-cookie'];

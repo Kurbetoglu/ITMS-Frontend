@@ -268,7 +268,7 @@ class RadioGroupWidget extends State {
         Radio(
           value: 1,
           groupValue: id,
-          onChanged: (val) {
+          onChanged: (dynamic val) {
             setState(() {
               radioButtonItem = 'ONE';
               id = 1;
@@ -282,7 +282,7 @@ class RadioGroupWidget extends State {
         Radio(
           value: 2,
           groupValue: id,
-          onChanged: (val) {
+          onChanged: (dynamic val) {
             setState(() {
               radioButtonItem = 'TWO';
               id = 2;
