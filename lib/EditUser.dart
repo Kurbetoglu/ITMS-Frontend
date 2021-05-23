@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 
-class editUser extends StatefulWidget {
-  const editUser({Key key}) : super(key: key);
+class EditUser extends StatefulWidget {
+  const EditUser({Key key}) : super(key: key);
 
   @override
-  _editUserState createState() => _editUserState();
+  _EditUserState createState() => _EditUserState();
 }
 
-class _editUserState extends State<editUser> {
+class _EditUserState extends State<EditUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

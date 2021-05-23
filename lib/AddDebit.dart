@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 
-class addUser extends StatefulWidget {
-  const addUser({Key key}) : super(key: key);
+String _chosenValue;
+
+class AddDebit extends StatefulWidget {
+  const AddDebit({Key key}) : super(key: key);
 
   @override
-  _addUserState createState() => _addUserState();
+  _AddDebitState createState() => _AddDebitState();
 }
 
-class _addUserState extends State<addUser> {
+class _AddDebitState extends State<AddDebit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,9 +18,9 @@ class _addUserState extends State<addUser> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () =>
-                Navigator.popUntil(context, ModalRoute.withName("/users")),
+                Navigator.popUntil(context, ModalRoute.withName("/homepage")),
           ),
-          title: Text("ADD USER"),
+          title: Text("ADD DEBIT"),
           backgroundColor: Color(0xff67acb0),
         ),
         backgroundColor: Color(0xff518199),
@@ -34,7 +35,8 @@ class _addUserState extends State<addUser> {
                     height: 30.0,
                     color: Color(0xfff0e8ca),
                     child: TextFormField(
-                      decoration: InputDecoration(hintText: "Name"),
+                      decoration: InputDecoration(hintText: "User Email"),
+                      keyboardType: TextInputType.emailAddress,
                     ))
               ],
             ),
@@ -47,19 +49,46 @@ class _addUserState extends State<addUser> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                    width: 300.0,
-                    height: 30.0,
-                    color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "Surname"),
-                    )))
+                  width: 300.0,
+                  height: 30.0,
+                  color: Color(0xfff0e8ca),
+                  child: DropdownButton<String>(
+                    value: _chosenValue,
+                    style: TextStyle(color: Colors.white),
+                    iconEnabledColor: Colors.black,
+                    items: <String>[
+                      'Fiziksel',
+                      'Dijital',
+                      'İnsan Kaynağı',
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(color: Colors.black, fontSize: 14),
+                        ),
+                      );
+                    }).toList(),
+                    hint: Text(
+                      "Type",
+                      style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    onChanged: (String value) {
+                      setState(() {
+                        _chosenValue = value;
+                      });
+                    },
+                  ),
+                ),
               ],
             ),
 
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
-            ), //2
+            ),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -70,8 +99,7 @@ class _addUserState extends State<addUser> {
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
-                      decoration: InputDecoration(hintText: "Email"),
-                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(hintText: "Name"),
                     )))
               ],
             ),
@@ -89,7 +117,25 @@ class _addUserState extends State<addUser> {
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
-                      decoration: InputDecoration(hintText: "Telephone Number"),
+                            decoration: InputDecoration(hintText: "End Date"),
+                            keyboardType: TextInputType.datetime)))
+              ],
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    width: 300.0,
+                    height: 30.0,
+                    color: Color(0xfff0e8ca),
+                    child: Center(
+                        child: TextFormField(
+                      decoration: InputDecoration(hintText: "Cause"),
                     )))
               ],
             ),
@@ -107,7 +153,7 @@ class _addUserState extends State<addUser> {
                   color: Color(0xff4e9b2b),
                   child: MaterialButton(
                     textColor: Colors.white,
-                    child: Text("Add User"),
+                    child: Text("Add Debit"),
                     onPressed: () => {},
                   ),
                 ),
@@ -119,7 +165,7 @@ class _addUserState extends State<addUser> {
                     textColor: Colors.white,
                     child: Text("Cancel"),
                     onPressed: () =>
-                        Navigator.popUntil(context, ModalRoute.withName("/users")),
+                        Navigator.popUntil(context, ModalRoute.withName("/homepage")),
                   ),
                 )
               ],

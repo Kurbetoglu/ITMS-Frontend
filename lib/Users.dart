@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 
-
-
-class users extends StatefulWidget {
-  const users({Key key}) : super(key: key);
+class Users extends StatefulWidget {
+  const Users({Key key}) : super(key: key);
 
   @override
-  _usersState createState() => _usersState();
+  _UsersState createState() => _UsersState();
 }
 
-class _usersState extends State<users> {
+class _UsersState extends State<Users> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 String _chosenValue;
 
-class addAsset extends StatefulWidget {
-  const addAsset({Key key}) : super(key: key);
+class AddAsset extends StatefulWidget {
+  const AddAsset({Key key}) : super(key: key);
 
   @override
-  _addAssetState createState() => _addAssetState();
+  _AddAssetState createState() => _AddAssetState();
 }
 
-class _addAssetState extends State<addAsset> {
+class _AddAssetState extends State<AddAsset> {
 
   @override
   Widget build(BuildContext context) {

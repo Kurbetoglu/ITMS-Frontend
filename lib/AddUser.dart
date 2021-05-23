@@ -1,16 +1,30 @@
+import 'package:asset_yonet/models/BaseResponse.dart';
+import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
-import 'main.dart';
 
-String _chosenValue;
-
-class addDebit extends StatefulWidget {
-  const addDebit({Key key}) : super(key: key);
+class AddUser extends StatefulWidget {
+  const AddUser({Key key}) : super(key: key);
 
   @override
-  _addDebitState createState() => _addDebitState();
+  _AddUserState createState() => _AddUserState();
 }
 
-class _addDebitState extends State<addDebit> {
+class _AddUserState extends State<AddUser> {
+  final nameTextEditingController = TextEditingController();
+  final surnameTextEditingController = TextEditingController();
+  final emailTextEditingController = TextEditingController();
+  final telephoneNumberTextEditingController = TextEditingController();
+  Future<BaseResponse> _futureBaseResponse;
+
+  @override
+  void dispose() {
+    nameTextEditingController.dispose();
+    surnameTextEditingController.dispose();
+    emailTextEditingController.dispose();
+    telephoneNumberTextEditingController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,9 +33,9 @@ class _addDebitState extends State<addDebit> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () =>
-                Navigator.popUntil(context, ModalRoute.withName("/homepage")),
+                Navigator.popUntil(context, ModalRoute.withName("/users")),
           ),
-          title: Text("ADD DEBIT"),
+          title: Text("ADD USER"),
           backgroundColor: Color(0xff67acb0),
         ),
         backgroundColor: Color(0xff518199),
@@ -36,8 +50,8 @@ class _addDebitState extends State<addDebit> {
                     height: 30.0,
                     color: Color(0xfff0e8ca),
                     child: TextFormField(
-                      decoration: InputDecoration(hintText: "User Email"),
-                      keyboardType: TextInputType.emailAddress,
+                      controller: nameTextEditingController,
+                      decoration: InputDecoration(hintText: "Name"),
                     ))
               ],
             ),
@@ -50,46 +64,20 @@ class _addDebitState extends State<addDebit> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  width: 300.0,
-                  height: 30.0,
-                  color: Color(0xfff0e8ca),
-                  child: DropdownButton<String>(
-                    value: _chosenValue,
-                    style: TextStyle(color: Colors.white),
-                    iconEnabledColor: Colors.black,
-                    items: <String>[
-                      'Fiziksel',
-                      'Dijital',
-                      'İnsan Kaynağı',
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(color: Colors.black, fontSize: 14),
-                        ),
-                      );
-                    }).toList(),
-                    hint: Text(
-                      "Type",
-                      style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    onChanged: (String value) {
-                      setState(() {
-                        _chosenValue = value;
-                      });
-                    },
-                  ),
-                ),
+                    width: 300.0,
+                    height: 30.0,
+                    color: Color(0xfff0e8ca),
+                    child: Center(
+                        child: TextFormField(
+                      controller: surnameTextEditingController,
+                      decoration: InputDecoration(hintText: "Surname"),
+                    )))
               ],
             ),
 
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
-            ),
+            ), //2
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -100,7 +88,9 @@ class _addDebitState extends State<addDebit> {
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
-                      decoration: InputDecoration(hintText: "Name"),
+                      controller: emailTextEditingController,
+                      decoration: InputDecoration(hintText: "Email"),
+                      keyboardType: TextInputType.emailAddress,
                     )))
               ],
             ),
@@ -118,25 +108,8 @@ class _addDebitState extends State<addDebit> {
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
-                            decoration: InputDecoration(hintText: "End Date"),
-                            keyboardType: TextInputType.datetime)))
-              ],
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                    width: 300.0,
-                    height: 30.0,
-                    color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "Cause"),
+                      controller: telephoneNumberTextEditingController,
+                      decoration: InputDecoration(hintText: "Telephone Number"),
                     )))
               ],
             ),
@@ -154,8 +127,20 @@ class _addDebitState extends State<addDebit> {
                   color: Color(0xff4e9b2b),
                   child: MaterialButton(
                     textColor: Colors.white,
-                    child: Text("Add Debit"),
-                    onPressed: () => {},
+                    child: Text("Add User"),
+                    onPressed: () {
+                      _futureBaseResponse = NetworkFunctions.addUser(
+                          nameTextEditingController.text,
+                          surnameTextEditingController.text,
+                          emailTextEditingController.text,
+                          telephoneNumberTextEditingController.text
+                      );
+                      _futureBaseResponse.then((value) {
+                        if (value.success){
+                          Navigator.popUntil(context, ModalRoute.withName("/users"));
+                        }
+                      });
+                    },
                   ),
                 ),
                 Container(
@@ -165,8 +150,7 @@ class _addDebitState extends State<addDebit> {
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("Cancel"),
-                    onPressed: () =>
-                        Navigator.popUntil(context, ModalRoute.withName("/homepage")),
+                    onPressed: () => Navigator.popUntil(context, ModalRoute.withName("/users")),
                   ),
                 )
               ],

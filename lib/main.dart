@@ -1,35 +1,38 @@
 import 'package:asset_yonet/Users.dart';
-import 'package:asset_yonet/addAsset.dart';
-import 'package:asset_yonet/addDebit.dart';
-import 'package:asset_yonet/addUser.dart';
-import 'package:asset_yonet/editAsset.dart';
-import 'package:asset_yonet/editDebit.dart';
-import 'package:asset_yonet/editUser.dart';
-import 'package:asset_yonet/homepage.dart';
-import 'package:asset_yonet/removeAssetConfirm.dart';
-import 'package:asset_yonet/removeDebit.dart';
-import 'package:asset_yonet/removeDebitConfirm.dart';
-import 'package:asset_yonet/removeUserConfirm.dart';
-import 'package:asset_yonet/searchDebits.dart';
+import 'package:asset_yonet/AddAsset.dart';
+import 'package:asset_yonet/AddDebit.dart';
+import 'package:asset_yonet/AddUser.dart';
+import 'package:asset_yonet/Homepage.dart';
+import 'package:asset_yonet/models/AdminLoginResponse.dart';
+import 'package:asset_yonet/network/NetworkFunctions.dart';
+import 'package:asset_yonet/RemoveDebit.dart';
+import 'package:asset_yonet/SearchDebits.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MyApp());
+void main() async{
 
+  runApp(MyApp());
+}
+Future<bool> cookieChecker() async{
+  SharedPreferences initialPrefs = await SharedPreferences.getInstance();
+  bool checkCookie = initialPrefs.containsKey("cookie");
+  return checkCookie;
+}
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: "/",
       routes: {
         "/": (context) => MyHomePage(),
-        "/addAsset": (context) => addAsset(),
-        "/addDebit": (context) => addDebit(),
-        "/addUser": (context) => addUser(),
-        "/homepage": (context) => homepage(),
-        "/removeDebit": (context) => removeDebit(),
-        "/searchDebits": (context) => searchDebits(),
-        "/users": (context) => users(),
+        "/addAsset": (context) => AddAsset(),
+        "/addDebit": (context) => AddDebit(),
+        "/addUser": (context) => AddUser(),
+        "/homepage": (context) => Homepage(),
+        "/removeDebit": (context) => RemoveDebit(),
+        "/searchDebits": (context) => SearchDebits(),
+        "/users": (context) => Users(),
       },
     );
   }
@@ -41,6 +44,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final emailTextEditingController = TextEditingController();
+  final passwordTextEditingController = TextEditingController();
+  Future<AdminLoginResponse> _futureAdminLoginResponse;
+
+  @override
+  void dispose() {
+    emailTextEditingController.dispose();
+    passwordTextEditingController.dispose();
+    super.dispose();
+  }
+  @override
+  void initState() {
+    cookieChecker().then((value) {
+      if(value){
+        Navigator.pushNamed(context, "/homepage");
+      }
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Form(
-                  autovalidate: true,
                   child: Theme(
                     data: ThemeData(
                         brightness: Brightness.dark,
@@ -74,6 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Column(
                         children: <Widget>[
                           TextFormField(
+                            controller: emailTextEditingController,
                             decoration: InputDecoration(
                                 labelText: "Email",
                                 fillColor: Color(0xfff0e8ca),
@@ -85,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: const EdgeInsets.only(top: 20.0),
                           ),
                           TextFormField(
+                            controller: passwordTextEditingController,
                             decoration: InputDecoration(
                               labelText: "Password",
                                 fillColor: Color(0xfff0e8ca),
@@ -101,8 +124,22 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: Color(0xff4e9b2b),
                             textColor: Colors.white,
                             child: Text("LOGIN"),
-                            onPressed: () =>
-                                {Navigator.pushNamed(context, "/homepage")},
+                            onPressed: () {
+                              if(emailTextEditingController.text.isNotEmpty && passwordTextEditingController.text.isNotEmpty){
+                                _futureAdminLoginResponse = NetworkFunctions.adminLogin(emailTextEditingController.text, passwordTextEditingController.text);
+                                _futureAdminLoginResponse.then((response) async {
+                                  if(response.success){
+                                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                                    prefs.setString("adminEmail", response.adminModel.adminInfo.email);
+                                    prefs.setString("adminPassword", passwordTextEditingController.text);
+                                    Navigator.pushNamed(context, "/homepage");
+                                  }
+                                  else {
+                                    print("login error");
+                                  }
+                                });
+                              }
+                            },
                             splashColor: Colors.green[900],
                           )
                         ],
@@ -116,3 +153,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+

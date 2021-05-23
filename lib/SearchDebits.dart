@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 
 String typeValue, startDateValue, endDateValue, isDeliveredValue;
 
-class searchDebits extends StatefulWidget {
-  const searchDebits({Key key}) : super(key: key);
+class SearchDebits extends StatefulWidget {
+  const SearchDebits({Key key}) : super(key: key);
 
   @override
-  _searchDebitsState createState() => _searchDebitsState();
+  _SearchDebitsState createState() => _SearchDebitsState();
 }
 
-class _searchDebitsState extends State<searchDebits> {
+class _SearchDebitsState extends State<SearchDebits> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -200,15 +199,15 @@ class _searchDebitsState extends State<searchDebits> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(child: kart()),
-                Container(child: kart()),
+                Container(child: CustomCard()),
+                Container(child: CustomCard()),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(child: kart()),
-                Container(child: kart()),
+                Container(child: CustomCard()),
+                Container(child: CustomCard()),
               ],
             ),
           ]),
@@ -216,12 +215,12 @@ class _searchDebitsState extends State<searchDebits> {
   }
 }
 
-class kart extends StatefulWidget {
+class CustomCard extends StatefulWidget {
   @override
-  kartWidget createState() => kartWidget();
+  CustomCardWidget createState() => CustomCardWidget();
 }
 
-class kartWidget extends State {
+class CustomCardWidget extends State {
   @override
   Widget build(BuildContext context) {
     return Card(

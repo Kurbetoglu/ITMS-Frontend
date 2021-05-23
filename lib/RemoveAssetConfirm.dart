@@ -1,26 +1,16 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 
-class removeUserConfirm extends StatefulWidget {
-  const removeUserConfirm({Key key}) : super(key: key);
+class RemoveAssetConfirm extends StatefulWidget {
+  const RemoveAssetConfirm({Key key}) : super(key: key);
 
   @override
-  _removeUserConfirmState createState() => _removeUserConfirmState();
+  _RemoveAssetConfirmState createState() => _RemoveAssetConfirmState();
 }
 
-class _removeUserConfirmState extends State<removeUserConfirm> {
+class _RemoveAssetConfirmState extends State<RemoveAssetConfirm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () =>
-                Navigator.popUntil(context, ModalRoute.withName("/removeDebit")),
-          ),
-          title: Text("CONFIRMATION"),
-          backgroundColor: Color(0xff67acb0),
-        ),
         backgroundColor: Color(0xff518199),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -33,9 +23,9 @@ class _removeUserConfirmState extends State<removeUserConfirm> {
                     height: 50.0,
                     color: Color(0xffc53737),
                     child: Center(
-                      child: Text("Are you sure to remove this user?",
-                          style: TextStyle(
-                              fontSize: 18.0, color: Colors.white)),
+                      child: Text("Are you sure to remove this asset?",
+                        style: TextStyle(
+                            fontSize: 18.0, color: Colors.white)),
                     )
                 )
               ],
@@ -74,4 +64,3 @@ class _removeUserConfirmState extends State<removeUserConfirm> {
 
   }
 }
-

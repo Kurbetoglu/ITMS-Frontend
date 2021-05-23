@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 
-class removeAssetConfirm extends StatefulWidget {
-  const removeAssetConfirm({Key key}) : super(key: key);
+class RemoveDebitConfirm extends StatefulWidget {
+  const RemoveDebitConfirm({Key key}) : super(key: key);
 
   @override
-  _removeAssetConfirmState createState() => _removeAssetConfirmState();
+  _RemoveDebitConfirmState createState() => _RemoveDebitConfirmState();
 }
 
-class _removeAssetConfirmState extends State<removeAssetConfirm> {
+class _RemoveDebitConfirmState extends State<RemoveDebitConfirm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () =>
+                Navigator.popUntil(context, ModalRoute.withName("/removeDebit")),
+          ),
+          title: Text("CONFIRMATION"),
+          backgroundColor: Color(0xff67acb0),
+        ),
         backgroundColor: Color(0xff518199),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -24,9 +32,9 @@ class _removeAssetConfirmState extends State<removeAssetConfirm> {
                     height: 50.0,
                     color: Color(0xffc53737),
                     child: Center(
-                      child: Text("Are you sure to remove this asset?",
-                        style: TextStyle(
-                            fontSize: 18.0, color: Colors.white)),
+                      child: Text("Are you sure to remove this debit?",
+                          style: TextStyle(
+                              fontSize: 18.0, color: Colors.white)),
                     )
                 )
               ],
@@ -54,7 +62,8 @@ class _removeAssetConfirmState extends State<removeAssetConfirm> {
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("NO"),
-                    onPressed: () => {},
+                    onPressed: () =>
+                        Navigator.popUntil(context, ModalRoute.withName("/removeDebit")),
                   ),
                 )
               ],
@@ -65,3 +74,4 @@ class _removeAssetConfirmState extends State<removeAssetConfirm> {
 
   }
 }
+

@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 
-String _chosenValue;
-
-class editAsset extends StatefulWidget {
-  const editAsset({Key key}) : super(key: key);
+class EditDebit extends StatefulWidget {
+  const EditDebit({Key key}) : super(key: key);
 
   @override
-  _editAssetState createState() => _editAssetState();
+  _EditDebitState createState() => _EditDebitState();
 }
 
-class _editAssetState extends State<editAsset> {
+class _EditDebitState extends State<EditDebit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,9 +15,9 @@ class _editAssetState extends State<editAsset> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () =>
-                Navigator.popUntil(context, ModalRoute.withName("/homepage")),
+                Navigator.popUntil(context, ModalRoute.withName("/searchDebits")),
           ),
-          title: Text("EDIT ASSET"),
+          title: Text("EDIT DEBIT"),
           backgroundColor: Color(0xff67acb0),
         ),
         resizeToAvoidBottomInset: false,
@@ -32,51 +29,17 @@ class _editAssetState extends State<editAsset> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  width: 300.0,
-                  height: 30.0,
-                  color: Color(0xfff0e8ca),
-                  child: DropdownButton<String>(
-                    value: _chosenValue,
-                    style: TextStyle(color: Colors.white),
-                    iconEnabledColor: Colors.black,
-                    items: <String>[
-                      'Android',
-                      'IOS',
-                      'Flutter',
-                      'Node',
-                      'Java',
-                      'Python',
-                      'PHP',
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(color: Colors.black, fontSize: 14),
-                        ),
-                      );
-                    }).toList(),
-                    hint: Text(
-                      "Type",
-                      style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    onChanged: (String value) {
-                      setState(() {
-                        _chosenValue = value;
-                      });
-                    },
-                  ),
-                ),
+                    width: 300.0,
+                    height: 30.0,
+                    color: Color(0xfff0e8ca),
+                    child: TextFormField(
+                      decoration: InputDecoration(hintText: "Assigner"),
+                    ))
               ],
             ),
-
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
-            ),
-            //1
+            ), //1
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -86,15 +49,13 @@ class _editAssetState extends State<editAsset> {
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
-                      decoration: InputDecoration(hintText: "Name"),
+                      decoration: InputDecoration(hintText: "User"),
                     )))
               ],
             ),
-
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
-            ),
-            //2
+            ), //2
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -104,13 +65,62 @@ class _editAssetState extends State<editAsset> {
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
-                      decoration: InputDecoration(hintText: "Description"),
+                      decoration: InputDecoration(hintText: "Asset Type"),
                     )))
               ],
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    width: 300.0,
+                    height: 30.0,
+                    color: Color(0xfff0e8ca),
+                    child: Center(
+                        child: TextFormField(
+                      decoration: InputDecoration(hintText: "Asset Name"),
+                    )))
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    width: 300.0,
+                    height: 30.0,
+                    color: Color(0xfff0e8ca),
+                    child: Center(
+                        child: TextFormField(
+                      decoration:
+                          InputDecoration(hintText: "Asset Desctription"),
+                    )))
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    width: 300.0,
+                    height: 30.0,
+                    color: Color(0xfff0e8ca),
+                    child: Center(
+                        child: TextFormField(
+                      decoration: InputDecoration(hintText: "Type"),
+                    )))
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -121,7 +131,24 @@ class _editAssetState extends State<editAsset> {
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
-                      decoration: InputDecoration(hintText: "Added Date"),
+                      decoration: InputDecoration(hintText: "Start Date"),
+                    )))
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    width: 300.0,
+                    height: 30.0,
+                    color: Color(0xfff0e8ca),
+                    child: Center(
+                        child: TextFormField(
+                      decoration: InputDecoration(hintText: "Change End Date"),
                     )))
               ],
             ),
@@ -141,73 +168,6 @@ class _editAssetState extends State<editAsset> {
               ],
             ),
 
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                    width: 300.0,
-                    height: 30.0,
-                    color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "Expiry Date"),
-                    )))
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                    width: 300.0,
-                    height: 30.0,
-                    color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "Person Name"),
-                    )))
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                    width: 300.0,
-                    height: 30.0,
-                    color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "Person Surname"),
-                    )))
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                    width: 300.0,
-                    height: 30.0,
-                    color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "Person Email"),
-                    )))
-              ],
-            ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
             ),
@@ -263,7 +223,7 @@ class RadioGroupWidget extends State {
         //Column(children: <Widget>[]),
         //Column(children: <Widget>[]),
         Text(
-          'Is Assigned?  |',
+          'Is Delivered?  |',
           style: TextStyle(fontSize: 16),
         ),
         Radio(

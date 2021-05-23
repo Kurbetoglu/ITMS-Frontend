@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 
 String typeValue, startDateValue, endDateValue, isDeliveredValue;
 
-class removeDebit extends StatefulWidget {
-  const removeDebit({Key key}) : super(key: key);
+class RemoveDebit extends StatefulWidget {
+  const RemoveDebit({Key key}) : super(key: key);
 
   @override
-  _removeDebitState createState() => _removeDebitState();
+  _RemoveDebitState createState() => _RemoveDebitState();
 }
 
-class _removeDebitState extends State<removeDebit> {
+class _RemoveDebitState extends State<RemoveDebit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -199,15 +198,15 @@ class _removeDebitState extends State<removeDebit> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(child: kart()),
-                Container(child: kart()),
+                Container(child: CustomCard()),
+                Container(child: CustomCard()),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(child: kart()),
-                Container(child: kart()),
+                Container(child: CustomCard()),
+                Container(child: CustomCard()),
               ],
             ),
           ]),
@@ -215,12 +214,12 @@ class _removeDebitState extends State<removeDebit> {
   }
 }
 
-class kart extends StatefulWidget {
+class CustomCard extends StatefulWidget {
   @override
-  kartWidget createState() => kartWidget();
+  CustomCardWidget createState() => CustomCardWidget();
 }
 
-class kartWidget extends State {
+class CustomCardWidget extends State {
   @override
   Widget build(BuildContext context) {
     return Card(
