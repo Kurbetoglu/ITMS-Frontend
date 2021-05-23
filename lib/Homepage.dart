@@ -1,3 +1,5 @@
+import 'package:asset_yonet/models/BaseResponse.dart';
+import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
 class Homepage extends StatefulWidget {
@@ -6,6 +8,8 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  Future<BaseResponse> _futureBaseResponse;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +19,14 @@ class _HomepageState extends State<Homepage> {
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    _futureBaseResponse = NetworkFunctions.adminLogoff();
+                    _futureBaseResponse.then((value) {
+                      if(value.success){
+                        Navigator.popUntil(context, ModalRoute.withName("/"));
+                      }
+                    });
+                  },
                   child: Icon(
                       Icons.logout
                   ),

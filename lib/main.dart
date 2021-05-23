@@ -127,17 +127,15 @@ class _MyHomePageState extends State<MyHomePage> {
                             onPressed: () {
                               if(emailTextEditingController.text.isNotEmpty && passwordTextEditingController.text.isNotEmpty){
                                 _futureAdminLoginResponse = NetworkFunctions.adminLogin(emailTextEditingController.text, passwordTextEditingController.text);
-                                _futureAdminLoginResponse.then((response) async {
+                                _futureAdminLoginResponse.then((response) {
                                   if(response.success){
-                                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                                    prefs.setString("adminEmail", response.adminModel.adminInfo.email);
-                                    prefs.setString("adminPassword", passwordTextEditingController.text);
                                     Navigator.pushNamed(context, "/homepage");
                                   }
                                   else {
                                     print("login error");
                                   }
-                                });
+                                }
+                                );
                               }
                             },
                             splashColor: Colors.green[900],
@@ -145,7 +143,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         ],
                       ),
                     ),
-                  )),
+                  )
+              ),
             ],
           )
         ],

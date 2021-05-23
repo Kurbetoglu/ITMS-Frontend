@@ -31,6 +31,22 @@ class NetworkFunctions {
     }
   }
 
+  static Future<BaseResponse> adminLogoff() async {
+    setCookie();
+    final response = await http.get(
+      Uri.parse(uri + "/AdminLogoff"),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      removeSharedPreference("cookie");
+
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to admin logoff.");
+    }
+  }
+
   static Future<BaseResponse> addUser(String name, String surname, String email, String telephoneNumber) async {
     setCookie();
     final response = await http.post(
@@ -47,7 +63,7 @@ class NetworkFunctions {
     if (response.statusCode == 200) {
       return BaseResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Failed to add user.');
+      throw Exception("Failed to add user.");
     }
   }
 
@@ -83,19 +99,19 @@ class NetworkFunctions {
   }
 
   void updateCookie(http.Response response) {
-    String rawCookie = response.headers['set-cookie'];
+    String rawCookie = response.headers["set-cookie"];
     if (rawCookie != null) {
       int index = rawCookie.indexOf(';');
-      headers['cookie'] = (index == -1) ? rawCookie : rawCookie.substring(0, index);
+      headers["cookie"] = (index == -1) ? rawCookie : rawCookie.substring(0, index);
     }
   }
   static void saveCookie(http.Response response) async {
-    String rawCookie = response.headers['set-cookie'];
+    String rawCookie = response.headers["set-cookie"];
     String cookie;
     if (rawCookie != null) {
       int index = rawCookie.indexOf(';');
       cookie = (index == -1) ? rawCookie : rawCookie.substring(0, index);
-      headers['cookie'] = cookie;
+      headers["cookie"] = cookie;
     }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -105,7 +121,12 @@ class NetworkFunctions {
   static void setCookie() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String cookie = prefs.getString("cookie");
-    headers['cookie'] = cookie;
+    headers["cookie"] = cookie;
+  }
+
+  static void removeSharedPreference(String key) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(key);
   }
 }
 
