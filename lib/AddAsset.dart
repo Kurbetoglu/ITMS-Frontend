@@ -16,7 +16,6 @@ class AddAsset extends StatefulWidget {
 class _AddAssetState extends State<AddAsset> {
   final nameTextEditingController = TextEditingController();
   final descriptionTextEditingController = TextEditingController();
-  final expiryDateTextEditingController = TextEditingController();
   final personNameTextEditingController = TextEditingController();
   final personSurnameTextEditingController = TextEditingController();
   final personEmailTextEditingController = TextEditingController();
@@ -26,7 +25,6 @@ class _AddAssetState extends State<AddAsset> {
   void dispose() {
     nameTextEditingController.dispose();
     descriptionTextEditingController.dispose();
-    expiryDateTextEditingController.dispose();
     personNameTextEditingController.dispose();
     personSurnameTextEditingController.dispose();
     personEmailTextEditingController.dispose();
@@ -35,7 +33,7 @@ class _AddAssetState extends State<AddAsset> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           leading: IconButton(
@@ -120,36 +118,16 @@ class _AddAssetState extends State<AddAsset> {
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
-                      controller: descriptionTextEditingController,
-                      decoration: InputDecoration(hintText: "Description"),
-                    )))
+                          controller: descriptionTextEditingController,
+                          decoration: InputDecoration(hintText: "Description"),
+                        )))
               ],
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
             ),
             Visibility(
-                visible: typeValue == "Dijital" ? true : false,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xfff0e8ca),
-                  ),
-                  onPressed: () {
-                    selectDate(context);
-                  },
-                  child: const Text(
-                    "Pick Expiry Date",
-                    style: TextStyle(
-                      color: Color(0xff707070),
-                    ),
-                  ),
-                )
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-            Visibility(
-              visible: typeValue == "İnsan Kaynağı" ? true : false,
+              visible: typeValue == "Dijital" ? true : false,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -157,11 +135,21 @@ class _AddAssetState extends State<AddAsset> {
                       width: 300.0,
                       height: 30.0,
                       color: Color(0xfff0e8ca),
-                      child: Center(
-                          child: TextFormField(
-                        controller: personNameTextEditingController,
-                        decoration: InputDecoration(hintText: "Person Name"),
-                      )))
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xfff0e8ca),
+                        ),
+                        onPressed: () {
+                          selectDate(context);
+                        },
+                        child: const Text(
+                          "Pick Expiry Date",
+                          style: TextStyle(
+                            color: Color(0xff707070),
+                          ),
+                        ),
+                      )
+                  )
                 ],
               ),
             ),
@@ -179,9 +167,9 @@ class _AddAssetState extends State<AddAsset> {
                       color: Color(0xfff0e8ca),
                       child: Center(
                           child: TextFormField(
-                        controller: personSurnameTextEditingController,
-                        decoration: InputDecoration(hintText: "Person Surname"),
-                      )))
+                            controller: personNameTextEditingController,
+                            decoration: InputDecoration(hintText: "Person Name"),
+                          )))
                 ],
               ),
             ),
@@ -199,9 +187,29 @@ class _AddAssetState extends State<AddAsset> {
                       color: Color(0xfff0e8ca),
                       child: Center(
                           child: TextFormField(
-                        controller: personEmailTextEditingController,
-                        decoration: InputDecoration(hintText: "Person Email"),
-                      )))
+                            controller: personSurnameTextEditingController,
+                            decoration: InputDecoration(hintText: "Person Surname"),
+                          )))
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
+            Visibility(
+              visible: typeValue == "İnsan Kaynağı" ? true : false,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                      width: 300.0,
+                      height: 30.0,
+                      color: Color(0xfff0e8ca),
+                      child: Center(
+                          child: TextFormField(
+                            controller: personEmailTextEditingController,
+                            decoration: InputDecoration(hintText: "Person Email"),
+                          )))
                 ],
               ),
             ),
@@ -242,18 +250,18 @@ class _AddAssetState extends State<AddAsset> {
                   height: 50.0,
                   color: Color(0xffc53737),
                   child: MaterialButton(
-                    textColor: Colors.white,
-                    child: Text("Cancel"),
-                    onPressed: () {
-                      // print(typeValue);
-                      // print(nameTextEditingController.text);
-                      // print(descriptionTextEditingController.text);
-                      // print(typeValue == "Dijital" ? selectedDate.toUtc().microsecondsSinceEpoch : 0);
-                      // print(personNameTextEditingController.text);
-                      // print(personSurnameTextEditingController.text);
-                      // print(personEmailTextEditingController.text);
-                      Navigator.popUntil(context, ModalRoute.withName("/homepage"));
-                    }
+                      textColor: Colors.white,
+                      child: Text("Cancel"),
+                      onPressed: () {
+                        // print(typeValue);
+                        // print(nameTextEditingController.text);
+                        // print(descriptionTextEditingController.text);
+                        // print(typeValue == "Dijital" ? selectedDate.toUtc().microsecondsSinceEpoch : 0);
+                        // print(personNameTextEditingController.text);
+                        // print(personSurnameTextEditingController.text);
+                        // print(personEmailTextEditingController.text);
+                        Navigator.popUntil(context, ModalRoute.withName("/homepage"));
+                      }
                   ),
                 )
               ],
@@ -270,10 +278,6 @@ class _AddAssetState extends State<AddAsset> {
         lastDate: new DateTime(2222));
     if (picked != null && picked!= selectedDate) {
       setState(() => selectedDate = picked);
-      print(picked);
-    }
-    else{
-      print(picked);
     }
   }
 }

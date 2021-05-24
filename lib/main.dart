@@ -58,7 +58,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     cookieChecker().then((value) {
       if(value){
-        Navigator.pushNamed(context, "/homepage");
+        Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute( builder: (BuildContext context) => Homepage(),),
+              (route) => false,
+        );
       }
     });
     super.initState();

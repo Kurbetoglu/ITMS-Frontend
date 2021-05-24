@@ -1,7 +1,15 @@
+import 'dart:math';
+
+import 'package:asset_yonet/Homepage.dart';
+import 'package:asset_yonet/models/GetAssetsByTypeResponse.dart';
+import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
-String _chosenValue;
+import 'models/BaseResponse.dart';
 
+String typeValue, nameValue;
+DateTime selectedDate = DateTime.now();
+int selectedId = 0;
 class AddDebit extends StatefulWidget {
   const AddDebit({Key key}) : super(key: key);
 
@@ -10,19 +18,38 @@ class AddDebit extends StatefulWidget {
 }
 
 class _AddDebitState extends State<AddDebit> {
+  final userEmailTextEditingController = TextEditingController();
+  final assetNameTextEditingController = TextEditingController();
+  final causeTextEditingController = TextEditingController();
+  Future<GetAssetsByTypeResponse> _futureGetAssetsByTypeResponse;
+  Future<BaseResponse> _futureBaseResponse;
+  GetAssetsByTypeResponse _getAssetsByTypeResponse;
+  @override
+  void dispose() {
+    userEmailTextEditingController.dispose();
+    assetNameTextEditingController.dispose();
+    causeTextEditingController.dispose();
+    typeValue = "";
+    nameValue = "";
+    selectedId = 0;
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () =>
-                Navigator.popUntil(context, ModalRoute.withName("/homepage")),
-          ),
           title: Text("ADD DEBIT"),
           backgroundColor: Color(0xff67acb0),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              dispose();
+              Navigator.popUntil(context, ModalRoute.withName("/homepage"));
+            }
+          ),
         ),
+
         backgroundColor: Color(0xff518199),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -35,16 +62,16 @@ class _AddDebitState extends State<AddDebit> {
                     height: 30.0,
                     color: Color(0xfff0e8ca),
                     child: TextFormField(
+
                       decoration: InputDecoration(hintText: "User Email"),
                       keyboardType: TextInputType.emailAddress,
-                    ))
+                    )
+                )
               ],
             ),
-
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
             ), //1
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -53,7 +80,7 @@ class _AddDebitState extends State<AddDebit> {
                   height: 30.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
-                    value: _chosenValue,
+                    value: typeValue,
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
@@ -62,6 +89,12 @@ class _AddDebitState extends State<AddDebit> {
                       'İnsan Kaynağı',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
+                        onTap: () {
+                          _futureGetAssetsByTypeResponse = NetworkFunctions.getAssetsByType(0, 0, value);
+                          _futureGetAssetsByTypeResponse.then((value) {
+                            setState(() { });
+                          });
+                        },
                         value: value,
                         child: Text(
                           value,
@@ -78,18 +111,28 @@ class _AddDebitState extends State<AddDebit> {
                     ),
                     onChanged: (String value) {
                       setState(() {
-                        _chosenValue = value;
+                        typeValue = value;
                       });
                     },
                   ),
                 ),
               ],
             ),
-
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
             ),
-
+            Flexible(
+              child: _futureGetAssetsByTypeResponse == null ? buildRow() : futureBuilder(),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
+            Flexible(
+              child: selectedId == 0 ? buildRow() : buildDetails(selectedId),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -97,10 +140,21 @@ class _AddDebitState extends State<AddDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "Name"),
-                    )))
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xfff0e8ca),
+                      ),
+                      onPressed: () {
+                        selectDate(context);
+                      },
+                      child: const Text(
+                        "Pick End Date",
+                        style: TextStyle(
+                          color: Color(0xff707070),
+                        ),
+                      ),
+                    )
+                )
               ],
             ),
 
@@ -117,25 +171,7 @@ class _AddDebitState extends State<AddDebit> {
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
-                            decoration: InputDecoration(hintText: "End Date"),
-                            keyboardType: TextInputType.datetime)))
-              ],
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                    width: 300.0,
-                    height: 30.0,
-                    color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "Cause"),
+                          decoration: InputDecoration(hintText: "Cause"),
                     )))
               ],
             ),
@@ -154,7 +190,22 @@ class _AddDebitState extends State<AddDebit> {
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("Add Debit"),
-                    onPressed: () => {},
+                    onPressed: () {
+                      _futureBaseResponse = NetworkFunctions.addDebit(
+                          userEmailTextEditingController.text,
+                          selectedId,
+                          typeValue,
+                          nameValue,
+                          selectedDate.toUtc().microsecondsSinceEpoch,
+                          causeTextEditingController.text
+                      );
+                      _futureBaseResponse.then((value) {
+                        if(value.success){
+                          dispose();
+                          Navigator.popUntil(context, ModalRoute.withName("/homepage"));
+                        }
+                      });
+                    },
                   ),
                 ),
                 Container(
@@ -164,14 +215,195 @@ class _AddDebitState extends State<AddDebit> {
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("Cancel"),
-                    onPressed: () =>
-                        Navigator.popUntil(context, ModalRoute.withName("/homepage")),
+                    onPressed: () {
+                      dispose();
+                      Navigator.popUntil(context, ModalRoute.withName("/homepage"));
+                    }
                   ),
                 )
               ],
             ),
             //3
           ],
-        ));
+        )
+    );
+  }
+  Future selectDate(BuildContext context) async {
+    DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: new DateTime(2016),
+        lastDate: new DateTime(2222));
+    if (picked != null && picked!= selectedDate) {
+      setState(() => selectedDate = picked);
+    }
+  }
+  Visibility buildRow() {
+    return Visibility(
+        visible: false,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              width: 300.0,
+              height: 30.0,
+              color: Color(0xfff0e8ca),
+            )
+          ],
+        )
+    );
+  }
+
+  Column buildDetails(int id) {
+    Record record;
+    for(int i = 0; i < _getAssetsByTypeResponse.records.length; ++i){
+      if (_getAssetsByTypeResponse.records[i].id == id){
+        record = _getAssetsByTypeResponse.records[i];
+      }
+    }
+
+    switch (typeValue){
+      case "Fiziksel": {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              width: 300.0,
+              height: 30.0,
+              color: Color(0xfff0e8ca),
+              child: Text(record.description),
+            ),
+            Container(
+              width: 300.0,
+              height: 30.0,
+              color: Color(0xfff0e8ca),
+              child: Text(record.addedDate),
+            ),
+          ],
+        );
+      }
+      break;
+      case "Dijital": {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              width: 300.0,
+              height: 30.0,
+              color: Color(0xfff0e8ca),
+              child: Text(record.description),
+            ),
+            Container(
+              width: 300.0,
+              height: 30.0,
+              color: Color(0xfff0e8ca),
+              child: Text(record.addedDate),
+            ),
+            Container(
+              width: 300.0,
+              height: 30.0,
+              color: Color(0xfff0e8ca),
+              child: Text(DateTime.fromMicrosecondsSinceEpoch(record.expiryDate).toString()),
+            ),
+          ],
+        );
+      }
+      break;
+      case "İnsan Kaynağı": {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              width: 300.0,
+              height: 30.0,
+              color: Color(0xfff0e8ca),
+              child: Text(record.description),
+            ),
+            Container(
+              width: 300.0,
+              height: 30.0,
+              color: Color(0xfff0e8ca),
+              child: Text(record.addedDate),
+            ),
+            Container(
+              width: 300.0,
+              height: 30.0,
+              color: Color(0xfff0e8ca),
+              child: Text(record.personName),
+            ),
+            Container(
+              width: 300.0,
+              height: 30.0,
+              color: Color(0xfff0e8ca),
+              child: Text(record.personSurname),
+            ),
+            Container(
+              width: 300.0,
+              height: 30.0,
+              color: Color(0xfff0e8ca),
+              child: Text(record.personEmail),
+            ),
+          ],
+        );
+      }
+      break;
+    }
+  }
+
+  FutureBuilder<GetAssetsByTypeResponse> futureBuilder() {
+    return FutureBuilder<GetAssetsByTypeResponse>(
+      future: _futureGetAssetsByTypeResponse,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          _getAssetsByTypeResponse = snapshot.data;
+          List<String> list = new List<String>();
+          for(int i = 0; i < snapshot.data.records.length; i++){
+            if( snapshot.data.records[i].isAssigned){
+              continue;
+            }
+            String string = snapshot.data.records[i].name + ", " + "Id: " + snapshot.data.records[i].id.toString();
+            list.add(string);
+          }
+
+          return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    width: 300.0,
+                    height: 30.0,
+                    color: Color(0xfff0e8ca),
+                    child:  DropdownButton(
+                      value: nameValue,
+                      isDense: true,
+                      items: list.map((String value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      hint: Text(
+                        "Name",
+                        style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      onChanged: (String value) {
+                        setState(() {
+                          var splittedName = value.split(', Id: ');
+                          nameValue = splittedName[0];
+                          selectedId = int.parse(splittedName[1]);
+                        });
+                      },
+                    )
+                ),
+              ]
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+        return CircularProgressIndicator();
+      },
+    );
   }
 }
