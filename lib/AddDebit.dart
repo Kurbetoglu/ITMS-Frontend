@@ -196,7 +196,7 @@ class _AddDebitState extends State<AddDebit> {
                           selectedId,
                           typeValue,
                           nameValue,
-                          selectedDate.toUtc().microsecondsSinceEpoch,
+                          selectedDate.toUtc().millisecondsSinceEpoch,
                           causeTextEditingController.text
                       );
                       _futureBaseResponse.then((value) {
@@ -303,7 +303,7 @@ class _AddDebitState extends State<AddDebit> {
               width: 300.0,
               height: 30.0,
               color: Color(0xfff0e8ca),
-              child: Text(DateTime.fromMicrosecondsSinceEpoch(record.expiryDate).toString()),
+              child: Text(record.expiryDate),
             ),
           ],
         );

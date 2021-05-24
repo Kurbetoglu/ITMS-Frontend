@@ -231,7 +231,7 @@ class _AddAssetState extends State<AddAsset> {
                           typeValue,
                           nameTextEditingController.text,
                           descriptionTextEditingController.text,
-                          typeValue == "Dijital" ? selectedDate.toUtc().microsecondsSinceEpoch : 0,
+                          typeValue == "Dijital" ? selectedDate.toUtc().millisecondsSinceEpoch : 0,
                           personNameTextEditingController.text.isEmpty ? null : personNameTextEditingController.text,
                           personSurnameTextEditingController.text.isEmpty ? null : personSurnameTextEditingController.text,
                           personEmailTextEditingController.text.isEmpty ? null : personEmailTextEditingController.text
@@ -256,7 +256,7 @@ class _AddAssetState extends State<AddAsset> {
                         // print(typeValue);
                         // print(nameTextEditingController.text);
                         // print(descriptionTextEditingController.text);
-                        // print(typeValue == "Dijital" ? selectedDate.toUtc().microsecondsSinceEpoch : 0);
+                        // print(typeValue == "Dijital" ? selectedDate.toUtc().millisecondsSinceEpoch : 0);
                         // print(personNameTextEditingController.text);
                         // print(personSurnameTextEditingController.text);
                         // print(personEmailTextEditingController.text);

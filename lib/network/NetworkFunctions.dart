@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:asset_yonet/models/AdminLoginResponse.dart';
 import 'package:asset_yonet/models/BaseResponse.dart';
+import 'package:asset_yonet/models/GetAllDebitsResponse.dart';
 import 'package:asset_yonet/models/GetAssetsByTypeResponse.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -139,6 +140,24 @@ class NetworkFunctions {
       return BaseResponse.fromJson(jsonDecode(response.body));
     } else {
       throw Exception("Failed to add asset.");
+    }
+  }
+
+  static Future<GetAllDebitsResponse> getAllDebits (int pageNumber, int pageSize) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/GetAllDebits"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "pageNumber": pageNumber,
+        "pageSize": pageSize,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return GetAllDebitsResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to fetch debits.");
     }
   }
 

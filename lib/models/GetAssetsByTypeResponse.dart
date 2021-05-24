@@ -8,7 +8,6 @@ class GetAssetsByTypeResponse {
 
   factory GetAssetsByTypeResponse.fromJson(Map<String, dynamic> json) {
     var list = json['recordList'] as List;
-    print(list);
     List<Record> recordList = list.map((json) => Record.fromJson(json)).toList();
     return GetAssetsByTypeResponse(
       success: json['success'],
@@ -26,7 +25,7 @@ class Record {
   String description;
   String addedDate;
   bool isAssigned;
-  int expiryDate;
+  String expiryDate;
   String personName;
   String personSurname;
   String personEmail;
