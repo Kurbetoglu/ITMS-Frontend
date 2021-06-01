@@ -1,4 +1,5 @@
 import 'package:asset_yonet/SearchAssets.dart';
+import 'package:asset_yonet/SearchUsers.dart';
 import 'package:asset_yonet/Users.dart';
 import 'package:asset_yonet/AddAsset.dart';
 import 'package:asset_yonet/AddDebit.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         "/removeDebit": (context) => RemoveDebit(),
         "/searchAssets": (context) => SearchAssets(),
         "/searchDebits": (context) => SearchDebits(),
+        "/searchUsers": (context) => SearchUsers(),
         "/users": (context) => Users(),
       },
     );

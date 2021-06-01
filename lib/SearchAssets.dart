@@ -241,10 +241,10 @@ class CustomDataRowWidget extends State<CustomDataRow> {
         ),
         columns: [
           DataColumn(
-            label: Text('Name'),
+            label: Text('Type'),
           ),
           DataColumn(
-            label: Text('Type'),
+            label: Text('Name'),
           ),
           DataColumn(
             label: Text('Description'),
@@ -259,8 +259,8 @@ class CustomDataRowWidget extends State<CustomDataRow> {
         rows: assetRecords
             .map((assetRecord) => DataRow(
             cells: [
-                  DataCell(Text(assetRecord.name)),
                   DataCell(Text(assetRecord.type)),
+                  DataCell(Text(assetRecord.name)),
                   DataCell(Text(assetRecord.description)),
                   DataCell(Text(assetRecord.addedDate)),
                   DataCell(Text(assetRecord.isAssigned.toString())),

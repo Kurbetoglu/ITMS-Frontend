@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:asset_yonet/Homepage.dart';
@@ -37,6 +38,7 @@ class _AddDebitState extends State<AddDebit> {
   @override
   void initState(){
     _futureGetAssetsByTypeResponse = NetworkFunctions.getAssetsByType(1, 1, "");
+    sleep(Duration(seconds: 1));
     _futureGetAssetsByTypeResponse.then((value) {
       setState(() { });
     });

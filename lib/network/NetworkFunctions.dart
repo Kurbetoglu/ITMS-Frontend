@@ -4,6 +4,7 @@ import 'package:asset_yonet/models/AdminLoginResponse.dart';
 import 'package:asset_yonet/models/BaseResponse.dart';
 import 'package:asset_yonet/models/GetAllAssetsResponse.dart';
 import 'package:asset_yonet/models/GetAllDebitsResponse.dart';
+import 'package:asset_yonet/models/GetAllUsersResponse.dart';
 import 'package:asset_yonet/models/GetAssetsByTypeResponse.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -177,6 +178,24 @@ class NetworkFunctions {
       return GetAllDebitsResponse.fromJson(jsonDecode(response.body));
     } else {
       throw Exception("Failed to fetching debits.");
+    }
+  }
+
+  static Future<GetAllUsersResponse> getAllUsers (int pageNumber, int pageSize) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/GetAllUsers"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "pageNumber": pageNumber,
+        "pageSize": pageSize,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return GetAllUsersResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to fetching users.");
     }
   }
 
