@@ -47,7 +47,7 @@ class _HomepageState extends State<Homepage> {
                       child: MaterialButton(
                         textColor: Colors.white,
                         child: Text("Search Assets"),
-                        onPressed: () => {},
+                        onPressed: () => Navigator.pushNamed(context, "/searchAssets"),
                       ))
                 ],
               ),
@@ -64,8 +64,7 @@ class _HomepageState extends State<Homepage> {
                     child: MaterialButton(
                       textColor: Colors.white,
                       child: Text("Add Asset"),
-                      onPressed: () =>
-                          {Navigator.pushNamed(context, "/addAsset")},
+                      onPressed: () => Navigator.pushNamed(context, "/addAsset"),
                     ),
                   )
                 ],

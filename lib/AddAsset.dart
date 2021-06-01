@@ -21,15 +21,15 @@ class _AddAssetState extends State<AddAsset> {
   final personEmailTextEditingController = TextEditingController();
   Future<BaseResponse> _futureBaseResponse;
 
-  @override
-  void dispose() {
-    nameTextEditingController.dispose();
-    descriptionTextEditingController.dispose();
-    personNameTextEditingController.dispose();
-    personSurnameTextEditingController.dispose();
-    personEmailTextEditingController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   nameTextEditingController.dispose();
+  //   descriptionTextEditingController.dispose();
+  //   personNameTextEditingController.dispose();
+  //   personSurnameTextEditingController.dispose();
+  //   personEmailTextEditingController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +231,7 @@ class _AddAssetState extends State<AddAsset> {
                           typeValue,
                           nameTextEditingController.text,
                           descriptionTextEditingController.text,
-                          typeValue == "Dijital" ? selectedDate.toUtc().millisecondsSinceEpoch : 0,
+                          typeValue == "Dijital" ? (selectedDate.toUtc().millisecondsSinceEpoch / 1000).toInt() : 0,
                           personNameTextEditingController.text.isEmpty ? null : personNameTextEditingController.text,
                           personSurnameTextEditingController.text.isEmpty ? null : personSurnameTextEditingController.text,
                           personEmailTextEditingController.text.isEmpty ? null : personEmailTextEditingController.text

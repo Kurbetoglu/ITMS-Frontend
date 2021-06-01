@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:asset_yonet/models/AdminLoginResponse.dart';
 import 'package:asset_yonet/models/BaseResponse.dart';
+import 'package:asset_yonet/models/GetAllAssetsResponse.dart';
 import 'package:asset_yonet/models/GetAllDebitsResponse.dart';
 import 'package:asset_yonet/models/GetAssetsByTypeResponse.dart';
 import 'package:http/http.dart' as http;
@@ -67,7 +68,7 @@ class NetworkFunctions {
     if (response.statusCode == 200) {
       return BaseResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception("Failed to add user.");
+      throw Exception("Failed to adding user.");
     }
   }
 
@@ -98,7 +99,7 @@ class NetworkFunctions {
     if (response.statusCode == 200) {
       return BaseResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception("Failed to add asset.");
+      throw Exception("Failed to adding asset.");
     }
   }
 
@@ -117,7 +118,7 @@ class NetworkFunctions {
     if (response.statusCode == 200) {
       return GetAssetsByTypeResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception("Failed to add asset.");
+      throw Exception("Failed to fetching assets.");
     }
   }
 
@@ -139,7 +140,25 @@ class NetworkFunctions {
     if (response.statusCode == 200) {
       return BaseResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception("Failed to add asset.");
+      throw Exception("Failed to adding debit.");
+    }
+  }
+
+  static Future<GetAllAssetsResponse> getAllAssets (int pageNumber, int pageSize) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/GetAllAssets"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "pageNumber": pageNumber,
+        "pageSize": pageSize,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return GetAllAssetsResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to fetching assets.");
     }
   }
 
@@ -157,7 +176,24 @@ class NetworkFunctions {
     if (response.statusCode == 200) {
       return GetAllDebitsResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception("Failed to fetch debits.");
+      throw Exception("Failed to fetching debits.");
+    }
+  }
+
+  static Future<BaseResponse> removeDebit (int debitId) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/RemoveDebit"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "debitId": debitId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to removing debit.");
     }
   }
 

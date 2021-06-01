@@ -1,4 +1,10 @@
+import 'dart:io';
+
+import 'package:asset_yonet/RemoveDebitConfirm.dart';
 import 'package:flutter/material.dart';
+
+import 'models/GetAllDebitsResponse.dart';
+import 'network/NetworkFunctions.dart';
 
 String typeValue, startDateValue, endDateValue, isDeliveredValue;
 
@@ -10,14 +16,27 @@ class RemoveDebit extends StatefulWidget {
 }
 
 class _RemoveDebitState extends State<RemoveDebit> {
+  Future<GetAllDebitsResponse> _futureGetAllDebitsResponse;
+  List<DebitRecord> debitRecords;
+
+  @override
+  void initState() {
+    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(0, 0);
+    _futureGetAllDebitsResponse.then((value) {
+      setState(() { });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () =>
-              Navigator.popUntil(context, ModalRoute.withName("/homepage")),
+          onPressed: () async {
+            Navigator.popUntil(context, ModalRoute.withName("/homepage"));
+          }
         ),
         title: Text("REMOVE DEBIT"),
         backgroundColor: Color(0xff67acb0),
@@ -30,7 +49,12 @@ class _RemoveDebitState extends State<RemoveDebit> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(color: Color(0xfff0e8ca),width: 280, height: 30,child: TextFormField()),
+                Container(
+                    color: Color(0xfff0e8ca),
+                    width: 280,
+                    height: 30,
+                    child: TextFormField()
+                ),
                 Container(
                   width: 100.0,
                   height: 30.0,
@@ -190,69 +214,107 @@ class _RemoveDebitState extends State<RemoveDebit> {
                 ),
               ],
             ),
-
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
             ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(child: CustomCard()),
-                Container(child: CustomCard()),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(child: CustomCard()),
-                Container(child: CustomCard()),
-              ],
+            Flexible(
+              child: _futureGetAllDebitsResponse == null ? Container(width: 0, height: 0,) : buildCustomCards(),
             ),
           ]),
     );
   }
+
+  FutureBuilder<GetAllDebitsResponse> buildCustomCards(){
+    return FutureBuilder<GetAllDebitsResponse>(
+      future: _futureGetAllDebitsResponse,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          print(snapshot.error);
+        }
+        return snapshot.hasData
+            ? DebitRecordList(debitRecords: snapshot.data.records)
+            : Center(child: CircularProgressIndicator());
+      },
+    );
+  }
 }
 
-class CustomCard extends StatefulWidget {
+class DebitRecordList extends StatelessWidget {
+  List<DebitRecord> debitRecords;
+
+  DebitRecordList({Key key, this.debitRecords}) : super(key: key);
+
   @override
-  CustomCardWidget createState() => CustomCardWidget();
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.all(8),
+      itemCount: debitRecords.length,
+      itemBuilder: (BuildContext context, int index) {
+        return CustomCardWithDelete(debitRecords[index]);
+      },
+      separatorBuilder: (BuildContext context, int index) => const Divider(),
+    );
+  }
 }
 
-class CustomCardWidget extends State {
+class CustomCardWithDelete extends StatefulWidget {
+  DebitRecord debitRecord;
+  CustomCardWithDelete(DebitRecord debitRecord){
+    this.debitRecord = debitRecord;
+  }
+  @override
+  CustomCardWithDeleteWidget createState() => CustomCardWithDeleteWidget(debitRecord);
+}
+
+class CustomCardWithDeleteWidget extends State {
+  DebitRecord debitRecord;
+  CustomCardWithDeleteWidget(DebitRecord debitRecord){
+    this.debitRecord = debitRecord;
+  }
+
+  updateWidget(int number){
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
+        color: Color(0xfff0e8ca),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 190.0,
-                  height: 20.0,
+                  width: 387,
+                  height: 20,
                   color: Color(0xffc53737),
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("Remove"),
-                    onPressed: () => {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RemoveDebitConfirm(debitRecord.id, updateWidget)
+                          )
+                      );
+                    },
                   ),
                 ),
               ],
             ),
             Row(
               children: [
-
                 Container(
                     width: 90,
                     height: 20,
                     color: Color(0xff4e9b2b),
                     child: Text("Assigner")),
                 Container(
-                    width: 100,
                     height: 20,
-                    color: Color(0xfff0e8ca),
-                    child: TextFormField())
+                    child: Text(debitRecord.assigner)),
               ],
             ),
 
@@ -264,10 +326,8 @@ class CustomCardWidget extends State {
                     color: Color(0xff4e9b2b),
                     child: Text("User")),
                 Container(
-                    width: 100,
                     height: 20,
-                    color: Color(0xfff0e8ca),
-                    child: TextFormField())
+                    child: Text(debitRecord.user)),
               ],
             ),
 
@@ -279,10 +339,8 @@ class CustomCardWidget extends State {
                     color: Color(0xff4e9b2b),
                     child: Text("Asset Type")),
                 Container(
-                    width: 100,
                     height: 20,
-                    color: Color(0xfff0e8ca),
-                    child: TextFormField())
+                    child: Text(debitRecord.assetType)),
               ],
             ),
 
@@ -294,10 +352,8 @@ class CustomCardWidget extends State {
                     color: Color(0xff4e9b2b),
                     child: Text("Asset Name")),
                 Container(
-                    width: 100,
                     height: 20,
-                    color: Color(0xfff0e8ca),
-                    child: TextFormField())
+                    child: Text(debitRecord.assetName)),
               ],
             ),
 
@@ -309,10 +365,8 @@ class CustomCardWidget extends State {
                     color: Color(0xff4e9b2b),
                     child: Text("Asset Desc.")),
                 Container(
-                    width: 100,
                     height: 20,
-                    color: Color(0xfff0e8ca),
-                    child: TextFormField())
+                    child: Text(debitRecord.assetDescription)),
               ],
             ),
 
@@ -324,10 +378,8 @@ class CustomCardWidget extends State {
                     color: Color(0xff4e9b2b),
                     child: Text("Start Date")),
                 Container(
-                    width: 100,
                     height: 20,
-                    color: Color(0xfff0e8ca),
-                    child: TextFormField())
+                    child: Text(debitRecord.startDate)),
               ],
             ),
 
@@ -339,10 +391,8 @@ class CustomCardWidget extends State {
                     color: Color(0xff4e9b2b),
                     child: Text("End Date")),
                 Container(
-                    width: 100,
                     height: 20,
-                    color: Color(0xfff0e8ca),
-                    child: TextFormField())
+                    child: Text(debitRecord.endDate)),
               ],
             ),
 
@@ -354,10 +404,8 @@ class CustomCardWidget extends State {
                     color: Color(0xff4e9b2b),
                     child: Text("Created Date")),
                 Container(
-                    width: 100,
                     height: 20,
-                    color: Color(0xfff0e8ca),
-                    child: TextFormField())
+                    child: Text(debitRecord.createdDate)),
               ],
             ),
 
@@ -369,10 +417,8 @@ class CustomCardWidget extends State {
                     color: Color(0xff4e9b2b),
                     child: Text("Edited Date")),
                 Container(
-                    width: 100,
                     height: 20,
-                    color: Color(0xfff0e8ca),
-                    child: TextFormField())
+                    child: Text(debitRecord.editedDate)),
               ],
             ),
 
@@ -384,10 +430,8 @@ class CustomCardWidget extends State {
                     color: Color(0xff4e9b2b),
                     child: Text("isDelivered")),
                 Container(
-                    width: 100,
                     height: 20,
-                    color: Color(0xfff0e8ca),
-                    child: TextFormField())
+                    child: Text(debitRecord.isDelivered.toString())),
               ],
             ),
 
@@ -399,14 +443,10 @@ class CustomCardWidget extends State {
                     color: Color(0xff4e9b2b),
                     child: Text("Cause")),
                 Container(
-                    width: 100,
                     height: 20,
-                    color: Color(0xfff0e8ca),
-                    child: TextFormField())
+                    child: Text(debitRecord.cause)),
               ],
             ),
-
-            //3
           ],
         ));
   }

@@ -1,13 +1,31 @@
+import 'dart:io';
+
+import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
+import 'models/BaseResponse.dart';
+
 class RemoveDebitConfirm extends StatefulWidget {
-  const RemoveDebitConfirm({Key key}) : super(key: key);
+  RemoveDebitConfirm(int debitId, ValueChanged<int> parentAction){
+    this.parentAction = parentAction;
+    this.debitId = debitId;
+  }
+
+  ValueChanged<int> parentAction;
+  int debitId;
 
   @override
-  _RemoveDebitConfirmState createState() => _RemoveDebitConfirmState();
+  _RemoveDebitConfirmState createState() => _RemoveDebitConfirmState(debitId);
 }
 
 class _RemoveDebitConfirmState extends State<RemoveDebitConfirm> {
+  _RemoveDebitConfirmState(int debitId){
+    this.debitId = debitId;
+  }
+
+  Future<BaseResponse> _futureBaseResponse;
+  int debitId;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +70,15 @@ class _RemoveDebitConfirmState extends State<RemoveDebitConfirm> {
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("YES"),
-                    onPressed: () => {},
+                    onPressed: () {
+                      _futureBaseResponse = NetworkFunctions.removeDebit(debitId);
+                      _futureBaseResponse.then((value) async {
+                        if(value.success){
+                          Navigator.popUntil(context, ModalRoute.withName("/homepage"));
+                          widget.parentAction(1);
+                        }
+                      });
+                    },
                   ),
                 ),
                 Container(
@@ -62,8 +88,7 @@ class _RemoveDebitConfirmState extends State<RemoveDebitConfirm> {
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("NO"),
-                    onPressed: () =>
-                        Navigator.popUntil(context, ModalRoute.withName("/removeDebit")),
+                    onPressed: () => Navigator.popUntil(context, ModalRoute.withName("/removeDebit")),
                   ),
                 )
               ],

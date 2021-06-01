@@ -35,6 +35,13 @@ class _AddDebitState extends State<AddDebit> {
     super.dispose();
   }
   @override
+  void initState(){
+    _futureGetAssetsByTypeResponse = NetworkFunctions.getAssetsByType(1, 1, "");
+    _futureGetAssetsByTypeResponse.then((value) {
+      setState(() { });
+    });
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -44,7 +51,6 @@ class _AddDebitState extends State<AddDebit> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              dispose();
               Navigator.popUntil(context, ModalRoute.withName("/homepage"));
             }
           ),
@@ -89,7 +95,7 @@ class _AddDebitState extends State<AddDebit> {
                       'İnsan Kaynağı',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
-                        onTap: () {
+                        onTap:  () async {
                           _futureGetAssetsByTypeResponse = NetworkFunctions.getAssetsByType(0, 0, value);
                           _futureGetAssetsByTypeResponse.then((value) {
                             setState(() { });
@@ -128,7 +134,8 @@ class _AddDebitState extends State<AddDebit> {
               padding: const EdgeInsets.only(top: 10.0),
             ),
             Flexible(
-              child: selectedId == 0 ? buildRow() : buildDetails(selectedId),
+              //child: selectedId == 0 ? buildRow() : buildDetails(selectedId),
+              child: selectedId == 0 ? buildRow() : buildRow(),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
@@ -196,7 +203,7 @@ class _AddDebitState extends State<AddDebit> {
                           selectedId,
                           typeValue,
                           nameValue,
-                          selectedDate.toUtc().millisecondsSinceEpoch,
+                          (selectedDate.toUtc().millisecondsSinceEpoch / 1000).toInt(),
                           causeTextEditingController.text
                       );
                       _futureBaseResponse.then((value) {
@@ -361,7 +368,7 @@ class _AddDebitState extends State<AddDebit> {
             if( snapshot.data.records[i].isAssigned){
               continue;
             }
-            String string = snapshot.data.records[i].name + ", " + "Id: " + snapshot.data.records[i].id.toString();
+            String string = "Id: " + snapshot.data.records[i].id.toString() + ", " + snapshot.data.records[i].name;
             list.add(string);
           }
 

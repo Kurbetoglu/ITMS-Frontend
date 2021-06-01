@@ -1,3 +1,4 @@
+import 'package:asset_yonet/SearchAssets.dart';
 import 'package:asset_yonet/Users.dart';
 import 'package:asset_yonet/AddAsset.dart';
 import 'package:asset_yonet/AddDebit.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         "/addUser": (context) => AddUser(),
         "/homepage": (context) => Homepage(),
         "/removeDebit": (context) => RemoveDebit(),
+        "/searchAssets": (context) => SearchAssets(),
         "/searchDebits": (context) => SearchDebits(),
         "/users": (context) => Users(),
       },
@@ -58,11 +60,12 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     cookieChecker().then((value) {
       if(value){
-        Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute( builder: (BuildContext context) => Homepage(),),
-              (route) => false,
-        );
+        // Navigator.pushAndRemoveUntil(
+        //       context,
+        //       MaterialPageRoute(builder: (BuildContext context) => Homepage()),
+        //       (route) => false,
+        // );
+        Navigator.pushNamed(context, "/homepage");
       }
     });
     super.initState();
