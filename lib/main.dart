@@ -11,6 +11,9 @@ import 'package:asset_yonet/SearchDebits.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'RemoveAsset.dart';
+import 'RemoveAssetConfirm.dart';
+
 void main() async{
 
   runApp(MyApp());
@@ -31,6 +34,7 @@ class MyApp extends StatelessWidget {
         "/addDebit": (context) => AddDebit(),
         "/addUser": (context) => AddUser(),
         "/homepage": (context) => Homepage(),
+        "/removeAsset": (context) => RemoveAsset(),
         "/removeDebit": (context) => RemoveDebit(),
         "/searchAssets": (context) => SearchAssets(),
         "/searchDebits": (context) => SearchDebits(),

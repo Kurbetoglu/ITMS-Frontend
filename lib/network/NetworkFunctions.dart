@@ -180,6 +180,23 @@ class NetworkFunctions {
     }
   }
 
+  static Future<BaseResponse> removeAsset (int assetId) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/RemoveAsset"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "assetId": assetId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to removing debit.");
+    }
+  }
+
   static Future<BaseResponse> removeDebit (int debitId) async {
     setCookie();
     final response = await http.post(

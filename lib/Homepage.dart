@@ -82,7 +82,7 @@ class _HomepageState extends State<Homepage> {
                     child: MaterialButton(
                       textColor: Colors.white,
                       child: Text("Remove Asset"),
-                      onPressed: () => {},
+                      onPressed: () => Navigator.pushNamed(context, "/removeAsset"),
                     ),
                   )
                 ],
