@@ -220,15 +220,48 @@ class _AddAssetState extends State<AddAsset> {
                     textColor: Colors.white,
                     child: Text("Add Asset"),
                     onPressed: () {
-                      _futureBaseResponse = NetworkFunctions.addAsset(
-                          typeValue,
-                          nameTextEditingController.text,
-                          descriptionTextEditingController.text,
-                          typeValue == "Dijital" ? (selectedDate.toUtc().millisecondsSinceEpoch ~/ 1000) : 0,
-                          personNameTextEditingController.text.isEmpty ? null : personNameTextEditingController.text,
-                          personSurnameTextEditingController.text.isEmpty ? null : personSurnameTextEditingController.text,
-                          personEmailTextEditingController.text.isEmpty ? null : personEmailTextEditingController.text
-                      );
+
+                      switch(typeValue){
+                        case "Fiziksel":{
+                          _futureBaseResponse = NetworkFunctions.addAsset(
+                            typeValue,
+                            nameTextEditingController.text,
+                            descriptionTextEditingController.text,
+                            0,
+                            null,
+                            null,
+                            null,
+                          );
+                        }
+                        break;
+
+                        case "Dijital":{
+                          _futureBaseResponse = NetworkFunctions.addAsset(
+                            typeValue,
+                            nameTextEditingController.text,
+                            descriptionTextEditingController.text,
+                            (selectedDate.toUtc().millisecondsSinceEpoch ~/ 1000),
+                            null,
+                            null,
+                            null,
+                          );
+                        }
+                        break;
+
+                        case "İnsan Kaynağı":{
+                          _futureBaseResponse = NetworkFunctions.addAsset(
+                            typeValue,
+                            nameTextEditingController.text,
+                            descriptionTextEditingController.text,
+                            0,
+                            personNameTextEditingController.text,
+                            personSurnameTextEditingController.text,
+                            personEmailTextEditingController.text,
+                          );
+                        }
+                        break;
+                      }
+
                       _futureBaseResponse.then((value) {
                         print(value.success);
                         if (value.success) {

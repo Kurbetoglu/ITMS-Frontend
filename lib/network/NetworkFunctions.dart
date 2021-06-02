@@ -80,7 +80,7 @@ class NetworkFunctions {
       int expiryDate,
       String personName,
       String personSurname,
-      String email) async {
+      String personEmail) async {
     setCookie();
     final response = await http.post(
       Uri.parse(uri + "/AddAsset"),
@@ -92,7 +92,7 @@ class NetworkFunctions {
         "expiryDate": expiryDate,
         "personName": personName,
         "personSurname": personSurname,
-        "email": email,
+        "personEmail": personEmail,
       }),
     );
 
