@@ -10,14 +10,21 @@ class RemoveUser extends StatefulWidget {
 }
 
 class _RemoveUserState extends State<RemoveUser> {
+  TextEditingController searchController = TextEditingController();
   Future<GetAllUsersResponse> _futureGetAllUsersResponse;
 
   @override
   void initState() {
-    _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(0, 0);
+    _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(null, 0, 0);
     _futureGetAllUsersResponse.then((value) {
       setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -44,7 +51,7 @@ class _RemoveUserState extends State<RemoveUser> {
                         color: Color(0xfff0e8ca),
                         width: 280,
                         height: 30,
-                        child: TextFormField()),
+                        child: TextFormField(controller: searchController,)),
                     Container(
                       width: 100.0,
                       height: 30.0,
@@ -52,7 +59,12 @@ class _RemoveUserState extends State<RemoveUser> {
                       child: MaterialButton(
                         textColor: Colors.white,
                         child: Text("Search"),
-                        onPressed: () => {},
+                        onPressed: () {
+                          _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(searchController.text, 0, 0);
+                          _futureGetAllUsersResponse.then((value) {
+                            setState(() {});
+                          });
+                        },
                       ),
                     )
                   ],

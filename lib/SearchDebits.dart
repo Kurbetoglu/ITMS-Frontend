@@ -14,20 +14,27 @@ class SearchDebits extends StatefulWidget {
 }
 
 class _SearchDebitsState extends State<SearchDebits> {
+  TextEditingController searchController = TextEditingController();
   Future<GetAllDebitsResponse> _futureGetAllDebitsResponse;
   List<DebitRecord> debitRecords;
 
   @override
   void initState() {
-    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(0, 0);
+    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0);
     _futureGetAllDebitsResponse.then((value) {
       setState(() { });
     });
     super.initState();
   }
 
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   updateWidget(int number){
-    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(0, 0);
+    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0);
     _futureGetAllDebitsResponse.then((value) {
       setState(() { });
     });
@@ -57,7 +64,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                     color: Color(0xfff0e8ca),
                     width: 280,
                     height: 30,
-                    child: TextFormField()),
+                    child: TextFormField(controller: searchController,)),
                 Container(
                   width: 100.0,
                   height: 30.0,
@@ -65,7 +72,12 @@ class _SearchDebitsState extends State<SearchDebits> {
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("Search"),
-                    onPressed: () => {},
+                    onPressed: () {
+                      _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0);
+                      _futureGetAllDebitsResponse.then((value) {
+                        setState(() { });
+                      });
+                    },
                   ),
                 )
               ],

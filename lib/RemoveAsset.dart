@@ -12,11 +12,12 @@ class RemoveAsset extends StatefulWidget {
 }
 
 class _RemoveAssetState extends State<RemoveAsset> {
+  TextEditingController searchController = TextEditingController();
   Future<GetAllAssetsResponse> _futureGetAllAssetsResponse;
 
   @override
   void initState() {
-    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(0, 0);
+    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(null, 0, 0);
     _futureGetAllAssetsResponse.then((value) {
       setState(() {});
     });
@@ -28,6 +29,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
     typeValue = null;
     addedDateValue = null;
     isAssignedValue = null;
+    searchController.dispose();
     super.dispose();
   }
 
@@ -54,7 +56,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
                     color: Color(0xfff0e8ca),
                     width: 280,
                     height: 30,
-                    child: TextFormField()),
+                    child: TextFormField(controller: searchController,)),
                 Container(
                   width: 100.0,
                   height: 30.0,
@@ -62,7 +64,12 @@ class _RemoveAssetState extends State<RemoveAsset> {
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("Search"),
-                    onPressed: () => {},
+                    onPressed: () {
+                      _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0);
+                      _futureGetAllAssetsResponse.then((value) {
+                        setState(() {});
+                      });
+                    },
                   ),
                 )
               ],

@@ -249,12 +249,13 @@ class NetworkFunctions {
     }
   }
 
-  static Future<GetAllUsersResponse> getAllUsers (int pageNumber, int pageSize) async {
+  static Future<GetAllUsersResponse> getAllUsers (String searchQuery, int pageNumber, int pageSize) async {
     setCookie();
     final response = await http.post(
       Uri.parse(uri + "/GetAllUsers"),
       headers: headers,
       body: jsonEncode(<String, dynamic>{
+        "searchQuery": searchQuery,
         "pageNumber": pageNumber,
         "pageSize": pageSize,
       }),
@@ -267,12 +268,13 @@ class NetworkFunctions {
     }
   }
 
-  static Future<GetAllAssetsResponse> getAllAssets (int pageNumber, int pageSize) async {
+  static Future<GetAllAssetsResponse> getAllAssets (String searchQuery, int pageNumber, int pageSize) async {
     setCookie();
     final response = await http.post(
       Uri.parse(uri + "/GetAllAssets"),
       headers: headers,
       body: jsonEncode(<String, dynamic>{
+        "searchQuery": searchQuery,
         "pageNumber": pageNumber,
         "pageSize": pageSize,
       }),
@@ -285,12 +287,13 @@ class NetworkFunctions {
     }
   }
 
-  static Future<GetAllDebitsResponse> getAllDebits (int pageNumber, int pageSize) async {
+  static Future<GetAllDebitsResponse> getAllDebits (String searchQuery, int pageNumber, int pageSize) async {
     setCookie();
     final response = await http.post(
       Uri.parse(uri + "/GetAllDebits"),
       headers: headers,
       body: jsonEncode(<String, dynamic>{
+        "searchQuery": searchQuery,
         "pageNumber": pageNumber,
         "pageSize": pageSize,
       }),

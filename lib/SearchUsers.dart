@@ -10,19 +10,26 @@ class SearchUsers extends StatefulWidget {
 }
 
 class _SearchUsersState extends State<SearchUsers> {
+  TextEditingController searchController = TextEditingController();
   Future<GetAllUsersResponse> _futureGetAllUsersResponse;
 
   @override
   void initState() {
-    _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(0, 0);
+    _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(null, 0, 0);
     _futureGetAllUsersResponse.then((value) {
       setState(() {});
     });
     super.initState();
   }
 
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   updateWidget(int number){
-    _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(0, 0);
+    _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(null, 0, 0);
     _futureGetAllUsersResponse.then((value) {
       setState(() {});
     });
@@ -52,7 +59,7 @@ class _SearchUsersState extends State<SearchUsers> {
                         color: Color(0xfff0e8ca),
                         width: 280,
                         height: 30,
-                        child: TextFormField()),
+                        child: TextFormField(controller: searchController,)),
                     Container(
                       width: 100.0,
                       height: 30.0,
@@ -60,7 +67,12 @@ class _SearchUsersState extends State<SearchUsers> {
                       child: MaterialButton(
                         textColor: Colors.white,
                         child: Text("Search"),
-                        onPressed: () => {},
+                        onPressed: () {
+                          _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(searchController.text, 0, 0);
+                          _futureGetAllUsersResponse.then((value) {
+                            setState(() {});
+                          });
+                        },
                       ),
                     )
                   ],

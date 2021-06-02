@@ -14,12 +14,13 @@ class RemoveDebit extends StatefulWidget {
 }
 
 class _RemoveDebitState extends State<RemoveDebit> {
+  TextEditingController searchController = TextEditingController();
   Future<GetAllDebitsResponse> _futureGetAllDebitsResponse;
   List<DebitRecord> debitRecords;
 
   @override
   void initState() {
-    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(0, 0);
+    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0);
     _futureGetAllDebitsResponse.then((value) {
       setState(() { });
     });
@@ -32,6 +33,7 @@ class _RemoveDebitState extends State<RemoveDebit> {
     startDateValue = null;
     endDateValue = null;
     isDeliveredValue = null;
+    searchController.dispose();
     super.dispose();
   }
 
@@ -60,7 +62,7 @@ class _RemoveDebitState extends State<RemoveDebit> {
                     color: Color(0xfff0e8ca),
                     width: 280,
                     height: 30,
-                    child: TextFormField()
+                    child: TextFormField(controller: searchController,)
                 ),
                 Container(
                   width: 100.0,
@@ -69,7 +71,12 @@ class _RemoveDebitState extends State<RemoveDebit> {
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("Search"),
-                    onPressed: () => {},
+                    onPressed: () {
+                      _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0);
+                      _futureGetAllDebitsResponse.then((value) {
+                        setState(() { });
+                      });
+                    },
                   ),
                 )
               ],
