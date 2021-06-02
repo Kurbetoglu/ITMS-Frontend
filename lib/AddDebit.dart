@@ -16,7 +16,7 @@ class AddDebit extends StatefulWidget {
 
 class _AddDebitState extends State<AddDebit> {
   TextEditingController userEmailTextEditingController = TextEditingController();
-  TextEditingController assetNameTextEditingController = TextEditingController();
+  TextEditingController assetIdTextEditingController = TextEditingController();
   TextEditingController causeTextEditingController = TextEditingController();
 
   Future<GetAssetsByTypeResponse> _futureGetAssetsByTypeResponse;
@@ -35,7 +35,7 @@ class _AddDebitState extends State<AddDebit> {
   @override
   void dispose() {
     userEmailTextEditingController.dispose();
-    assetNameTextEditingController.dispose();
+    assetIdTextEditingController.dispose();
     causeTextEditingController.dispose();
     typeValue = "";
     nameValue = "";
@@ -70,6 +70,7 @@ class _AddDebitState extends State<AddDebit> {
                     height: 30.0,
                     color: Color(0xfff0e8ca),
                     child: TextFormField(
+                      controller: userEmailTextEditingController,
                       decoration: InputDecoration(hintText: "User Email"),
                       keyboardType: TextInputType.emailAddress,
                     )
@@ -81,56 +82,15 @@ class _AddDebitState extends State<AddDebit> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  width: 300.0,
-                  height: 30.0,
-                  color: Color(0xfff0e8ca),
-                  child: DropdownButton<String>(
-                    value: typeValue,
-                    style: TextStyle(color: Colors.white),
-                    iconEnabledColor: Colors.black,
-                    items: <String>[
-                      'Fiziksel',
-                      'Dijital',
-                      'İnsan Kaynağı',
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        onTap:  () async {
-                          _futureGetAssetsByTypeResponse = NetworkFunctions.getAssetsByType(0, 0, value);
-                          _futureGetAssetsByTypeResponse.then((value) {
-                            setState(() { });
-                          });
-                        },
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(color: Colors.black, fontSize: 14),
-                        ),
-                      );
-                    }).toList(),
-                    hint: Text(
-                      "Type",
-                      style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    onChanged: (String value) {
-                      setState(() {
-                        typeValue = value;
-                      });
-                    },
-                  ),
-                ),
+                    width: 300.0,
+                    height: 30.0,
+                    color: Color(0xfff0e8ca),
+                    child: TextFormField(
+                      controller: assetIdTextEditingController,
+                      decoration: InputDecoration(hintText: "Asset Id"),
+                    )
+                )
               ],
-            ),
-            Padding(padding: const EdgeInsets.only(top: 10.0),),
-            Flexible(
-              child: _futureGetAssetsByTypeResponse == null ? buildRow() : futureBuilder(),
-            ),
-            Padding(padding: const EdgeInsets.only(top: 10.0),),
-            Flexible(
-              child: selectedId == 0 ? buildRow() : buildDetails(selectedId),
-              //child: selectedId == 0 ? buildRow() : buildRow(),
             ),
             Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
@@ -167,6 +127,7 @@ class _AddDebitState extends State<AddDebit> {
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
+                          controller: causeTextEditingController,
                           decoration: InputDecoration(hintText: "Cause"),
                     )))
               ],
@@ -185,15 +146,12 @@ class _AddDebitState extends State<AddDebit> {
                     onPressed: () {
                       _futureBaseResponse = NetworkFunctions.addDebit(
                           userEmailTextEditingController.text,
-                          selectedId,
-                          typeValue,
-                          nameValue,
+                          int.parse(assetIdTextEditingController.text),
                           (selectedDate.toUtc().millisecondsSinceEpoch ~/ 1000),
                           causeTextEditingController.text
                       );
                       _futureBaseResponse.then((value) {
                         if(value.success){
-                          dispose();
                           Navigator.popUntil(context, ModalRoute.withName("/homepage"));
                         }
                       });
@@ -208,7 +166,6 @@ class _AddDebitState extends State<AddDebit> {
                     textColor: Colors.white,
                     child: Text("Cancel"),
                     onPressed: () {
-                      dispose();
                       Navigator.popUntil(context, ModalRoute.withName("/homepage"));
                     }
                   ),
@@ -228,174 +185,5 @@ class _AddDebitState extends State<AddDebit> {
     if (picked != null && picked!= selectedDate) {
       setState(() => selectedDate = picked);
     }
-  }
-
-  Visibility buildRow() {
-    return Visibility(
-        visible: false,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              width: 300.0,
-              height: 30.0,
-              color: Color(0xfff0e8ca),
-            )
-          ],
-        )
-    );
-  }
-
-  Column buildDetails(int id) {
-    Record record;
-    for(int i = 0; i < _getAssetsByTypeResponse.records.length; ++i){
-      if (_getAssetsByTypeResponse.records[i].id == id){
-        record = _getAssetsByTypeResponse.records[i];
-      }
-    }
-
-    switch (typeValue){
-      case "Fiziksel": {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              width: 300.0,
-              height: 30.0,
-              color: Color(0xfff0e8ca),
-              child: Text(record.description),
-            ),
-            Container(
-              width: 300.0,
-              height: 30.0,
-              color: Color(0xfff0e8ca),
-              child: Text(record.addedDate),
-            ),
-          ],
-        );
-      }
-      break;
-      case "Dijital": {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              width: 300.0,
-              height: 30.0,
-              color: Color(0xfff0e8ca),
-              child: Text(record.description),
-            ),
-            Container(
-              width: 300.0,
-              height: 30.0,
-              color: Color(0xfff0e8ca),
-              child: Text(record.addedDate),
-            ),
-            Container(
-              width: 300.0,
-              height: 30.0,
-              color: Color(0xfff0e8ca),
-              child: Text(record.expiryDate),
-            ),
-          ],
-        );
-      }
-      break;
-      case "İnsan Kaynağı": {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              width: 300.0,
-              height: 30.0,
-              color: Color(0xfff0e8ca),
-              child: Text(record.description),
-            ),
-            Container(
-              width: 300.0,
-              height: 30.0,
-              color: Color(0xfff0e8ca),
-              child: Text(record.addedDate),
-            ),
-            Container(
-              width: 300.0,
-              height: 30.0,
-              color: Color(0xfff0e8ca),
-              child: Text(record.personName),
-            ),
-            Container(
-              width: 300.0,
-              height: 30.0,
-              color: Color(0xfff0e8ca),
-              child: Text(record.personSurname),
-            ),
-            Container(
-              width: 300.0,
-              height: 30.0,
-              color: Color(0xfff0e8ca),
-              child: Text(record.personEmail),
-            ),
-          ],
-        );
-      }
-      break;
-    }
-  }
-
-  FutureBuilder<GetAssetsByTypeResponse> futureBuilder() {
-    return FutureBuilder<GetAssetsByTypeResponse>(
-      future: _futureGetAssetsByTypeResponse,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          _getAssetsByTypeResponse = snapshot.data;
-          List<String> list = new List<String>();
-          for(int i = 0; i < snapshot.data.records.length; i++){
-            if( snapshot.data.records[i].isAssigned){
-              continue;
-            }
-            String string = "Id: " + snapshot.data.records[i].id.toString() + ", " + snapshot.data.records[i].name;
-            list.add(string);
-          }
-
-          return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                    width: 300.0,
-                    height: 30.0,
-                    color: Color(0xfff0e8ca),
-                    child:  DropdownButton(
-                      value: nameValue,
-                      isDense: true,
-                      items: list.map((String value) {
-                        return DropdownMenuItem(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      hint: Text(
-                        "Name",
-                        style: TextStyle(
-                            color: Colors.grey[700],
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      onChanged: (String value) {
-                        setState(() {
-                          var splittedName = value.split(', ');
-                          nameValue = splittedName[1];
-                          selectedId = int.parse(splittedName.skip(4).toString());
-                        });
-                      },
-                    )
-                ),
-              ]
-          );
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
-        return CircularProgressIndicator();
-      },
-    );
   }
 }

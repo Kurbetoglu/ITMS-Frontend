@@ -103,7 +103,7 @@ class NetworkFunctions {
     }
   }
 
-  static Future<BaseResponse> addDebit(String userEmail, int assetId, String type, String name, int endDate, String cause,) async {
+  static Future<BaseResponse> addDebit(String userEmail, int assetId, int endDate, String cause) async {
     setCookie();
     final response = await http.post(
       Uri.parse(uri + "/AddDebit"),
@@ -111,8 +111,6 @@ class NetworkFunctions {
       body: jsonEncode(<String, dynamic>{
         "userEmail": userEmail,
         "assetId": assetId,
-        "type": type,
-        "name": name,
         "endDate": endDate,
         "cause": cause,
       }),

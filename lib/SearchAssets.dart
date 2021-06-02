@@ -237,6 +237,9 @@ class CustomDataRowWidget extends State<CustomDataRow> {
         ),
         columns: [
           DataColumn(
+            label: Text('Id'),
+          ),
+          DataColumn(
             label: Text('Type'),
           ),
           DataColumn(
@@ -255,6 +258,10 @@ class CustomDataRowWidget extends State<CustomDataRow> {
         rows: widget.assetRecords
             .map((assetRecord) => DataRow(
             cells: [
+                  DataCell(
+                      Text(assetRecord.id.toString()),
+                      onTap: () => navigateToUpdateAssetPage(assetRecord)
+                  ),
                   DataCell(
                       Text(assetRecord.type),
                       onTap: () => navigateToUpdateAssetPage(assetRecord)
