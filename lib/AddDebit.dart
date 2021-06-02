@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'models/BaseResponse.dart';
 
 String typeValue, nameValue;
-DateTime selectedDate = DateTime.now();
 int selectedId = 0;
+
 class AddDebit extends StatefulWidget {
   const AddDebit({Key key}) : super(key: key);
 
@@ -19,6 +19,7 @@ class AddDebit extends StatefulWidget {
 }
 
 class _AddDebitState extends State<AddDebit> {
+  DateTime selectedDate = DateTime.now();
   final userEmailTextEditingController = TextEditingController();
   final assetNameTextEditingController = TextEditingController();
   final causeTextEditingController = TextEditingController();

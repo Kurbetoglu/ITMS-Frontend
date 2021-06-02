@@ -4,10 +4,6 @@ import 'package:flutter/material.dart';
 import 'models/BaseResponse.dart';
 import 'models/GetAllAssetsResponse.dart';
 
-DateTime selectedDate;
-String typeValue, radioButtonItem;
-int radioButtonId;
-
 class UpdateAsset extends StatefulWidget {
   UpdateAsset(this.assetRecord, this.parentAction);
   AssetRecord assetRecord;
@@ -22,18 +18,24 @@ class _UpdateAssetState extends State<UpdateAsset> {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController personNameController = TextEditingController();
-  TextEditingController _personSurnameController = TextEditingController();
+  TextEditingController personSurnameController = TextEditingController();
   TextEditingController personEmailController = TextEditingController();
-
+  bool _isAssigned;
+  DateTime selectedDate = DateTime.now();
+  String typeValue;
   @override
   void initState(){
     typeValue = widget.assetRecord.type;
-    selectedDate = DateTime.now();
+    //selectedDate = DateTime.now();
+    _isAssigned = widget.assetRecord.isAssigned;
     nameController.text = widget.assetRecord.name;
     descriptionController.text = widget.assetRecord.description;
     personNameController.text = typeValue == "İnsan Kaynağı" ? widget.assetRecord.personName : null;
-    _personSurnameController.text = typeValue == "İnsan Kaynağı" ? widget.assetRecord.personSurname : null;
+    personSurnameController.text = typeValue == "İnsan Kaynağı" ? widget.assetRecord.personSurname : null;
     personEmailController.text = typeValue == "İnsan Kaynağı" ? widget.assetRecord.personEmail : null;
+    setState(() {
+
+    });
   }
 
   @override
@@ -43,7 +45,7 @@ class _UpdateAssetState extends State<UpdateAsset> {
     nameController.dispose();
     descriptionController.dispose();
     personNameController.dispose();
-    _personSurnameController.dispose();
+    personSurnameController.dispose();
     personEmailController.dispose();
     super.dispose();
   }
@@ -153,7 +155,34 @@ class _UpdateAssetState extends State<UpdateAsset> {
                   width: 300.0,
                   height: 50.0,
                   color: Color(0xfff0e8ca),
-                  child: RadioGroup(widget.assetRecord.isAssigned),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Is Assigned?'),
+                      LabeledRadio(
+                        label: 'YES',
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        value: true,
+                        groupValue: _isAssigned,
+                        onChanged: (bool newValue) {
+                          setState(() {
+                            _isAssigned = newValue;
+                          });
+                        },
+                      ),
+                      LabeledRadio(
+                        label: 'NO',
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        value: false,
+                        groupValue: _isAssigned,
+                        onChanged: (bool newValue) {
+                          setState(() {
+                            _isAssigned = newValue;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -211,7 +240,7 @@ class _UpdateAssetState extends State<UpdateAsset> {
                     height: 30.0,
                     color: Color(0xfff0e8ca),
                     child:TextField(
-                      controller: _personSurnameController,
+                      controller: personSurnameController,
                     ),
                   ),
                 ],
@@ -246,19 +275,14 @@ class _UpdateAssetState extends State<UpdateAsset> {
                     textColor: Colors.white,
                     child: Text("Save Changes", style: TextStyle(fontSize: 13),),
                     onPressed: () {
-                      bool _isAssigned;
-                      if(radioButtonId == 1){
-                        _isAssigned = true;
-                      } else {
-                        _isAssigned = false;
-                      }
-
                       bool expiryDateHasChanged = false;
-                      if(selectedDate.year != DateTime.now().year &&
-                          selectedDate.month != DateTime.now().month &&
+                      if(selectedDate.year != DateTime.now().year ||
+                          selectedDate.month != DateTime.now().month ||
                           selectedDate.day != DateTime.now().day){
                         expiryDateHasChanged = true;
                       }
+
+                      print(expiryDateHasChanged);
 
                       switch (typeValue) {
                         case "Fiziksel": {
@@ -299,7 +323,7 @@ class _UpdateAssetState extends State<UpdateAsset> {
                               descriptionController.text,
                               0,
                               personNameController.text,
-                              _personSurnameController.text,
+                              personSurnameController.text,
                               personEmailController.text,
                               _isAssigned
                           );
@@ -344,52 +368,46 @@ class _UpdateAssetState extends State<UpdateAsset> {
   }
 }
 
-class RadioGroup extends StatefulWidget {
-  RadioGroup(this.isAssigned);
-  bool isAssigned;
+class LabeledRadio extends StatelessWidget {
+  const LabeledRadio({
+    Key key,
+    this.label,
+    this.padding,
+    this.groupValue,
+    this.value,
+    this.onChanged,
+  }) : super(key: key);
+
+  final String label;
+  final EdgeInsets padding;
+  final bool groupValue;
+  final bool value;
+  final Function onChanged;
+
   @override
-  RadioGroupWidget createState() => RadioGroupWidget();
-}
-
-class RadioGroupWidget extends State<RadioGroup> {
   Widget build(BuildContext context) {
-    radioButtonItem = widget.isAssigned ? 'YES' : 'NO';
-    radioButtonId = widget.isAssigned ? 1 : 0;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        Text(
-          'Is Assigned?',
-          style: TextStyle(fontSize: 16),
+    return InkWell(
+      onTap: () {
+        if (value != groupValue) {
+          onChanged(value);
+        }
+      },
+      child: Padding(
+        padding: padding,
+        child: Row(
+          children: <Widget>[
+            Radio<bool>(
+              groupValue: groupValue,
+              value: value,
+              onChanged: (bool newValue) {
+                onChanged(newValue);
+              },
+            ),
+            Text(label),
+          ],
         ),
-        Radio(
-          value: 1,
-          groupValue: radioButtonId,
-          onChanged: (dynamic val) {
-            setState(() {
-              radioButtonItem = 'YES';
-              radioButtonId = 1;
-            });
-          },
-        ),
-        Text(
-          'YES',
-        ),
-
-        Radio(
-          value: 0,
-          groupValue: radioButtonId,
-          onChanged: (dynamic val) {
-            setState(() {
-              radioButtonItem = 'NO';
-              radioButtonId = 0;
-            });
-          },
-        ),
-        Text(
-          'NO',
-        ),
-      ],
+      ),
     );
   }
 }
+

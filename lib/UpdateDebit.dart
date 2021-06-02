@@ -4,20 +4,31 @@ import 'package:flutter/material.dart';
 
 import 'models/BaseResponse.dart';
 
-DateTime selectedDate = DateTime.now();
-String radioButtonItem;
-int radioButtonId;
-
 class UpdateDebit extends StatefulWidget {
-  UpdateDebit(this.debitRecord);
+  UpdateDebit(this.debitRecord, this.parentAction);
   DebitRecord debitRecord;
+  ValueChanged<int> parentAction;
 
   @override
   _UpdateDebitState createState() => _UpdateDebitState();
 }
 
 class _UpdateDebitState extends State<UpdateDebit> {
+  DateTime selectedDate = DateTime.now();
   Future<BaseResponse> _futureBaseResponse;
+  bool _isDelivered;
+
+  @override
+  void initState(){
+    _isDelivered = widget.debitRecord.isDelivered;
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    selectedDate = null;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +57,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ), //1
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -60,9 +69,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ), //2
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -74,9 +81,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -88,9 +93,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -102,9 +105,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -116,10 +117,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -131,10 +129,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -157,10 +152,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -168,15 +160,38 @@ class _UpdateDebitState extends State<UpdateDebit> {
                   width: 300.0,
                   height: 50.0,
                   color: Color(0xfff0e8ca),
-                  child: RadioGroup(widget.debitRecord.isDelivered),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Is Assigned?'),
+                      LabeledRadio(
+                        label: 'YES',
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        value: true,
+                        groupValue: _isDelivered,
+                        onChanged: (bool newValue) {
+                          setState(() {
+                            _isDelivered = newValue;
+                          });
+                        },
+                      ),
+                      LabeledRadio(
+                        label: 'NO',
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        value: false,
+                        groupValue: _isDelivered,
+                        onChanged: (bool newValue) {
+                          setState(() {
+                            _isDelivered = newValue;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -188,30 +203,26 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     textColor: Colors.white,
                     child: Text("Save Changes", style: TextStyle(fontSize: 13),),
                     onPressed: () {
-                      bool _isDelivered;
-                      if(radioButtonId == 1){
-                        _isDelivered = true;
-                      } else {
-                        _isDelivered = false;
+                      bool expiryDateHasChanged = false;
+                      if(selectedDate.year != DateTime.now().year ||
+                          selectedDate.month != DateTime.now().month ||
+                          selectedDate.day != DateTime.now().day){
+                        expiryDateHasChanged = true;
                       }
+                      print("expiryDateHasChanged: " + expiryDateHasChanged.toString());
+                      _futureBaseResponse = NetworkFunctions.updateDebit(
+                          widget.debitRecord.id,
+                          widget.debitRecord.assetId,
+                          expiryDateHasChanged ? (selectedDate.toUtc().millisecondsSinceEpoch ~/ 1000) : 0,
+                          _isDelivered,
+                      );
 
-                      if(_isDelivered != widget.debitRecord.isDelivered ||
-                          (selectedDate.day != DateTime.now().day &&
-                              selectedDate.month != DateTime.now().month &&
-                              selectedDate.year != DateTime.now().year)){
-                        _futureBaseResponse = NetworkFunctions.updateDebit(
-                            widget.debitRecord.id,
-                            widget.debitRecord.assetId,
-                            _isDelivered ? 0 : (selectedDate.toUtc().millisecondsSinceEpoch~/1000),
-                            _isDelivered,
-                        );
-
-                        _futureBaseResponse.then((value) {
-                          if(value.success){
-                            Navigator.pop(context);
-                          }
-                        });
-                      }
+                      _futureBaseResponse.then((value) {
+                        if(value.success){
+                          widget.parentAction(1);
+                          Navigator.pop(context);
+                        }
+                      });
                     },
                   ),
                 ),
@@ -227,9 +238,9 @@ class _UpdateDebitState extends State<UpdateDebit> {
                 )
               ],
             ),
-            //3
           ],
-        ));
+        )
+    );
   }
   Future selectDate(BuildContext context) async {
     DateTime picked = await showDatePicker(
@@ -243,53 +254,45 @@ class _UpdateDebitState extends State<UpdateDebit> {
   }
 }
 
-class RadioGroup extends StatefulWidget {
-  RadioGroup(this.isDelivered);
-  bool isDelivered;
+class LabeledRadio extends StatelessWidget {
+  const LabeledRadio({
+    Key key,
+    this.label,
+    this.padding,
+    this.groupValue,
+    this.value,
+    this.onChanged,
+  }) : super(key: key);
+
+  final String label;
+  final EdgeInsets padding;
+  final bool groupValue;
+  final bool value;
+  final Function onChanged;
 
   @override
-  RadioGroupWidget createState() => RadioGroupWidget();
-}
-
-class RadioGroupWidget extends State<RadioGroup> {
-    Widget build(BuildContext context) {
-    radioButtonItem = widget.isDelivered ? 'YES' : 'NO';
-    radioButtonId = widget.isDelivered ? 1 : 0;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        Text(
-          'Is Delivered?',
-          style: TextStyle(fontSize: 16),
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        if (value != groupValue) {
+          onChanged(value);
+        }
+      },
+      child: Padding(
+        padding: padding,
+        child: Row(
+          children: <Widget>[
+            Radio<bool>(
+              groupValue: groupValue,
+              value: value,
+              onChanged: (bool newValue) {
+                onChanged(newValue);
+              },
+            ),
+            Text(label),
+          ],
         ),
-        Radio(
-          value: 1,
-          groupValue: radioButtonId,
-          onChanged: (dynamic val) {
-            setState(() {
-              radioButtonItem = 'YES';
-              radioButtonId = 1;
-            });
-          },
-        ),
-        Text(
-          'YES',
-        ),
-
-        Radio(
-          value: 0,
-          groupValue: radioButtonId,
-          onChanged: (dynamic val) {
-            setState(() {
-              radioButtonItem = 'NO';
-              radioButtonId = 0;
-            });
-          },
-        ),
-        Text(
-          'NO',
-        ),
-      ],
+      ),
     );
   }
 }

@@ -7,7 +7,7 @@ import 'UpdateDebit.dart';
 String typeValue, startDateValue, endDateValue, isDeliveredValue;
 
 class SearchDebits extends StatefulWidget {
-  const SearchDebits({Key key}) : super(key: key);
+  SearchDebits({Key key}) : super(key: key);
 
   @override
   _SearchDebitsState createState() => _SearchDebitsState();
@@ -24,6 +24,13 @@ class _SearchDebitsState extends State<SearchDebits> {
       setState(() { });
     });
     super.initState();
+  }
+
+  updateWidget(int number){
+    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(0, 0);
+    _futureGetAllDebitsResponse.then((value) {
+      setState(() { });
+    });
   }
 
   @override
@@ -227,7 +234,7 @@ class _SearchDebitsState extends State<SearchDebits> {
           print(snapshot.error);
         }
         return snapshot.hasData
-            ? DebitRecordList(debitRecords: snapshot.data.records)
+            ? DebitRecordList(snapshot.data.records, updateWidget)
             : Center(child: CircularProgressIndicator());
       },
     );
@@ -235,17 +242,16 @@ class _SearchDebitsState extends State<SearchDebits> {
 }
 
 class DebitRecordList extends StatelessWidget {
+  DebitRecordList(this.debitRecords, this.parentAction);
   List<DebitRecord> debitRecords;
-
-  DebitRecordList({Key key, this.debitRecords}) : super(key: key);
-
+  ValueChanged<int> parentAction;
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       padding: const EdgeInsets.all(8),
       itemCount: debitRecords.length,
       itemBuilder: (BuildContext context, int index) {
-        return CustomCard(debitRecords[index]);
+        return CustomCard(debitRecords[index], parentAction);
       },
       separatorBuilder: (BuildContext context, int index) => const Divider(),
     );
@@ -253,20 +259,15 @@ class DebitRecordList extends StatelessWidget {
 }
 
 class CustomCard extends StatefulWidget {
+  CustomCard(this.debitRecord, this.parentAction);
   DebitRecord debitRecord;
-  CustomCard(DebitRecord debitRecord){
-    this.debitRecord = debitRecord;
-  }
+  ValueChanged<int> parentAction;
+
   @override
-  CustomCardWidget createState() => CustomCardWidget(debitRecord);
+  CustomCardWidget createState() => CustomCardWidget();
 }
 
-class CustomCardWidget extends State {
-  DebitRecord debitRecord;
-  CustomCardWidget(DebitRecord debitRecord){
-    this.debitRecord = debitRecord;
-  }
-
+class CustomCardWidget extends State<CustomCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -274,7 +275,7 @@ class CustomCardWidget extends State {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => UpdateDebit(debitRecord)
+                builder: (context) => UpdateDebit(widget.debitRecord, widget.parentAction)
             )
         );
       } ,
@@ -292,7 +293,7 @@ class CustomCardWidget extends State {
                       child: Text("Assigner")),
                   Container(
                       height: 20,
-                      child: Text(debitRecord.assigner)),
+                      child: Text(widget.debitRecord.assigner)),
                 ],
               ),
 
@@ -305,7 +306,7 @@ class CustomCardWidget extends State {
                       child: Text("User")),
                   Container(
                       height: 20,
-                      child: Text(debitRecord.user)),
+                      child: Text(widget.debitRecord.user)),
                 ],
               ),
 
@@ -318,7 +319,7 @@ class CustomCardWidget extends State {
                       child: Text("Asset Type")),
                   Container(
                       height: 20,
-                      child: Text(debitRecord.assetType)),
+                      child: Text(widget.debitRecord.assetType)),
                 ],
               ),
 
@@ -331,7 +332,7 @@ class CustomCardWidget extends State {
                       child: Text("Asset Name")),
                   Container(
                       height: 20,
-                      child: Text(debitRecord.assetName)),
+                      child: Text(widget.debitRecord.assetName)),
                 ],
               ),
 
@@ -344,7 +345,7 @@ class CustomCardWidget extends State {
                       child: Text("Asset Desc.")),
                   Container(
                       height: 20,
-                      child: Text(debitRecord.assetDescription)),
+                      child: Text(widget.debitRecord.assetDescription)),
                 ],
               ),
 
@@ -357,7 +358,7 @@ class CustomCardWidget extends State {
                       child: Text("Start Date")),
                   Container(
                       height: 20,
-                      child: Text(debitRecord.startDate)),
+                      child: Text(widget.debitRecord.startDate)),
                 ],
               ),
 
@@ -370,7 +371,7 @@ class CustomCardWidget extends State {
                       child: Text("End Date")),
                   Container(
                       height: 20,
-                      child: Text(debitRecord.endDate)),
+                      child: Text(widget.debitRecord.endDate)),
                 ],
               ),
 
@@ -383,7 +384,7 @@ class CustomCardWidget extends State {
                       child: Text("Created Date")),
                   Container(
                       height: 20,
-                      child: Text(debitRecord.createdDate)),
+                      child: Text(widget.debitRecord.createdDate)),
                 ],
               ),
 
@@ -396,7 +397,7 @@ class CustomCardWidget extends State {
                       child: Text("Edited Date")),
                   Container(
                       height: 20,
-                      child: Text(debitRecord.editedDate)),
+                      child: Text(widget.debitRecord.editedDate)),
                 ],
               ),
 
@@ -409,7 +410,7 @@ class CustomCardWidget extends State {
                       child: Text("isDelivered")),
                   Container(
                       height: 20,
-                      child: Text(debitRecord.isDelivered.toString())),
+                      child: Text(widget.debitRecord.isDelivered.toString())),
                 ],
               ),
 
@@ -422,7 +423,7 @@ class CustomCardWidget extends State {
                       child: Text("Cause")),
                   Container(
                       height: 20,
-                      child: Text(debitRecord.cause)),
+                      child: Text(widget.debitRecord.cause)),
                 ],
               ),
             ],
