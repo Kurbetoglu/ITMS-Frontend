@@ -1,19 +1,20 @@
-import 'package:asset_yonet/SearchAssets.dart';
-import 'package:asset_yonet/SearchUsers.dart';
-import 'package:asset_yonet/Users.dart';
-import 'package:asset_yonet/AddAsset.dart';
-import 'package:asset_yonet/AddDebit.dart';
-import 'package:asset_yonet/AddUser.dart';
-import 'package:asset_yonet/Homepage.dart';
-import 'package:asset_yonet/models/AdminLoginResponse.dart';
-import 'package:asset_yonet/network/NetworkFunctions.dart';
-import 'package:asset_yonet/RemoveDebit.dart';
-import 'package:asset_yonet/SearchDebits.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'AddAsset.dart';
+import 'AddDebit.dart';
+import 'AddUser.dart';
+import 'Homepage.dart';
 import 'RemoveAsset.dart';
-import 'RemoveAssetConfirm.dart';
+import 'RemoveDebit.dart';
+import 'RemoveUser.dart';
+import 'SearchAssets.dart';
+import 'SearchDebits.dart';
+import 'SearchUsers.dart';
+import 'Users.dart';
+import 'models/AdminLoginResponse.dart';
+import 'network/NetworkFunctions.dart';
+
 
 void main() async{
 
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         "/homepage": (context) => Homepage(),
         "/removeAsset": (context) => RemoveAsset(),
         "/removeDebit": (context) => RemoveDebit(),
+        "/removeUser": (context) => RemoveUser(),
         "/searchAssets": (context) => SearchAssets(),
         "/searchDebits": (context) => SearchDebits(),
         "/searchUsers": (context) => SearchUsers(),

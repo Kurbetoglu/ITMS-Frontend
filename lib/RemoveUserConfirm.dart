@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
 
-class RemoveUserConfirm extends StatefulWidget {
-  const RemoveUserConfirm({Key key}) : super(key: key);
+import 'models/BaseResponse.dart';
+import 'network/NetworkFunctions.dart';
 
+class RemoveUserConfirm extends StatefulWidget {
+  RemoveUserConfirm(int userId){
+    this.userId = userId;
+  }
+  int userId;
   @override
-  _RemoveUserConfirmState createState() => _RemoveUserConfirmState();
+  _RemoveUserConfirmState createState() => _RemoveUserConfirmState(userId);
 }
 
 class _RemoveUserConfirmState extends State<RemoveUserConfirm> {
+  _RemoveUserConfirmState(int userId){
+    this.userId = userId;
+  }
+
+  Future<BaseResponse> _futureBaseResponse;
+  int userId;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () =>
-                Navigator.popUntil(context, ModalRoute.withName("/removeDebit")),
+            onPressed: () => Navigator.pop(context),
           ),
           title: Text("CONFIRMATION"),
           backgroundColor: Color(0xff67acb0),
@@ -52,7 +63,14 @@ class _RemoveUserConfirmState extends State<RemoveUserConfirm> {
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("YES"),
-                    onPressed: () => {},
+                    onPressed: () {
+                      _futureBaseResponse = NetworkFunctions.removeUser(userId);
+                      _futureBaseResponse.then((value) async {
+                        if(value.success){
+                          Navigator.pop(context);
+                        }
+                      });
+                    },
                   ),
                 ),
                 Container(
@@ -62,7 +80,7 @@ class _RemoveUserConfirmState extends State<RemoveUserConfirm> {
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("NO"),
-                    onPressed: () => {},
+                    onPressed: () => Navigator.pop(context),
                   ),
                 )
               ],
@@ -70,7 +88,5 @@ class _RemoveUserConfirmState extends State<RemoveUserConfirm> {
           ],
         )
     );
-
   }
 }
-

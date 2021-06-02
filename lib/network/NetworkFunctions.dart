@@ -233,6 +233,23 @@ class NetworkFunctions {
     }
   }
 
+  static Future<BaseResponse> removeUser (int userId) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/RemoveUser"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "userId": userId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to removing user.");
+    }
+  }
+
   void updateCookie(http.Response response) {
     String rawCookie = response.headers["set-cookie"];
     if (rawCookie != null) {

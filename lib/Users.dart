@@ -33,7 +33,7 @@ class _UsersState extends State<Users> {
                     color: Color(0xffe48e55),
                     child: MaterialButton(
                       textColor: Colors.white,
-                      child: Text("Search User"),
+                      child: Text("Search Users"),
                       onPressed: () => Navigator.pushNamed(context, "/searchUsers"),
                     )
                 )
@@ -70,7 +70,7 @@ class _UsersState extends State<Users> {
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("Remove User"),
-                    onPressed: () => {},
+                    onPressed: () => Navigator.pushNamed(context, "/removeUser"),
                   ),
                 )
               ],
