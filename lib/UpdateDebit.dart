@@ -9,23 +9,15 @@ String radioButtonItem;
 int radioButtonId;
 
 class UpdateDebit extends StatefulWidget {
-  UpdateDebit(DebitRecord debitRecord){
-    this.debitRecord = debitRecord;
-  }
-
+  UpdateDebit(this.debitRecord);
   DebitRecord debitRecord;
 
   @override
-  _UpdateDebitState createState() => _UpdateDebitState(debitRecord);
+  _UpdateDebitState createState() => _UpdateDebitState();
 }
 
 class _UpdateDebitState extends State<UpdateDebit> {
-  _UpdateDebitState(DebitRecord debitRecord){
-    this.debitRecord = debitRecord;
-  }
-
   Future<BaseResponse> _futureBaseResponse;
-  DebitRecord debitRecord;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +42,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(debitRecord.assigner),
+                    child: Text(widget.debitRecord.assigner),
                 )
               ],
             ),
@@ -64,7 +56,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(debitRecord.user),
+                    child: Text(widget.debitRecord.user),
                 )
               ],
             ),
@@ -78,7 +70,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(debitRecord.assetType),
+                    child: Text(widget.debitRecord.assetType),
                 )
               ],
             ),
@@ -92,7 +84,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(debitRecord.assetName),
+                    child: Text(widget.debitRecord.assetName),
                 )
               ],
             ),
@@ -106,7 +98,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(debitRecord.assetDescription),
+                    child: Text(widget.debitRecord.assetDescription),
                 )
               ],
             ),
@@ -120,7 +112,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(debitRecord.cause),
+                    child: Text(widget.debitRecord.cause),
                 )
               ],
             ),
@@ -135,7 +127,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(debitRecord.startDate),
+                    child: Text(widget.debitRecord.startDate),
                 )
               ],
             ),
@@ -158,7 +150,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                         selectDate(context);
                       },
                       child: Text(
-                        selectedDate.day == DateTime.now().day ? "End Date: " + debitRecord.endDate : "End Date: " + selectedDate.toString(),
+                        selectedDate.day == DateTime.now().day ? "End Date: " + widget.debitRecord.endDate : "End Date: " + selectedDate.toString(),
                         style: TextStyle(color: Color(0xff707070),),
                       ),
                     ),
@@ -176,7 +168,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                   width: 300.0,
                   height: 50.0,
                   color: Color(0xfff0e8ca),
-                  child: RadioGroup(debitRecord.isDelivered),
+                  child: RadioGroup(widget.debitRecord.isDelivered),
                 ),
               ],
             ),
@@ -194,7 +186,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                   color: Color(0xff4e9b2b),
                   child: MaterialButton(
                     textColor: Colors.white,
-                    child: Text("Save Changes"),
+                    child: Text("Save Changes", style: TextStyle(fontSize: 13),),
                     onPressed: () {
                       bool _isDelivered;
                       if(radioButtonId == 1){
@@ -203,14 +195,14 @@ class _UpdateDebitState extends State<UpdateDebit> {
                         _isDelivered = false;
                       }
 
-                      if(_isDelivered != debitRecord.isDelivered ||
+                      if(_isDelivered != widget.debitRecord.isDelivered ||
                           (selectedDate.day != DateTime.now().day &&
                               selectedDate.month != DateTime.now().month &&
                               selectedDate.year != DateTime.now().year)){
                         _futureBaseResponse = NetworkFunctions.updateDebit(
-                            debitRecord.id,
-                            debitRecord.assetId,
-                            _isDelivered ? 0 : (selectedDate.toUtc().millisecondsSinceEpoch/1000).toInt(),
+                            widget.debitRecord.id,
+                            widget.debitRecord.assetId,
+                            _isDelivered ? 0 : (selectedDate.toUtc().millisecondsSinceEpoch~/1000),
                             _isDelivered,
                         );
 
@@ -252,24 +244,17 @@ class _UpdateDebitState extends State<UpdateDebit> {
 }
 
 class RadioGroup extends StatefulWidget {
-  RadioGroup(bool isDelivered){
-    this.isDelivered = isDelivered;
-  }
+  RadioGroup(this.isDelivered);
   bool isDelivered;
+
   @override
-  RadioGroupWidget createState() => RadioGroupWidget(isDelivered);
+  RadioGroupWidget createState() => RadioGroupWidget();
 }
 
-class RadioGroupWidget extends State {
-  RadioGroupWidget(bool isDelivered){
-    this.isDelivered = isDelivered;
-  }
-
-  bool isDelivered;
-
-  Widget build(BuildContext context) {
-    radioButtonItem = isDelivered ? 'YES' : 'NO';
-    radioButtonId = isDelivered ? 1 : 0;
+class RadioGroupWidget extends State<RadioGroup> {
+    Widget build(BuildContext context) {
+    radioButtonItem = widget.isDelivered ? 'YES' : 'NO';
+    radioButtonId = widget.isDelivered ? 1 : 0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[

@@ -204,7 +204,7 @@ class _AddDebitState extends State<AddDebit> {
                           selectedId,
                           typeValue,
                           nameValue,
-                          (selectedDate.toUtc().millisecondsSinceEpoch / 1000).toInt(),
+                          (selectedDate.toUtc().millisecondsSinceEpoch ~/ 1000),
                           causeTextEditingController.text
                       );
                       _futureBaseResponse.then((value) {

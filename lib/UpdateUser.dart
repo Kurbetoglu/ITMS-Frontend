@@ -118,7 +118,7 @@ class _UpdateUserState extends State<UpdateUser> {
                   color: Color(0xff4e9b2b),
                   child: MaterialButton(
                     textColor: Colors.white,
-                    child: Text("Save Changes"),
+                    child: Text("Save Changes", style: TextStyle(fontSize: 13),),
                     onPressed: () {
                       _futureBaseResponse = NetworkFunctions.updateUser(
                           widget.userRecord.id,

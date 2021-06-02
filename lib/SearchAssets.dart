@@ -4,6 +4,7 @@ import 'package:asset_yonet/models/BaseResponse.dart';
 import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
+import 'UpdateAsset.dart';
 import 'models/GetAllAssetsResponse.dart';
 
 String typeValue, addedDateValue, isAssignedValue;
@@ -19,7 +20,13 @@ class _SearchAssetsState extends State<SearchAssets> {
   @override
   void initState() {
     _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(0, 0);
-    sleep(Duration(seconds: 1));
+    _futureGetAllAssetsResponse.then((value) {
+      setState(() {});
+    });
+  }
+
+  updateWidget(int number){
+    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(0, 0);
     _futureGetAllAssetsResponse.then((value) {
       setState(() {});
     });
@@ -194,7 +201,7 @@ class _SearchAssetsState extends State<SearchAssets> {
           print(snapshot.error);
         }
         return snapshot.hasData
-            ? CustomDataRow(snapshot.data.records)
+            ? CustomDataRow(snapshot.data.records, updateWidget)
             : Center(child: CircularProgressIndicator());
       },
     );
@@ -202,22 +209,16 @@ class _SearchAssetsState extends State<SearchAssets> {
 }
 
 class CustomDataRow extends StatefulWidget {
-  List<AssetRecord> assetRecords;
+  CustomDataRow(this.assetRecords, this.parentAction);
 
-  CustomDataRow(List<AssetRecord> assetRecords) {
-    this.assetRecords = assetRecords;
-  }
+  List<AssetRecord> assetRecords;
+  ValueChanged<int> parentAction;
 
   @override
-  CustomDataRowWidget createState() => CustomDataRowWidget(assetRecords);
+  CustomDataRowWidget createState() => CustomDataRowWidget();
 }
 
 class CustomDataRowWidget extends State<CustomDataRow> {
-  List<AssetRecord> assetRecords;
-
-  CustomDataRowWidget(List<AssetRecord> assetRecords) {
-    this.assetRecords = assetRecords;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -256,17 +257,41 @@ class CustomDataRowWidget extends State<CustomDataRow> {
             label: Text('Is Assigned?'),
           ),
         ],
-        rows: assetRecords
+        rows: widget.assetRecords
             .map((assetRecord) => DataRow(
             cells: [
-                  DataCell(Text(assetRecord.type)),
-                  DataCell(Text(assetRecord.name)),
-                  DataCell(Text(assetRecord.description)),
-                  DataCell(Text(assetRecord.addedDate)),
-                  DataCell(Text(assetRecord.isAssigned.toString())),
+                  DataCell(
+                      Text(assetRecord.type),
+                      onTap: () => navigateToUpdateAssetPage(assetRecord)
+                  ),
+                  DataCell(
+                      Text(assetRecord.name),
+                      onTap: () => navigateToUpdateAssetPage(assetRecord)
+                  ),
+                  DataCell(
+                      Text(assetRecord.description),
+                      onTap: () => navigateToUpdateAssetPage(assetRecord)
+                  ),
+                  DataCell(
+                      Text(assetRecord.addedDate),
+                      onTap: () => navigateToUpdateAssetPage(assetRecord)
+                  ),
+                  DataCell(
+                      Text(assetRecord.isAssigned.toString()),
+                      onTap: () => navigateToUpdateAssetPage(assetRecord)
+                  ),
                 ]))
             .toList(),
       ),
+    );
+  }
+
+  void navigateToUpdateAssetPage(AssetRecord assetRecord){
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => UpdateAsset(assetRecord, widget.parentAction)
+        )
     );
   }
 }

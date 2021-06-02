@@ -12,10 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class NetworkFunctions {
   static String uri = "http://3.138.187.210:5000/api/Admin";
-  //static String uri = "http://10.0.3.2:5000/api/Admin";
   static Map<String, String> headers = {
     "Content-Type": "application/json; charset=UTF-8",
   };
+
   static Future<AdminLoginResponse> adminLogin(String email, String password) async {
     final response = await http.post(
       Uri.parse(uri + "/AdminLogin"),
@@ -54,26 +54,6 @@ class NetworkFunctions {
     }
   }
 
-  static Future<BaseResponse> addUser(String name, String surname, String email, String telephoneNumber) async {
-    setCookie();
-    final response = await http.post(
-      Uri.parse(uri + "/AddUser"),
-      headers: headers,
-      body: jsonEncode(<String, String>{
-        "name": name,
-        "surname": surname,
-        "email": email,
-        "telephoneNumber": telephoneNumber,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      return BaseResponse.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception("Failed to adding user.");
-    }
-  }
-
   static Future<BaseResponse> addAsset(
       String type,
       String name,
@@ -105,6 +85,48 @@ class NetworkFunctions {
     }
   }
 
+  static Future<BaseResponse> addDebit(String userEmail, int assetId, String type, String name, int endDate, String cause,) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/AddDebit"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "userEmail": userEmail,
+        "assetId": assetId,
+        "type": type,
+        "name": name,
+        "endDate": endDate,
+        "cause": cause,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to adding debit.");
+    }
+  }
+
+  static Future<BaseResponse> addUser(String name, String surname, String email, String telephoneNumber) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/AddUser"),
+      headers: headers,
+      body: jsonEncode(<String, String>{
+        "name": name,
+        "surname": surname,
+        "email": email,
+        "telephoneNumber": telephoneNumber,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to adding user.");
+    }
+  }
+
   static Future<GetAssetsByTypeResponse> getAssetsByType(int pageNumber, int pageSize, String type) async {
     setCookie();
     final response = await http.post(
@@ -121,6 +143,41 @@ class NetworkFunctions {
       return GetAssetsByTypeResponse.fromJson(jsonDecode(response.body));
     } else {
       throw Exception("Failed to fetching assets.");
+    }
+  }
+
+  static Future<BaseResponse> updateAsset(
+      int assetId,
+      String type,
+      String name,
+      String description,
+      int expiryDate,
+      String personName,
+      String personSurname,
+      String personEmail,
+      bool isAssigned,
+      ) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/UpdateAsset"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "assetId": assetId,
+        "type": type,
+        "name": name,
+        "description": description,
+        "expiryDate": expiryDate,
+        "personName": personName,
+        "personSurname": personSurname,
+        "personEmail": personEmail,
+        "isAssigned": isAssigned,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to updating asset.");
     }
   }
 
@@ -162,28 +219,6 @@ class NetworkFunctions {
       return BaseResponse.fromJson(jsonDecode(response.body));
     } else {
       throw Exception("Failed to updating user.");
-    }
-  }
-
-  static Future<BaseResponse> addDebit(String userEmail, int assetId, String type, String name, int endDate, String cause,) async {
-    setCookie();
-    final response = await http.post(
-      Uri.parse(uri + "/AddDebit"),
-      headers: headers,
-      body: jsonEncode(<String, dynamic>{
-        "userEmail": userEmail,
-        "assetId": assetId,
-        "type": type,
-        "name": name,
-        "endDate": endDate,
-        "cause": cause,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      return BaseResponse.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception("Failed to adding debit.");
     }
   }
 
