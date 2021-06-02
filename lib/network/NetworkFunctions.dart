@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:asset_yonet/models/AdminLoginResponse.dart';
 import 'package:asset_yonet/models/BaseResponse.dart';
@@ -54,6 +53,26 @@ class NetworkFunctions {
     }
   }
 
+  static Future<BaseResponse> addUser(String name, String surname, String email, String telephoneNumber) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/AddUser"),
+      headers: headers,
+      body: jsonEncode(<String, String>{
+        "name": name,
+        "surname": surname,
+        "email": email,
+        "telephoneNumber": telephoneNumber,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to adding user.");
+    }
+  }
+
   static Future<BaseResponse> addAsset(
       String type,
       String name,
@@ -61,8 +80,7 @@ class NetworkFunctions {
       int expiryDate,
       String personName,
       String personSurname,
-      String email ) async {
-
+      String email) async {
     setCookie();
     final response = await http.post(
       Uri.parse(uri + "/AddAsset"),
@@ -107,12 +125,64 @@ class NetworkFunctions {
     }
   }
 
-  static Future<BaseResponse> addUser(String name, String surname, String email, String telephoneNumber) async {
+  static Future<BaseResponse> removeUser (int userId) async {
     setCookie();
     final response = await http.post(
-      Uri.parse(uri + "/AddUser"),
+      Uri.parse(uri + "/RemoveUser"),
       headers: headers,
-      body: jsonEncode(<String, String>{
+      body: jsonEncode(<String, dynamic>{
+        "userId": userId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to removing user.");
+    }
+  }
+
+  static Future<BaseResponse> removeAsset (int assetId) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/RemoveAsset"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "assetId": assetId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to removing debit.");
+    }
+  }
+
+  static Future<BaseResponse> removeDebit (int debitId) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/RemoveDebit"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "debitId": debitId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to removing debit.");
+    }
+  }
+
+  static Future<BaseResponse> updateUser(int userId, String name, String surname, String email, String telephoneNumber) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/UpdateUser"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "userId": userId,
         "name": name,
         "surname": surname,
         "email": email,
@@ -123,26 +193,7 @@ class NetworkFunctions {
     if (response.statusCode == 200) {
       return BaseResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception("Failed to adding user.");
-    }
-  }
-
-  static Future<GetAssetsByTypeResponse> getAssetsByType(int pageNumber, int pageSize, String type) async {
-    setCookie();
-    final response = await http.post(
-      Uri.parse(uri + "/GetAssetsByType"),
-      headers: headers,
-      body: jsonEncode(<String, dynamic>{
-        "pageNumber": pageNumber,
-        "pageSize": pageSize,
-        "type": type
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      return GetAssetsByTypeResponse.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception("Failed to fetching assets.");
+      throw Exception("Failed to updating user.");
     }
   }
 
@@ -155,8 +206,7 @@ class NetworkFunctions {
       String personName,
       String personSurname,
       String personEmail,
-      bool isAssigned,
-      ) async {
+      bool isAssigned) async {
     setCookie();
     final response = await http.post(
       Uri.parse(uri + "/UpdateAsset"),
@@ -201,24 +251,21 @@ class NetworkFunctions {
     }
   }
 
-  static Future<BaseResponse> updateUser(int userId, String name, String surname, String email, String telephoneNumber) async {
+  static Future<GetAllUsersResponse> getAllUsers (int pageNumber, int pageSize) async {
     setCookie();
     final response = await http.post(
-      Uri.parse(uri + "/UpdateUser"),
+      Uri.parse(uri + "/GetAllUsers"),
       headers: headers,
       body: jsonEncode(<String, dynamic>{
-        "userId": userId,
-        "name": name,
-        "surname": surname,
-        "email": email,
-        "telephoneNumber": telephoneNumber,
+        "pageNumber": pageNumber,
+        "pageSize": pageSize,
       }),
     );
 
     if (response.statusCode == 200) {
-      return BaseResponse.fromJson(jsonDecode(response.body));
+      return GetAllUsersResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception("Failed to updating user.");
+      throw Exception("Failed to fetching users.");
     }
   }
 
@@ -258,72 +305,22 @@ class NetworkFunctions {
     }
   }
 
-  static Future<GetAllUsersResponse> getAllUsers (int pageNumber, int pageSize) async {
+  static Future<GetAssetsByTypeResponse> getAssetsByType(int pageNumber, int pageSize, String type) async {
     setCookie();
     final response = await http.post(
-      Uri.parse(uri + "/GetAllUsers"),
+      Uri.parse(uri + "/GetAssetsByType"),
       headers: headers,
       body: jsonEncode(<String, dynamic>{
         "pageNumber": pageNumber,
         "pageSize": pageSize,
-      }),
-    );
-    await sleep(Duration(seconds: 1));
-    if (response.statusCode == 200) {
-      return GetAllUsersResponse.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception("Failed to fetching users.");
-    }
-  }
-
-  static Future<BaseResponse> removeAsset (int assetId) async {
-    setCookie();
-    final response = await http.post(
-      Uri.parse(uri + "/RemoveAsset"),
-      headers: headers,
-      body: jsonEncode(<String, dynamic>{
-        "assetId": assetId,
+        "type": type
       }),
     );
 
     if (response.statusCode == 200) {
-      return BaseResponse.fromJson(jsonDecode(response.body));
+      return GetAssetsByTypeResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception("Failed to removing debit.");
-    }
-  }
-
-  static Future<BaseResponse> removeDebit (int debitId) async {
-    setCookie();
-    final response = await http.post(
-      Uri.parse(uri + "/RemoveDebit"),
-      headers: headers,
-      body: jsonEncode(<String, dynamic>{
-        "debitId": debitId,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      return BaseResponse.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception("Failed to removing debit.");
-    }
-  }
-
-  static Future<BaseResponse> removeUser (int userId) async {
-    setCookie();
-    final response = await http.post(
-      Uri.parse(uri + "/RemoveUser"),
-      headers: headers,
-      body: jsonEncode(<String, dynamic>{
-        "userId": userId,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      return BaseResponse.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception("Failed to removing user.");
+      throw Exception("Failed to fetching assets.");
     }
   }
 
@@ -334,6 +331,7 @@ class NetworkFunctions {
       headers["cookie"] = (index == -1) ? rawCookie : rawCookie.substring(0, index);
     }
   }
+
   static void saveCookie(http.Response response) async {
     String rawCookie = response.headers["set-cookie"];
     String cookie;

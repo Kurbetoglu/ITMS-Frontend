@@ -1,8 +1,8 @@
-import 'package:asset_yonet/models/BaseResponse.dart';
-import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
+import 'models/BaseResponse.dart';
 import 'models/GetAllUsersResponse.dart';
+import 'network/NetworkFunctions.dart';
 
 class UpdateUser extends StatefulWidget {
   UpdateUser(this.userRecord, this.parentAction);
@@ -151,8 +151,7 @@ class _UpdateUserState extends State<UpdateUser> {
             ),
             //3
           ],
-        ));
+        )
+    );
   }
 }
-
-

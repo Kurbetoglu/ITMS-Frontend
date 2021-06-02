@@ -4,21 +4,14 @@ import 'models/BaseResponse.dart';
 import 'network/NetworkFunctions.dart';
 
 class RemoveUserConfirm extends StatefulWidget {
-  RemoveUserConfirm(int userId){
-    this.userId = userId;
-  }
+  RemoveUserConfirm(this.userId);
   int userId;
   @override
-  _RemoveUserConfirmState createState() => _RemoveUserConfirmState(userId);
+  _RemoveUserConfirmState createState() => _RemoveUserConfirmState();
 }
 
 class _RemoveUserConfirmState extends State<RemoveUserConfirm> {
-  _RemoveUserConfirmState(int userId){
-    this.userId = userId;
-  }
-
   Future<BaseResponse> _futureBaseResponse;
-  int userId;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +57,7 @@ class _RemoveUserConfirmState extends State<RemoveUserConfirm> {
                     textColor: Colors.white,
                     child: Text("YES"),
                     onPressed: () {
-                      _futureBaseResponse = NetworkFunctions.removeUser(userId);
+                      _futureBaseResponse = NetworkFunctions.removeUser(widget.userId);
                       _futureBaseResponse.then((value) async {
                         if(value.success){
                           Navigator.pop(context);

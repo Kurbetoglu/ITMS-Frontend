@@ -1,6 +1,6 @@
-import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
+import 'network/NetworkFunctions.dart';
 import 'models/BaseResponse.dart';
 import 'models/GetAllAssetsResponse.dart';
 
@@ -26,21 +26,19 @@ class _UpdateAssetState extends State<UpdateAsset> {
   @override
   void initState(){
     typeValue = widget.assetRecord.type;
-    //selectedDate = DateTime.now();
     _isAssigned = widget.assetRecord.isAssigned;
     nameController.text = widget.assetRecord.name;
     descriptionController.text = widget.assetRecord.description;
     personNameController.text = typeValue == "İnsan Kaynağı" ? widget.assetRecord.personName : null;
     personSurnameController.text = typeValue == "İnsan Kaynağı" ? widget.assetRecord.personSurname : null;
     personEmailController.text = typeValue == "İnsan Kaynağı" ? widget.assetRecord.personEmail : null;
-    setState(() {
-
-    });
+    setState(() { });
+    super.initState();
   }
 
   @override
   void dispose(){
-    typeValue = "";
+    typeValue = null;
     selectedDate = null;
     nameController.dispose();
     descriptionController.dispose();
@@ -410,4 +408,3 @@ class LabeledRadio extends StatelessWidget {
     );
   }
 }
-

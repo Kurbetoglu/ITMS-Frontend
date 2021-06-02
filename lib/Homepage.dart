@@ -1,6 +1,7 @@
-import 'package:asset_yonet/models/BaseResponse.dart';
-import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
+
+import 'models/BaseResponse.dart';
+import 'network/NetworkFunctions.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -29,7 +30,8 @@ class _HomepageState extends State<Homepage> {
                       });
                     },
                     child: Icon(Icons.logout),
-                  )),
+                  )
+              ),
             ],
             backgroundColor: Color(0xff67acb0),
           ),
@@ -48,12 +50,11 @@ class _HomepageState extends State<Homepage> {
                         textColor: Colors.white,
                         child: Text("Search Assets"),
                         onPressed: () => Navigator.pushNamed(context, "/searchAssets"),
-                      ))
+                      )
+                  )
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-              ), //1
+              Padding(padding: const EdgeInsets.only(top: 10.0),),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -69,9 +70,7 @@ class _HomepageState extends State<Homepage> {
                   )
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-              ), //2
+              Padding(padding: const EdgeInsets.only(top: 10.0),),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -87,9 +86,7 @@ class _HomepageState extends State<Homepage> {
                   )
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-              ),
+              Padding(padding: const EdgeInsets.only(top: 10.0),),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -106,9 +103,7 @@ class _HomepageState extends State<Homepage> {
                   )
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-              ),
+              Padding(padding: const EdgeInsets.only(top: 10.0),),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -125,9 +120,7 @@ class _HomepageState extends State<Homepage> {
                   )
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-              ),
+              Padding(padding: const EdgeInsets.only(top: 10.0),),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -144,9 +137,7 @@ class _HomepageState extends State<Homepage> {
                   )
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-              ),
+              Padding(padding: const EdgeInsets.only(top: 10.0),),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -162,7 +153,6 @@ class _HomepageState extends State<Homepage> {
                   )
                 ],
               ),
-              //3
             ],
           )),
       onWillPop: () => showDialog<bool>(

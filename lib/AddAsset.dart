@@ -14,11 +14,11 @@ class AddAsset extends StatefulWidget {
 }
 
 class _AddAssetState extends State<AddAsset> {
-  final nameTextEditingController = TextEditingController();
-  final descriptionTextEditingController = TextEditingController();
-  final personNameTextEditingController = TextEditingController();
-  final personSurnameTextEditingController = TextEditingController();
-  final personEmailTextEditingController = TextEditingController();
+  TextEditingController nameTextEditingController = TextEditingController();
+  TextEditingController descriptionTextEditingController = TextEditingController();
+  TextEditingController personNameTextEditingController = TextEditingController();
+  TextEditingController personSurnameTextEditingController = TextEditingController();
+  TextEditingController personEmailTextEditingController = TextEditingController();
   Future<BaseResponse> _futureBaseResponse;
 
   @override
@@ -99,7 +99,8 @@ class _AddAssetState extends State<AddAsset> {
                     child: TextFormField(
                       controller: nameTextEditingController,
                       decoration: InputDecoration(hintText: "Name"),
-                    ))
+                    )
+                )
               ],
             ),
             Padding(padding: const EdgeInsets.only(top: 10.0),),
@@ -114,7 +115,9 @@ class _AddAssetState extends State<AddAsset> {
                         child: TextFormField(
                           controller: descriptionTextEditingController,
                           decoration: InputDecoration(hintText: "Description"),
-                        )))
+                        )
+                    )
+                )
               ],
             ),
             Padding(padding: const EdgeInsets.only(top: 10.0),),
@@ -159,7 +162,9 @@ class _AddAssetState extends State<AddAsset> {
                           child: TextFormField(
                             controller: personNameTextEditingController,
                             decoration: InputDecoration(hintText: "Person Name"),
-                          )))
+                          )
+                      )
+                  )
                 ],
               ),
             ),
@@ -177,7 +182,9 @@ class _AddAssetState extends State<AddAsset> {
                           child: TextFormField(
                             controller: personSurnameTextEditingController,
                             decoration: InputDecoration(hintText: "Person Surname"),
-                          )))
+                          )
+                      )
+                  )
                 ],
               ),
             ),
@@ -195,7 +202,9 @@ class _AddAssetState extends State<AddAsset> {
                           child: TextFormField(
                             controller: personEmailTextEditingController,
                             decoration: InputDecoration(hintText: "Person Email"),
-                          )))
+                          )
+                      )
+                  )
                 ],
               ),
             ),
@@ -237,22 +246,15 @@ class _AddAssetState extends State<AddAsset> {
                       textColor: Colors.white,
                       child: Text("Cancel"),
                       onPressed: () {
-                        // print(typeValue);
-                        // print(nameTextEditingController.text);
-                        // print(descriptionTextEditingController.text);
-                        // print(typeValue == "Dijital" ? selectedDate.toUtc().millisecondsSinceEpoch : 0);
-                        // print(personNameTextEditingController.text);
-                        // print(personSurnameTextEditingController.text);
-                        // print(personEmailTextEditingController.text);
                         Navigator.popUntil(context, ModalRoute.withName("/homepage"));
                       }
                   ),
                 )
               ],
             ),
-            //3
           ],
-        ));
+        )
+    );
   }
   Future selectDate(BuildContext context) async {
     DateTime picked = await showDatePicker(

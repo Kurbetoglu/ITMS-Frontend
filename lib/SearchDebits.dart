@@ -1,7 +1,7 @@
-import 'package:asset_yonet/models/GetAllDebitsResponse.dart';
-import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
+import 'models/GetAllDebitsResponse.dart';
+import 'network/NetworkFunctions.dart';
 import 'UpdateDebit.dart';
 
 String typeValue, startDateValue, endDateValue, isDeliveredValue;
@@ -70,10 +70,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -216,13 +213,12 @@ class _SearchDebitsState extends State<SearchDebits> {
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Flexible(
               child: _futureGetAllDebitsResponse == null ? Container(width: 0, height: 0,) : buildCustomCards(),
             ),
-          ]),
+          ]
+      ),
     );
   }
 
@@ -286,148 +282,115 @@ class CustomCardWidget extends State<CustomCard> {
             children: <Widget>[
               Row(
                 children: [
-                  Container(
-                      width: 90,
-                      height: 20,
-                      color: Color(0xff4e9b2b),
-                      child: Text("Assigner")),
+                  labelContainer("Assigner"),
                   Container(
                       height: 20,
-                      child: Text(widget.debitRecord.assigner)),
+                      child: Text(widget.debitRecord.assigner)
+                  ),
                 ],
               ),
-
               Row(
                 children: [
-                  Container(
-                      width: 90,
-                      height: 20,
-                      color: Color(0xff4e9b2b),
-                      child: Text("User")),
+                  labelContainer("User"),
                   Container(
                       height: 20,
-                      child: Text(widget.debitRecord.user)),
+                      child: Text(widget.debitRecord.user)
+                  ),
                 ],
               ),
-
               Row(
                 children: [
-                  Container(
-                      width: 90,
-                      height: 20,
-                      color: Color(0xff4e9b2b),
-                      child: Text("Asset Type")),
+                  labelContainer("Asset Type"),
                   Container(
                       height: 20,
-                      child: Text(widget.debitRecord.assetType)),
+                      child: Text(widget.debitRecord.assetType)
+                  ),
                 ],
               ),
-
               Row(
                 children: [
-                  Container(
-                      width: 90,
-                      height: 20,
-                      color: Color(0xff4e9b2b),
-                      child: Text("Asset Name")),
+                  labelContainer("Asset Name"),
                   Container(
                       height: 20,
-                      child: Text(widget.debitRecord.assetName)),
+                      child: Text(widget.debitRecord.assetName)
+                  ),
                 ],
               ),
-
               Row(
                 children: [
-                  Container(
-                      width: 90,
-                      height: 20,
-                      color: Color(0xff4e9b2b),
-                      child: Text("Asset Desc.")),
+                  labelContainer("Asset Desc."),
                   Container(
                       height: 20,
-                      child: Text(widget.debitRecord.assetDescription)),
+                      child: Text(widget.debitRecord.assetDescription)
+                  ),
                 ],
               ),
-
               Row(
                 children: [
-                  Container(
-                      width: 90,
-                      height: 20,
-                      color: Color(0xff4e9b2b),
-                      child: Text("Start Date")),
+                  labelContainer("Start Date"),
                   Container(
                       height: 20,
-                      child: Text(widget.debitRecord.startDate)),
+                      child: Text(widget.debitRecord.startDate)
+                  ),
                 ],
               ),
-
               Row(
                 children: [
-                  Container(
-                      width: 90,
-                      height: 20,
-                      color: Color(0xff4e9b2b),
-                      child: Text("End Date")),
+                  labelContainer("End Date"),
                   Container(
                       height: 20,
-                      child: Text(widget.debitRecord.endDate)),
+                      child: Text(widget.debitRecord.endDate)
+                  ),
                 ],
               ),
-
               Row(
                 children: [
-                  Container(
-                      width: 90,
-                      height: 20,
-                      color: Color(0xff4e9b2b),
-                      child: Text("Created Date")),
+                  labelContainer("Created Date"),
                   Container(
                       height: 20,
-                      child: Text(widget.debitRecord.createdDate)),
+                      child: Text(widget.debitRecord.createdDate)
+                  ),
                 ],
               ),
-
               Row(
                 children: [
-                  Container(
-                      width: 90,
-                      height: 20,
-                      color: Color(0xff4e9b2b),
-                      child: Text("Edited Date")),
+                  labelContainer("Edited Date"),
                   Container(
                       height: 20,
-                      child: Text(widget.debitRecord.editedDate)),
+                      child: Text(widget.debitRecord.editedDate)
+                  ),
                 ],
               ),
-
               Row(
                 children: [
-                  Container(
-                      width: 90,
-                      height: 20,
-                      color: Color(0xff4e9b2b),
-                      child: Text("isDelivered")),
+                  labelContainer("isDelivered"),
                   Container(
                       height: 20,
-                      child: Text(widget.debitRecord.isDelivered.toString())),
+                      child: Text(widget.debitRecord.isDelivered.toString())
+                  ),
                 ],
               ),
-
               Row(
                 children: [
-                  Container(
-                      width: 90,
-                      height: 20,
-                      color: Color(0xff4e9b2b),
-                      child: Text("Cause")),
+                  labelContainer("Cause"),
                   Container(
                       height: 20,
-                      child: Text(widget.debitRecord.cause)),
+                      child: Text(widget.debitRecord.cause)
+                  ),
                 ],
               ),
             ],
-          )),
+          )
+      ),
     ) ;
+  }
+
+  Container labelContainer(String labelName){
+    return Container(
+        width: 90,
+        height: 20,
+        color: Color(0xff4e9b2b),
+        child: Text(labelName)
+    );
   }
 }

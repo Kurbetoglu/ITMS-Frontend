@@ -1,6 +1,7 @@
-import 'package:asset_yonet/models/BaseResponse.dart';
-import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
+
+import 'models/BaseResponse.dart';
+import 'network/NetworkFunctions.dart';
 
 class AddUser extends StatefulWidget {
   const AddUser({Key key}) : super(key: key);
@@ -10,11 +11,11 @@ class AddUser extends StatefulWidget {
 }
 
 class _AddUserState extends State<AddUser> {
-  final nameTextEditingController = TextEditingController();
-  final surnameTextEditingController = TextEditingController();
-  final emailTextEditingController = TextEditingController();
-  final telephoneNumberTextEditingController = TextEditingController();
   Future<BaseResponse> _futureBaseResponse;
+  TextEditingController nameTextEditingController = TextEditingController();
+  TextEditingController surnameTextEditingController = TextEditingController();
+  TextEditingController emailTextEditingController = TextEditingController();
+  TextEditingController telephoneNumberTextEditingController = TextEditingController();
 
   @override
   void dispose() {
@@ -52,14 +53,11 @@ class _AddUserState extends State<AddUser> {
                     child: TextFormField(
                       controller: nameTextEditingController,
                       decoration: InputDecoration(hintText: "Name"),
-                    ))
+                    )
+                )
               ],
             ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ), //1
-
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -69,16 +67,14 @@ class _AddUserState extends State<AddUser> {
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
-                      controller: surnameTextEditingController,
-                      decoration: InputDecoration(hintText: "Surname"),
-                    )))
+                          controller: surnameTextEditingController,
+                          decoration: InputDecoration(hintText: "Surname"),
+                        )
+                    )
+                )
               ],
             ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ), //2
-
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -88,17 +84,15 @@ class _AddUserState extends State<AddUser> {
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
-                      controller: emailTextEditingController,
-                      decoration: InputDecoration(hintText: "Email"),
-                      keyboardType: TextInputType.emailAddress,
-                    )))
+                          controller: emailTextEditingController,
+                          decoration: InputDecoration(hintText: "Email"),
+                          keyboardType: TextInputType.emailAddress,
+                        )
+                    )
+                )
               ],
             ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -108,16 +102,14 @@ class _AddUserState extends State<AddUser> {
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
-                      controller: telephoneNumberTextEditingController,
-                      decoration: InputDecoration(hintText: "Telephone Number"),
-                    )))
+                          controller: telephoneNumberTextEditingController,
+                          decoration: InputDecoration(hintText: "Telephone Number"),
+                        )
+                    )
+                )
               ],
             ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -155,8 +147,8 @@ class _AddUserState extends State<AddUser> {
                 )
               ],
             ),
-            //3
           ],
-        ));
+        )
+    );
   }
 }

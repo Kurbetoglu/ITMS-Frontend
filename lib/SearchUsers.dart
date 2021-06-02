@@ -1,12 +1,8 @@
-import 'dart:io';
-
-import 'package:asset_yonet/models/BaseResponse.dart';
-import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
 import 'UpdateUser.dart';
-import 'models/GetAllAssetsResponse.dart';
 import 'models/GetAllUsersResponse.dart';
+import 'network/NetworkFunctions.dart';
 
 class SearchUsers extends StatefulWidget {
   @override
@@ -22,6 +18,7 @@ class _SearchUsersState extends State<SearchUsers> {
     _futureGetAllUsersResponse.then((value) {
       setState(() {});
     });
+    super.initState();
   }
 
   updateWidget(int number){
@@ -46,38 +43,38 @@ class _SearchUsersState extends State<SearchUsers> {
             title: Text("SEARCH USERS"),
             backgroundColor: Color(0xff67acb0),
           ),
-          body: ListView(children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
+          body: ListView(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                        color: Color(0xfff0e8ca),
+                        width: 280,
+                        height: 30,
+                        child: TextFormField()),
+                    Container(
+                      width: 100.0,
+                      height: 30.0,
+                      color: Color(0xff4e9b2b),
+                      child: MaterialButton(
+                        textColor: Colors.white,
+                        child: Text("Search"),
+                        onPressed: () => {},
+                      ),
+                    )
+                  ],
+                ),
+                Padding(padding: const EdgeInsets.only(top: 10.0),),
                 Container(
-                    color: Color(0xfff0e8ca),
-                    width: 280,
-                    height: 30,
-                    child: TextFormField()),
-                Container(
-                  width: 100.0,
-                  height: 30.0,
-                  color: Color(0xff4e9b2b),
-                  child: MaterialButton(
-                    textColor: Colors.white,
-                    child: Text("Search"),
-                    onPressed: () => {},
-                  ),
-                )
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: _futureGetAllUsersResponse == null
-                ? Container(width: 0, height: 0,)
-                : generateCustomDataRows(),
-            ),
-
-          ])),
+                  padding: EdgeInsets.all(10),
+                  child: _futureGetAllUsersResponse == null
+                    ? Container(width: 0, height: 0,)
+                    : generateCustomDataRows(),
+                ),
+              ]
+          )
+      ),
     );
   }
 
@@ -97,16 +94,15 @@ class _SearchUsersState extends State<SearchUsers> {
 }
 
 class CustomDataRow extends StatefulWidget {
+  CustomDataRow(this.userRecords, this.parentAction);
   List<UserRecord> userRecords;
   ValueChanged<int> parentAction;
-  CustomDataRow(this.userRecords, this.parentAction);
 
   @override
   CustomDataRowWidget createState() => CustomDataRowWidget();
 }
 
 class CustomDataRowWidget extends State<CustomDataRow> {
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

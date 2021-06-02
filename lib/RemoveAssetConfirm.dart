@@ -4,23 +4,16 @@ import 'models/BaseResponse.dart';
 import 'network/NetworkFunctions.dart';
 
 class RemoveAssetConfirm extends StatefulWidget {
-  RemoveAssetConfirm(int assetId, ValueChanged<int> parentAction){
-    this.parentAction = parentAction;
-    this.assetId = assetId;
-  }
+  RemoveAssetConfirm(this.assetId, this.parentAction);
   int assetId;
   ValueChanged<int> parentAction;
+
   @override
-  _RemoveAssetConfirmState createState() => _RemoveAssetConfirmState(assetId);
+  _RemoveAssetConfirmState createState() => _RemoveAssetConfirmState();
 }
 
 class _RemoveAssetConfirmState extends State<RemoveAssetConfirm> {
-  _RemoveAssetConfirmState(int assetId){
-    this.assetId = assetId;
-  }
-
   Future<BaseResponse> _futureBaseResponse;
-  int assetId;
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +45,7 @@ class _RemoveAssetConfirmState extends State<RemoveAssetConfirm> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -66,7 +57,7 @@ class _RemoveAssetConfirmState extends State<RemoveAssetConfirm> {
                     textColor: Colors.white,
                     child: Text("YES"),
                     onPressed: () {
-                      _futureBaseResponse = NetworkFunctions.removeAsset(assetId);
+                      _futureBaseResponse = NetworkFunctions.removeAsset(widget.assetId);
                       _futureBaseResponse.then((value) async {
                         if(value.success){
                           widget.parentAction(1);
@@ -91,6 +82,5 @@ class _RemoveAssetConfirmState extends State<RemoveAssetConfirm> {
           ],
         )
     );
-
   }
 }

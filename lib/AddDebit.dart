@@ -1,12 +1,8 @@
-import 'dart:io';
-import 'dart:math';
-
-import 'package:asset_yonet/Homepage.dart';
-import 'package:asset_yonet/models/GetAssetsByTypeResponse.dart';
-import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
+import 'models/GetAssetsByTypeResponse.dart';
 import 'models/BaseResponse.dart';
+import 'network/NetworkFunctions.dart';
 
 String typeValue, nameValue;
 int selectedId = 0;
@@ -19,13 +15,23 @@ class AddDebit extends StatefulWidget {
 }
 
 class _AddDebitState extends State<AddDebit> {
-  DateTime selectedDate = DateTime.now();
-  final userEmailTextEditingController = TextEditingController();
-  final assetNameTextEditingController = TextEditingController();
-  final causeTextEditingController = TextEditingController();
+  TextEditingController userEmailTextEditingController = TextEditingController();
+  TextEditingController assetNameTextEditingController = TextEditingController();
+  TextEditingController causeTextEditingController = TextEditingController();
+
   Future<GetAssetsByTypeResponse> _futureGetAssetsByTypeResponse;
   Future<BaseResponse> _futureBaseResponse;
   GetAssetsByTypeResponse _getAssetsByTypeResponse;
+
+  DateTime selectedDate = DateTime.now();
+  @override
+  void initState(){
+    _futureGetAssetsByTypeResponse = NetworkFunctions.getAssetsByType(1, 1, "");
+    _futureGetAssetsByTypeResponse.then((value) {
+      setState(() { });
+    });
+  }
+
   @override
   void dispose() {
     userEmailTextEditingController.dispose();
@@ -36,14 +42,7 @@ class _AddDebitState extends State<AddDebit> {
     selectedId = 0;
     super.dispose();
   }
-  @override
-  void initState(){
-    _futureGetAssetsByTypeResponse = NetworkFunctions.getAssetsByType(1, 1, "");
-    sleep(Duration(seconds: 2));
-    _futureGetAssetsByTypeResponse.then((value) {
-      setState(() { });
-    });
-  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,9 +76,7 @@ class _AddDebitState extends State<AddDebit> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ), //1
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -126,22 +123,16 @@ class _AddDebitState extends State<AddDebit> {
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Flexible(
               child: _futureGetAssetsByTypeResponse == null ? buildRow() : futureBuilder(),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Flexible(
               child: selectedId == 0 ? buildRow() : buildDetails(selectedId),
               //child: selectedId == 0 ? buildRow() : buildRow(),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -166,11 +157,7 @@ class _AddDebitState extends State<AddDebit> {
                 )
               ],
             ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -184,11 +171,7 @@ class _AddDebitState extends State<AddDebit> {
                     )))
               ],
             ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -232,7 +215,6 @@ class _AddDebitState extends State<AddDebit> {
                 )
               ],
             ),
-            //3
           ],
         )
     );
@@ -247,6 +229,7 @@ class _AddDebitState extends State<AddDebit> {
       setState(() => selectedDate = picked);
     }
   }
+
   Visibility buildRow() {
     return Visibility(
         visible: false,

@@ -15,16 +15,10 @@ import 'Users.dart';
 import 'models/AdminLoginResponse.dart';
 import 'network/NetworkFunctions.dart';
 
-
 void main() async{
-
   runApp(MyApp());
 }
-Future<bool> cookieChecker() async{
-  SharedPreferences initialPrefs = await SharedPreferences.getInstance();
-  bool checkCookie = initialPrefs.containsKey("cookie");
-  return checkCookie;
-}
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -54,9 +48,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final emailTextEditingController = TextEditingController();
-  final passwordTextEditingController = TextEditingController();
+  TextEditingController emailTextEditingController = TextEditingController();
+  TextEditingController passwordTextEditingController = TextEditingController();
   Future<AdminLoginResponse> _futureAdminLoginResponse;
+
+  @override
+  void initState() {
+    cookieChecker().then((value) {
+      if(value){
+        Navigator.pushNamed(context, "/homepage");
+      }
+    });
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -64,20 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
     passwordTextEditingController.dispose();
     super.dispose();
   }
-  @override
-  void initState() {
-    cookieChecker().then((value) {
-      if(value){
-        // Navigator.pushAndRemoveUntil(
-        //       context,
-        //       MaterialPageRoute(builder: (BuildContext context) => Homepage()),
-        //       (route) => false,
-        // );
-        Navigator.pushNamed(context, "/homepage");
-      }
-    });
-    super.initState();
-  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,3 +159,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+Future<bool> cookieChecker() async{
+  SharedPreferences initialPrefs = await SharedPreferences.getInstance();
+  bool checkCookie = initialPrefs.containsKey("cookie");
+  return checkCookie;
+}

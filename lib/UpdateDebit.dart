@@ -1,8 +1,8 @@
-import 'package:asset_yonet/models/GetAllDebitsResponse.dart';
-import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
+import 'models/GetAllDebitsResponse.dart';
 import 'models/BaseResponse.dart';
+import 'network/NetworkFunctions.dart';
 
 class UpdateDebit extends StatefulWidget {
   UpdateDebit(this.debitRecord, this.parentAction);

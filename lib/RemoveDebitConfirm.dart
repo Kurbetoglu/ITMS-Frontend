@@ -1,30 +1,19 @@
-import 'dart:io';
-
 import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
 import 'models/BaseResponse.dart';
 
 class RemoveDebitConfirm extends StatefulWidget {
-  RemoveDebitConfirm(int debitId, ValueChanged<int> parentAction){
-    this.parentAction = parentAction;
-    this.debitId = debitId;
-  }
-
+  RemoveDebitConfirm(this.debitId, this.parentAction);
   ValueChanged<int> parentAction;
   int debitId;
 
   @override
-  _RemoveDebitConfirmState createState() => _RemoveDebitConfirmState(debitId);
+  _RemoveDebitConfirmState createState() => _RemoveDebitConfirmState();
 }
 
 class _RemoveDebitConfirmState extends State<RemoveDebitConfirm> {
-  _RemoveDebitConfirmState(int debitId){
-    this.debitId = debitId;
-  }
-
   Future<BaseResponse> _futureBaseResponse;
-  int debitId;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +60,7 @@ class _RemoveDebitConfirmState extends State<RemoveDebitConfirm> {
                     textColor: Colors.white,
                     child: Text("YES"),
                     onPressed: () {
-                      _futureBaseResponse = NetworkFunctions.removeDebit(debitId);
+                      _futureBaseResponse = NetworkFunctions.removeDebit(widget.debitId);
                       _futureBaseResponse.then((value) async {
                         if(value.success){
                           Navigator.popUntil(context, ModalRoute.withName("/homepage"));

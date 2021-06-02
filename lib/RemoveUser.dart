@@ -1,11 +1,7 @@
-import 'dart:io';
-
-import 'package:asset_yonet/models/BaseResponse.dart';
 import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
 import 'RemoveUserConfirm.dart';
-import 'models/GetAllAssetsResponse.dart';
 import 'models/GetAllUsersResponse.dart';
 
 class RemoveUser extends StatefulWidget {
@@ -19,7 +15,6 @@ class _RemoveUserState extends State<RemoveUser> {
   @override
   void initState() {
     _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(0, 0);
-    sleep(Duration(seconds: 1));
     _futureGetAllUsersResponse.then((value) {
       setState(() {});
     });
@@ -40,38 +35,38 @@ class _RemoveUserState extends State<RemoveUser> {
             title: Text("REMOVE USER"),
             backgroundColor: Color(0xff67acb0),
           ),
-          body: ListView(children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
+          body: ListView(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                        color: Color(0xfff0e8ca),
+                        width: 280,
+                        height: 30,
+                        child: TextFormField()),
+                    Container(
+                      width: 100.0,
+                      height: 30.0,
+                      color: Color(0xff4e9b2b),
+                      child: MaterialButton(
+                        textColor: Colors.white,
+                        child: Text("Search"),
+                        onPressed: () => {},
+                      ),
+                    )
+                  ],
+                ),
+                Padding(padding: const EdgeInsets.only(top: 10.0),),
                 Container(
-                    color: Color(0xfff0e8ca),
-                    width: 280,
-                    height: 30,
-                    child: TextFormField()),
-                Container(
-                  width: 100.0,
-                  height: 30.0,
-                  color: Color(0xff4e9b2b),
-                  child: MaterialButton(
-                    textColor: Colors.white,
-                    child: Text("Search"),
-                    onPressed: () => {},
-                  ),
-                )
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: _futureGetAllUsersResponse == null
-                ? Container(width: 0, height: 0,)
-                : generateCustomDataRows(),
-            ),
-
-          ])),
+                  padding: EdgeInsets.all(10),
+                  child: _futureGetAllUsersResponse == null
+                    ? Container(width: 0, height: 0,)
+                    : generateCustomDataRows(),
+                ),
+              ]
+          )
+      ),
     );
   }
 
@@ -91,21 +86,14 @@ class _RemoveUserState extends State<RemoveUser> {
 }
 
 class CustomDataRow extends StatefulWidget {
+  CustomDataRow(this.userRecords);
   List<UserRecord> userRecords;
-  CustomDataRow(List<UserRecord> userRecords) {
-    this.userRecords = userRecords;
-  }
 
   @override
-  CustomDataRowWidget createState() => CustomDataRowWidget(userRecords);
+  CustomDataRowWidget createState() => CustomDataRowWidget();
 }
 
 class CustomDataRowWidget extends State<CustomDataRow> {
-  List<UserRecord> userRecords;
-  CustomDataRowWidget(List<UserRecord> userRecords) {
-    this.userRecords = userRecords;
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -143,7 +131,7 @@ class CustomDataRowWidget extends State<CustomDataRow> {
             label: Text('REMOVE', style: TextStyle(color: Colors.red),),
           ),
         ],
-        rows: userRecords
+        rows: widget.userRecords
             .map((userRecord) => DataRow(
             cells: [
                   DataCell(Text(userRecord.name)),

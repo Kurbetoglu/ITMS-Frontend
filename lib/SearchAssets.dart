@@ -1,11 +1,8 @@
-import 'dart:io';
-
-import 'package:asset_yonet/models/BaseResponse.dart';
-import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
 import 'UpdateAsset.dart';
 import 'models/GetAllAssetsResponse.dart';
+import 'network/NetworkFunctions.dart';
 
 String typeValue, addedDateValue, isAssignedValue;
 
@@ -23,6 +20,7 @@ class _SearchAssetsState extends State<SearchAssets> {
     _futureGetAllAssetsResponse.then((value) {
       setState(() {});
     });
+    super.initState();
   }
 
   updateWidget(int number){
@@ -68,9 +66,7 @@ class _SearchAssetsState extends State<SearchAssets> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -179,9 +175,7 @@ class _SearchAssetsState extends State<SearchAssets> {
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Container(
               padding: EdgeInsets.all(10),
               child: _futureGetAllAssetsResponse == null
@@ -189,7 +183,9 @@ class _SearchAssetsState extends State<SearchAssets> {
                 : generateCustomDataRows(),
             ),
 
-          ])),
+          ]
+          )
+      ),
     );
   }
 
@@ -219,7 +215,6 @@ class CustomDataRow extends StatefulWidget {
 }
 
 class CustomDataRowWidget extends State<CustomDataRow> {
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

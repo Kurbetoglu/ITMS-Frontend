@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:asset_yonet/RemoveAssetConfirm.dart';
-import 'package:asset_yonet/models/BaseResponse.dart';
 import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
@@ -20,10 +17,18 @@ class _RemoveAssetState extends State<RemoveAsset> {
   @override
   void initState() {
     _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(0, 0);
-    sleep(Duration(seconds: 1));
     _futureGetAllAssetsResponse.then((value) {
       setState(() {});
     });
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    typeValue = null;
+    addedDateValue = null;
+    isAssignedValue = null;
+    super.dispose();
   }
 
   @override
