@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 String _chosenValue;
 
-class EditAsset extends StatefulWidget {
-  const EditAsset({Key key}) : super(key: key);
+class UpdateAsset extends StatefulWidget {
+  const UpdateAsset({Key key}) : super(key: key);
 
   @override
-  _EditAssetState createState() => _EditAssetState();
+  _UpdateAssetState createState() => _UpdateAssetState();
 }
 
-class _EditAssetState extends State<EditAsset> {
+class _UpdateAssetState extends State<UpdateAsset> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +19,7 @@ class _EditAssetState extends State<EditAsset> {
             onPressed: () =>
                 Navigator.popUntil(context, ModalRoute.withName("/homepage")),
           ),
-          title: Text("EDIT ASSET"),
+          title: Text("UPDATE ASSET"),
           backgroundColor: Color(0xff67acb0),
         ),
         resizeToAvoidBottomInset: false,

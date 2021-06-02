@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:asset_yonet/models/AdminLoginResponse.dart';
 import 'package:asset_yonet/models/BaseResponse.dart';
@@ -123,6 +124,47 @@ class NetworkFunctions {
     }
   }
 
+  static Future<BaseResponse> updateDebit(int debitId, int assetId, int endDate, bool isDelivered) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/UpdateDebit"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "debitId": debitId,
+        "assetId": assetId,
+        "endDate": endDate,
+        "isDelivered": isDelivered,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to updating debit.");
+    }
+  }
+
+  static Future<BaseResponse> updateUser(int userId, String name, String surname, String email, String telephoneNumber) async {
+    setCookie();
+    final response = await http.post(
+      Uri.parse(uri + "/UpdateUser"),
+      headers: headers,
+      body: jsonEncode(<String, dynamic>{
+        "userId": userId,
+        "name": name,
+        "surname": surname,
+        "email": email,
+        "telephoneNumber": telephoneNumber,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return BaseResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to updating user.");
+    }
+  }
+
   static Future<BaseResponse> addDebit(String userEmail, int assetId, String type, String name, int endDate, String cause,) async {
     setCookie();
     final response = await http.post(
@@ -191,7 +233,7 @@ class NetworkFunctions {
         "pageSize": pageSize,
       }),
     );
-
+    await sleep(Duration(seconds: 1));
     if (response.statusCode == 200) {
       return GetAllUsersResponse.fromJson(jsonDecode(response.body));
     } else {

@@ -4,6 +4,7 @@ import 'package:asset_yonet/models/BaseResponse.dart';
 import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
+import 'UpdateUser.dart';
 import 'models/GetAllAssetsResponse.dart';
 import 'models/GetAllUsersResponse.dart';
 
@@ -18,7 +19,13 @@ class _SearchUsersState extends State<SearchUsers> {
   @override
   void initState() {
     _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(0, 0);
-    sleep(Duration(seconds: 1));
+    _futureGetAllUsersResponse.then((value) {
+      setState(() {});
+    });
+  }
+
+  updateWidget(int number){
+    _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(0, 0);
     _futureGetAllUsersResponse.then((value) {
       setState(() {});
     });
@@ -82,7 +89,7 @@ class _SearchUsersState extends State<SearchUsers> {
           print(snapshot.error);
         }
         return snapshot.hasData
-            ? CustomDataRow(snapshot.data.records)
+            ? CustomDataRow(snapshot.data.records, updateWidget)
             : Center(child: CircularProgressIndicator());
       },
     );
@@ -91,21 +98,14 @@ class _SearchUsersState extends State<SearchUsers> {
 
 class CustomDataRow extends StatefulWidget {
   List<UserRecord> userRecords;
-
-  CustomDataRow(List<UserRecord> userRecords) {
-    this.userRecords = userRecords;
-  }
+  ValueChanged<int> parentAction;
+  CustomDataRow(this.userRecords, this.parentAction);
 
   @override
-  CustomDataRowWidget createState() => CustomDataRowWidget(userRecords);
+  CustomDataRowWidget createState() => CustomDataRowWidget();
 }
 
 class CustomDataRowWidget extends State<CustomDataRow> {
-  List<UserRecord> userRecords;
-
-  CustomDataRowWidget(List<UserRecord> userRecords) {
-    this.userRecords = userRecords;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,16 +141,37 @@ class CustomDataRowWidget extends State<CustomDataRow> {
             label: Text('Telephone Number'),
           ),
         ],
-        rows: userRecords
+        rows: widget.userRecords
             .map((userRecord) => DataRow(
             cells: [
-                  DataCell(Text(userRecord.name)),
-                  DataCell(Text(userRecord.surname)),
-                  DataCell(Text(userRecord.email)),
-                  DataCell(Text(userRecord.telephoneNumber)),
+                  DataCell(
+                      Text(userRecord.name),
+                      onTap: () => navigateToUpdateUserPage(userRecord)
+                  ),
+                  DataCell(
+                      Text(userRecord.surname),
+                      onTap: () => navigateToUpdateUserPage(userRecord)
+                  ),
+                  DataCell(
+                      Text(userRecord.email),
+                      onTap: () => navigateToUpdateUserPage(userRecord)
+                  ),
+                  DataCell(
+                      Text(userRecord.telephoneNumber),
+                      onTap: () => navigateToUpdateUserPage(userRecord)
+                  ),
                 ]))
             .toList(),
       ),
+    );
+  }
+
+  void navigateToUpdateUserPage(UserRecord userRecord){
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => UpdateUser(userRecord, widget.parentAction)
+        )
     );
   }
 }

@@ -2,6 +2,8 @@ import 'package:asset_yonet/models/GetAllDebitsResponse.dart';
 import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
+import 'UpdateDebit.dart';
+
 String typeValue, startDateValue, endDateValue, isDeliveredValue;
 
 class SearchDebits extends StatefulWidget {
@@ -267,154 +269,164 @@ class CustomCardWidget extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Color(0xfff0e8ca),
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Row(
-          children: [
-            Container(
-                width: 90,
-                height: 20,
-                color: Color(0xff4e9b2b),
-                child: Text("Assigner")),
-            Container(
-                height: 20,
-                child: Text(debitRecord.assigner)),
-          ],
-        ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UpdateDebit(debitRecord)
+            )
+        );
+      } ,
+      child: Card(
+          color: Color(0xfff0e8ca),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                children: [
+                  Container(
+                      width: 90,
+                      height: 20,
+                      color: Color(0xff4e9b2b),
+                      child: Text("Assigner")),
+                  Container(
+                      height: 20,
+                      child: Text(debitRecord.assigner)),
+                ],
+              ),
 
-        Row(
-          children: [
-            Container(
-                width: 90,
-                height: 20,
-                color: Color(0xff4e9b2b),
-                child: Text("User")),
-            Container(
-                height: 20,
-                child: Text(debitRecord.user)),
-          ],
-        ),
+              Row(
+                children: [
+                  Container(
+                      width: 90,
+                      height: 20,
+                      color: Color(0xff4e9b2b),
+                      child: Text("User")),
+                  Container(
+                      height: 20,
+                      child: Text(debitRecord.user)),
+                ],
+              ),
 
-        Row(
-          children: [
-            Container(
-                width: 90,
-                height: 20,
-                color: Color(0xff4e9b2b),
-                child: Text("Asset Type")),
-            Container(
-                height: 20,
-                child: Text(debitRecord.assetType)),
-          ],
-        ),
+              Row(
+                children: [
+                  Container(
+                      width: 90,
+                      height: 20,
+                      color: Color(0xff4e9b2b),
+                      child: Text("Asset Type")),
+                  Container(
+                      height: 20,
+                      child: Text(debitRecord.assetType)),
+                ],
+              ),
 
-        Row(
-          children: [
-            Container(
-                width: 90,
-                height: 20,
-                color: Color(0xff4e9b2b),
-                child: Text("Asset Name")),
-            Container(
-                height: 20,
-                child: Text(debitRecord.assetName)),
-          ],
-        ),
+              Row(
+                children: [
+                  Container(
+                      width: 90,
+                      height: 20,
+                      color: Color(0xff4e9b2b),
+                      child: Text("Asset Name")),
+                  Container(
+                      height: 20,
+                      child: Text(debitRecord.assetName)),
+                ],
+              ),
 
-        Row(
-          children: [
-            Container(
-                width: 90,
-                height: 20,
-                color: Color(0xff4e9b2b),
-                child: Text("Asset Desc.")),
-            Container(
-                height: 20,
-                child: Text(debitRecord.assetDescription)),
-          ],
-        ),
+              Row(
+                children: [
+                  Container(
+                      width: 90,
+                      height: 20,
+                      color: Color(0xff4e9b2b),
+                      child: Text("Asset Desc.")),
+                  Container(
+                      height: 20,
+                      child: Text(debitRecord.assetDescription)),
+                ],
+              ),
 
-        Row(
-          children: [
-            Container(
-                width: 90,
-                height: 20,
-                color: Color(0xff4e9b2b),
-                child: Text("Start Date")),
-            Container(
-                height: 20,
-                child: Text(debitRecord.startDate)),
-          ],
-        ),
+              Row(
+                children: [
+                  Container(
+                      width: 90,
+                      height: 20,
+                      color: Color(0xff4e9b2b),
+                      child: Text("Start Date")),
+                  Container(
+                      height: 20,
+                      child: Text(debitRecord.startDate)),
+                ],
+              ),
 
-        Row(
-          children: [
-            Container(
-                width: 90,
-                height: 20,
-                color: Color(0xff4e9b2b),
-                child: Text("End Date")),
-            Container(
-                height: 20,
-                child: Text(debitRecord.endDate)),
-          ],
-        ),
+              Row(
+                children: [
+                  Container(
+                      width: 90,
+                      height: 20,
+                      color: Color(0xff4e9b2b),
+                      child: Text("End Date")),
+                  Container(
+                      height: 20,
+                      child: Text(debitRecord.endDate)),
+                ],
+              ),
 
-        Row(
-          children: [
-            Container(
-                width: 90,
-                height: 20,
-                color: Color(0xff4e9b2b),
-                child: Text("Created Date")),
-            Container(
-                height: 20,
-                child: Text(debitRecord.createdDate)),
-          ],
-        ),
+              Row(
+                children: [
+                  Container(
+                      width: 90,
+                      height: 20,
+                      color: Color(0xff4e9b2b),
+                      child: Text("Created Date")),
+                  Container(
+                      height: 20,
+                      child: Text(debitRecord.createdDate)),
+                ],
+              ),
 
-        Row(
-          children: [
-            Container(
-                width: 90,
-                height: 20,
-                color: Color(0xff4e9b2b),
-                child: Text("Edited Date")),
-            Container(
-                height: 20,
-                child: Text(debitRecord.editedDate)),
-          ],
-        ),
+              Row(
+                children: [
+                  Container(
+                      width: 90,
+                      height: 20,
+                      color: Color(0xff4e9b2b),
+                      child: Text("Edited Date")),
+                  Container(
+                      height: 20,
+                      child: Text(debitRecord.editedDate)),
+                ],
+              ),
 
-        Row(
-          children: [
-            Container(
-                width: 90,
-                height: 20,
-                color: Color(0xff4e9b2b),
-                child: Text("isDelivered")),
-            Container(
-                height: 20,
-                child: Text(debitRecord.isDelivered.toString())),
-          ],
-        ),
+              Row(
+                children: [
+                  Container(
+                      width: 90,
+                      height: 20,
+                      color: Color(0xff4e9b2b),
+                      child: Text("isDelivered")),
+                  Container(
+                      height: 20,
+                      child: Text(debitRecord.isDelivered.toString())),
+                ],
+              ),
 
-        Row(
-          children: [
-            Container(
-                width: 90,
-                height: 20,
-                color: Color(0xff4e9b2b),
-                child: Text("Cause")),
-            Container(
-                height: 20,
-                child: Text(debitRecord.cause)),
-          ],
-        ),
-      ],
-    ));
+              Row(
+                children: [
+                  Container(
+                      width: 90,
+                      height: 20,
+                      color: Color(0xff4e9b2b),
+                      child: Text("Cause")),
+                  Container(
+                      height: 20,
+                      child: Text(debitRecord.cause)),
+                ],
+              ),
+            ],
+          )),
+    ) ;
   }
 }

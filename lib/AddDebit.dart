@@ -38,7 +38,7 @@ class _AddDebitState extends State<AddDebit> {
   @override
   void initState(){
     _futureGetAssetsByTypeResponse = NetworkFunctions.getAssetsByType(1, 1, "");
-    sleep(Duration(seconds: 1));
+    sleep(Duration(seconds: 2));
     _futureGetAssetsByTypeResponse.then((value) {
       setState(() { });
     });
@@ -70,7 +70,6 @@ class _AddDebitState extends State<AddDebit> {
                     height: 30.0,
                     color: Color(0xfff0e8ca),
                     child: TextFormField(
-
                       decoration: InputDecoration(hintText: "User Email"),
                       keyboardType: TextInputType.emailAddress,
                     )
@@ -136,8 +135,8 @@ class _AddDebitState extends State<AddDebit> {
               padding: const EdgeInsets.only(top: 10.0),
             ),
             Flexible(
-              //child: selectedId == 0 ? buildRow() : buildDetails(selectedId),
-              child: selectedId == 0 ? buildRow() : buildRow(),
+              child: selectedId == 0 ? buildRow() : buildDetails(selectedId),
+              //child: selectedId == 0 ? buildRow() : buildRow(),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
@@ -399,9 +398,9 @@ class _AddDebitState extends State<AddDebit> {
                       ),
                       onChanged: (String value) {
                         setState(() {
-                          var splittedName = value.split(', Id: ');
-                          nameValue = splittedName[0];
-                          selectedId = int.parse(splittedName[1]);
+                          var splittedName = value.split(', ');
+                          nameValue = splittedName[1];
+                          selectedId = int.parse(splittedName.skip(4).toString());
                         });
                       },
                     )

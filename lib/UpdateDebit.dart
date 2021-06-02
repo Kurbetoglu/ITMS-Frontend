@@ -1,23 +1,41 @@
+import 'package:asset_yonet/models/GetAllDebitsResponse.dart';
+import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
-class EditDebit extends StatefulWidget {
-  const EditDebit({Key key}) : super(key: key);
+import 'models/BaseResponse.dart';
+
+DateTime selectedDate = DateTime.now();
+String radioButtonItem;
+int radioButtonId;
+
+class UpdateDebit extends StatefulWidget {
+  UpdateDebit(DebitRecord debitRecord){
+    this.debitRecord = debitRecord;
+  }
+
+  DebitRecord debitRecord;
 
   @override
-  _EditDebitState createState() => _EditDebitState();
+  _UpdateDebitState createState() => _UpdateDebitState(debitRecord);
 }
 
-class _EditDebitState extends State<EditDebit> {
+class _UpdateDebitState extends State<UpdateDebit> {
+  _UpdateDebitState(DebitRecord debitRecord){
+    this.debitRecord = debitRecord;
+  }
+
+  Future<BaseResponse> _futureBaseResponse;
+  DebitRecord debitRecord;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () =>
-                Navigator.popUntil(context, ModalRoute.withName("/searchDebits")),
+            onPressed: () => Navigator.pop(context),
           ),
-          title: Text("EDIT DEBIT"),
+          title: Text("UPDATE DEBIT"),
           backgroundColor: Color(0xff67acb0),
         ),
         resizeToAvoidBottomInset: false,
@@ -32,9 +50,8 @@ class _EditDebitState extends State<EditDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: TextFormField(
-                      decoration: InputDecoration(hintText: "Assigner"),
-                    ))
+                    child: Text(debitRecord.assigner),
+                )
               ],
             ),
             Padding(
@@ -47,10 +64,8 @@ class _EditDebitState extends State<EditDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "User"),
-                    )))
+                    child: Text(debitRecord.user),
+                )
               ],
             ),
             Padding(
@@ -63,10 +78,8 @@ class _EditDebitState extends State<EditDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "Asset Type"),
-                    )))
+                    child: Text(debitRecord.assetType),
+                )
               ],
             ),
             Padding(
@@ -79,10 +92,8 @@ class _EditDebitState extends State<EditDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "Asset Name"),
-                    )))
+                    child: Text(debitRecord.assetName),
+                )
               ],
             ),
             Padding(
@@ -95,11 +106,8 @@ class _EditDebitState extends State<EditDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration:
-                          InputDecoration(hintText: "Asset Desctription"),
-                    )))
+                    child: Text(debitRecord.assetDescription),
+                )
               ],
             ),
             Padding(
@@ -112,10 +120,8 @@ class _EditDebitState extends State<EditDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "Type"),
-                    )))
+                    child: Text(debitRecord.cause),
+                )
               ],
             ),
             Padding(
@@ -129,10 +135,8 @@ class _EditDebitState extends State<EditDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "Start Date"),
-                    )))
+                    child: Text(debitRecord.startDate),
+                )
               ],
             ),
             Padding(
@@ -146,10 +150,19 @@ class _EditDebitState extends State<EditDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                      decoration: InputDecoration(hintText: "Change End Date"),
-                    )))
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xfff0e8ca),
+                      ),
+                      onPressed: () {
+                        selectDate(context);
+                      },
+                      child: Text(
+                        selectedDate.day == DateTime.now().day ? "End Date: " + debitRecord.endDate : "End Date: " + selectedDate.toString(),
+                        style: TextStyle(color: Color(0xff707070),),
+                      ),
+                    ),
+                )
               ],
             ),
             Padding(
@@ -163,7 +176,7 @@ class _EditDebitState extends State<EditDebit> {
                   width: 300.0,
                   height: 50.0,
                   color: Color(0xfff0e8ca),
-                  child: RadioGroup(),
+                  child: RadioGroup(debitRecord.isDelivered),
                 ),
               ],
             ),
@@ -181,8 +194,33 @@ class _EditDebitState extends State<EditDebit> {
                   color: Color(0xff4e9b2b),
                   child: MaterialButton(
                     textColor: Colors.white,
-                    child: Text("Add Asset"),
-                    onPressed: () => {},
+                    child: Text("Save Changes"),
+                    onPressed: () {
+                      bool _isDelivered;
+                      if(radioButtonId == 1){
+                        _isDelivered = true;
+                      } else {
+                        _isDelivered = false;
+                      }
+
+                      if(_isDelivered != debitRecord.isDelivered ||
+                          (selectedDate.day != DateTime.now().day &&
+                              selectedDate.month != DateTime.now().month &&
+                              selectedDate.year != DateTime.now().year)){
+                        _futureBaseResponse = NetworkFunctions.updateDebit(
+                            debitRecord.id,
+                            debitRecord.assetId,
+                            _isDelivered ? 0 : (selectedDate.toUtc().millisecondsSinceEpoch/1000).toInt(),
+                            _isDelivered,
+                        );
+
+                        _futureBaseResponse.then((value) {
+                          if(value.success){
+                            Navigator.pop(context);
+                          }
+                        });
+                      }
+                    },
                   ),
                 ),
                 Container(
@@ -192,7 +230,7 @@ class _EditDebitState extends State<EditDebit> {
                   child: MaterialButton(
                     textColor: Colors.white,
                     child: Text("Cancel"),
-                    onPressed: () => {},
+                    onPressed: () => Navigator.pop(context),
                   ),
                 )
               ],
@@ -201,57 +239,70 @@ class _EditDebitState extends State<EditDebit> {
           ],
         ));
   }
+  Future selectDate(BuildContext context) async {
+    DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: new DateTime(2016),
+        lastDate: new DateTime(2222));
+    if (picked != null && picked!= selectedDate) {
+      setState(() => selectedDate = picked);
+    }
+  }
 }
 
 class RadioGroup extends StatefulWidget {
+  RadioGroup(bool isDelivered){
+    this.isDelivered = isDelivered;
+  }
+  bool isDelivered;
   @override
-  RadioGroupWidget createState() => RadioGroupWidget();
+  RadioGroupWidget createState() => RadioGroupWidget(isDelivered);
 }
 
 class RadioGroupWidget extends State {
-  // Default Radio Button Selected Item When App Starts.
-  String radioButtonItem = 'ONE';
+  RadioGroupWidget(bool isDelivered){
+    this.isDelivered = isDelivered;
+  }
 
-  // Group Value for Radio Button.
-  int id = 1;
+  bool isDelivered;
 
   Widget build(BuildContext context) {
+    radioButtonItem = isDelivered ? 'YES' : 'NO';
+    radioButtonId = isDelivered ? 1 : 0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        //Column(children: <Widget>[]),
-        //Column(children: <Widget>[]),
-        //Column(children: <Widget>[]),
         Text(
-          'Is Delivered?  |',
+          'Is Delivered?',
           style: TextStyle(fontSize: 16),
         ),
         Radio(
           value: 1,
-          groupValue: id,
+          groupValue: radioButtonId,
           onChanged: (dynamic val) {
             setState(() {
-              radioButtonItem = 'ONE';
-              id = 1;
+              radioButtonItem = 'YES';
+              radioButtonId = 1;
             });
           },
         ),
         Text(
-          'ONE',
+          'YES',
         ),
 
         Radio(
-          value: 2,
-          groupValue: id,
+          value: 0,
+          groupValue: radioButtonId,
           onChanged: (dynamic val) {
             setState(() {
-              radioButtonItem = 'TWO';
-              id = 2;
+              radioButtonItem = 'NO';
+              radioButtonId = 0;
             });
           },
         ),
         Text(
-          'TWO',
+          'NO',
         ),
       ],
     );
