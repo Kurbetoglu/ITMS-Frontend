@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'models/GetAssetsByTypeResponse.dart';
-import 'models/BaseResponse.dart';
+import 'DTO/GetAssetsByTypeResponse.dart';
+import 'DTO/BaseResponse.dart';
 import 'network/NetworkFunctions.dart';
 
 String typeValue, nameValue;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'models/BaseResponse.dart';
-import 'models/GetAllUsersResponse.dart';
+import 'DTO/BaseResponse.dart';
+import 'DTO/GetAllUsersResponse.dart';
 import 'network/NetworkFunctions.dart';
 
 class UpdateUser extends StatefulWidget {

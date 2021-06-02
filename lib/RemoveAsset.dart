@@ -2,7 +2,7 @@ import 'package:asset_yonet/RemoveAssetConfirm.dart';
 import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
-import 'models/GetAllAssetsResponse.dart';
+import 'DTO/GetAllAssetsResponse.dart';
 
 String typeValue, addedDateValue, isAssignedValue;
 

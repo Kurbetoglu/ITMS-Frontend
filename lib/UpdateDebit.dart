@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'models/GetAllDebitsResponse.dart';
-import 'models/BaseResponse.dart';
+import 'DTO/GetAllDebitsResponse.dart';
+import 'DTO/BaseResponse.dart';
 import 'network/NetworkFunctions.dart';
 
 class UpdateDebit extends StatefulWidget {

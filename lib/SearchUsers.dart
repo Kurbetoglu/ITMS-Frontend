@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'UpdateUser.dart';
-import 'models/GetAllUsersResponse.dart';
+import 'DTO/GetAllUsersResponse.dart';
 import 'network/NetworkFunctions.dart';
 
 class SearchUsers extends StatefulWidget {

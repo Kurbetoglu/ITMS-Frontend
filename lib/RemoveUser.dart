@@ -2,7 +2,7 @@ import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
 import 'RemoveUserConfirm.dart';
-import 'models/GetAllUsersResponse.dart';
+import 'DTO/GetAllUsersResponse.dart';
 
 class RemoveUser extends StatefulWidget {
   @override

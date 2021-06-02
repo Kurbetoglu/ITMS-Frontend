@@ -1,7 +1,7 @@
 import 'package:asset_yonet/network/NetworkFunctions.dart';
 import 'package:flutter/material.dart';
 
-import 'models/BaseResponse.dart';
+import 'DTO/BaseResponse.dart';
 
 class RemoveDebitConfirm extends StatefulWidget {
   RemoveDebitConfirm(this.debitId, this.parentAction);

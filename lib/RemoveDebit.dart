@@ -1,7 +1,7 @@
 import 'package:asset_yonet/RemoveDebitConfirm.dart';
 import 'package:flutter/material.dart';
 
-import 'models/GetAllDebitsResponse.dart';
+import 'DTO/GetAllDebitsResponse.dart';
 import 'network/NetworkFunctions.dart';
 
 String typeValue, startDateValue, endDateValue, isDeliveredValue;

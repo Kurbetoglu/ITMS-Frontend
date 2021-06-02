@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'models/GetAllDebitsResponse.dart';
+import 'DTO/GetAllDebitsResponse.dart';
 import 'network/NetworkFunctions.dart';
 import 'UpdateDebit.dart';
 

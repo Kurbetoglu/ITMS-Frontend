@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'UpdateAsset.dart';
-import 'models/GetAllAssetsResponse.dart';
+import 'DTO/GetAllAssetsResponse.dart';
 import 'network/NetworkFunctions.dart';
 
 String typeValue, addedDateValue, isAssignedValue;

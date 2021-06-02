@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'network/NetworkFunctions.dart';
-import 'models/BaseResponse.dart';
-import 'models/GetAllAssetsResponse.dart';
+import 'DTO/BaseResponse.dart';
+import 'DTO/GetAllAssetsResponse.dart';
 
 class UpdateAsset extends StatefulWidget {
   UpdateAsset(this.assetRecord, this.parentAction);

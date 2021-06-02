@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:asset_yonet/models/AdminLoginResponse.dart';
-import 'package:asset_yonet/models/BaseResponse.dart';
-import 'package:asset_yonet/models/GetAllAssetsResponse.dart';
-import 'package:asset_yonet/models/GetAllDebitsResponse.dart';
-import 'package:asset_yonet/models/GetAllUsersResponse.dart';
-import 'package:asset_yonet/models/GetAssetsByTypeResponse.dart';
+import 'package:asset_yonet/DTO/AdminLoginResponse.dart';
+import 'package:asset_yonet/DTO/BaseResponse.dart';
+import 'package:asset_yonet/DTO/GetAllAssetsResponse.dart';
+import 'package:asset_yonet/DTO/GetAllDebitsResponse.dart';
+import 'package:asset_yonet/DTO/GetAllUsersResponse.dart';
+import 'package:asset_yonet/DTO/GetAssetsByTypeResponse.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 

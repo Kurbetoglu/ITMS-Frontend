@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'models/BaseResponse.dart';
+import 'DTO/BaseResponse.dart';
 import 'network/NetworkFunctions.dart';
 
 class RemoveAssetConfirm extends StatefulWidget {

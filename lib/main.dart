@@ -12,7 +12,7 @@ import 'SearchAssets.dart';
 import 'SearchDebits.dart';
 import 'SearchUsers.dart';
 import 'Users.dart';
-import 'models/AdminLoginResponse.dart';
+import 'DTO/AdminLoginResponse.dart';
 import 'network/NetworkFunctions.dart';
 
 void main() async{
