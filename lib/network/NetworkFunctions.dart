@@ -324,25 +324,6 @@ class NetworkFunctions {
     }
   }
 
-  static Future<GetAssetsByTypeResponse> getAssetsByType(int pageNumber, int pageSize, String type) async {
-    setCookie();
-    final response = await http.post(
-      Uri.parse(uri + "/GetAssetsByType"),
-      headers: headers,
-      body: jsonEncode(<String, dynamic>{
-        "pageNumber": pageNumber,
-        "pageSize": pageSize,
-        "type": type
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      return GetAssetsByTypeResponse.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception("Failed to fetching assets.");
-    }
-  }
-
   void updateCookie(http.Response response) {
     String rawCookie = response.headers["set-cookie"];
     if (rawCookie != null) {

@@ -4,7 +4,7 @@ import 'DTO/BaseResponse.dart';
 import 'network/NetworkFunctions.dart';
 
 
-DateTime selectedDate = DateTime.now();
+
 
 class AddAsset extends StatefulWidget {
   const AddAsset({Key key}) : super(key: key);
@@ -19,6 +19,7 @@ class _AddAssetState extends State<AddAsset> {
   TextEditingController personNameTextEditingController = TextEditingController();
   TextEditingController personSurnameTextEditingController = TextEditingController();
   TextEditingController personEmailTextEditingController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
   Future<BaseResponse> _futureBaseResponse;
   String typeValue;
   bool isEmailValid = false;
@@ -26,6 +27,7 @@ class _AddAssetState extends State<AddAsset> {
   @override
   void dispose() {
     typeValue = null;
+    selectedDate = null;
     isEmailValid = null;
     nameTextEditingController.dispose();
     descriptionTextEditingController.dispose();
@@ -86,6 +88,14 @@ class _AddAssetState extends State<AddAsset> {
                     onChanged: (String value) {
                       setState(() {
                         typeValue = value;
+
+                        nameTextEditingController.text = "";
+                        descriptionTextEditingController.text = "";
+                        selectedDate = DateTime.now();
+                        personNameTextEditingController.text = "";
+                        personSurnameTextEditingController.text = "";
+                        personEmailTextEditingController.text = "";
+
                       });
                     },
                   ),
@@ -136,13 +146,14 @@ class _AddAssetState extends State<AddAsset> {
                       color: Color(0xfff0e8ca),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                          alignment: Alignment.centerLeft,
                           primary: Color(0xfff0e8ca),
                         ),
                         onPressed: () {
                           selectDate(context);
                         },
-                        child: const Text(
-                          "Pick Expiry Date",
+                        child: Text(
+                          selectedDate.day == DateTime.now().day ? "Pick Expiry Date" : "Expiry Date: " + selectedDate.toString(),
                           style: TextStyle(
                             color: Colors.black,
                           ),
@@ -240,35 +251,35 @@ class _AddAssetState extends State<AddAsset> {
                     textColor: Colors.white,
                     child: Text("Add Asset"),
                     onPressed: () {
-                      if(isEmailValid){
-                        switch(typeValue){
-                          case "Fiziksel":{
-                            _futureBaseResponse = NetworkFunctions.addAsset(
-                              typeValue,
-                              nameTextEditingController.text,
-                              descriptionTextEditingController.text,
-                              0,
-                              null,
-                              null,
-                              null,
-                            );
-                          }
-                          break;
+                      switch(typeValue){
+                        case "Fiziksel":{
+                          _futureBaseResponse = NetworkFunctions.addAsset(
+                            typeValue,
+                            nameTextEditingController.text,
+                            descriptionTextEditingController.text,
+                            0,
+                            null,
+                            null,
+                            null,
+                          );
+                        }
+                        break;
 
-                          case "Dijital":{
-                            _futureBaseResponse = NetworkFunctions.addAsset(
-                              typeValue,
-                              nameTextEditingController.text,
-                              descriptionTextEditingController.text,
-                              (selectedDate.toUtc().millisecondsSinceEpoch ~/ 1000),
-                              null,
-                              null,
-                              null,
-                            );
-                          }
-                          break;
+                        case "Dijital":{
+                          _futureBaseResponse = NetworkFunctions.addAsset(
+                            typeValue,
+                            nameTextEditingController.text,
+                            descriptionTextEditingController.text,
+                            (selectedDate.toUtc().millisecondsSinceEpoch ~/ 1000),
+                            null,
+                            null,
+                            null,
+                          );
+                        }
+                        break;
 
-                          case "İnsan Kaynağı":{
+                        case "İnsan Kaynağı":{
+                          if(isEmailValid){
                             _futureBaseResponse = NetworkFunctions.addAsset(
                               typeValue,
                               nameTextEditingController.text,
@@ -279,11 +290,20 @@ class _AddAssetState extends State<AddAsset> {
                               personEmailTextEditingController.text,
                             );
                           }
-                          break;
                         }
-
+                        break;
+                      }
+                      if(typeValue == "İnsan Kaynağı"){
+                        if(isEmailValid){
+                          _futureBaseResponse.then((value) {
+                            if (value.success) {
+                              Navigator.popUntil(context, ModalRoute.withName("/homepage"));
+                            }
+                          });
+                        }
+                      }
+                      else {
                         _futureBaseResponse.then((value) {
-                          print(value.success);
                           if (value.success) {
                             Navigator.popUntil(context, ModalRoute.withName("/homepage"));
                           }

@@ -29,7 +29,7 @@ class _SearchUsersState extends State<SearchUsers> {
   }
 
   updateWidget(int number){
-    _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(null, 0, 0);
+    _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(searchController.text, 0, 0);
     _futureGetAllUsersResponse.then((value) {
       setState(() {});
     });

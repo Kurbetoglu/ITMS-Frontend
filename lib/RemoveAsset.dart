@@ -36,7 +36,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
   }
 
   updateWidget(int number){
-    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, null, null, null);
+    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
     _futureGetAllAssetsResponse.then((value) {
       setState(() {});
     });
@@ -74,7 +74,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
                     textColor: Colors.white,
                     child: Text("Search"),
                     onPressed: () {
-                      _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, null, null, null);
+                      _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
                       _futureGetAllAssetsResponse.then((value) {
                         setState(() {});
                       });
@@ -99,7 +99,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
                       'Type',
                       'Fiziksel',
                       'Dijital',
-                      'İnsan',
+                      'İnsan Kaynağı',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -176,8 +176,8 @@ class _RemoveAssetState extends State<RemoveAsset> {
                     iconEnabledColor: Colors.black,
                     items: <String>[
                       'Is Assigned?',
-                      'true',
-                      'false',
+                      'True',
+                      'False',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

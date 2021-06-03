@@ -139,6 +139,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     color: Color(0xfff0e8ca),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        alignment: Alignment.centerLeft,
                         primary: Color(0xfff0e8ca),
                       ),
                       onPressed: () {

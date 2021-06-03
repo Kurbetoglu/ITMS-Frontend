@@ -39,7 +39,7 @@ class _SearchDebitsState extends State<SearchDebits> {
   }
 
   updateWidget(int number){
-    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0, null, null, null);
+    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, typeValue, isDeliveredValue, assetNameValue);
     _futureGetAllDebitsResponse.then((value) {
       setState(() { });
     });
@@ -78,7 +78,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                     textColor: Colors.white,
                     child: Text("Search"),
                     onPressed: () {
-                      _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, null, null, null);
+                      _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, typeValue, isDeliveredValue, assetNameValue);
                       _futureGetAllDebitsResponse.then((value) {
                         setState(() { });
                       });
@@ -123,7 +123,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                     onChanged: (String value) {
                       setState(() {
                         typeValue = value == 'Type' ? null : value;
-                        _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0, typeValue, isDeliveredValue, assetNameValue);
+                        _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, typeValue, isDeliveredValue, assetNameValue);
                         _futureGetAllDebitsResponse.then((value) {
                           setState(() { });
                         });
@@ -162,7 +162,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                     onChanged: (String value) {
                       setState(() {
                         assetNameValue = value == 'Asset Name' ? null : value;
-                        _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0, typeValue, isDeliveredValue, assetNameValue);
+                        _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, typeValue, isDeliveredValue, assetNameValue);
                         _futureGetAllDebitsResponse.then((value) {
                           setState(() { });
                         });
@@ -180,8 +180,8 @@ class _SearchDebitsState extends State<SearchDebits> {
                     iconEnabledColor: Colors.black,
                     items: <String>[
                       'Is Delivered?',
-                      'true',
-                      'false',
+                      'True',
+                      'False',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -192,7 +192,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                       );
                     }).toList(),
                     hint: Text(
-                      "Is Delivered?",
+                      'Is Delivered?',
                       style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 14,
@@ -201,7 +201,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                     onChanged: (String value) {
                       setState(() {
                         isDeliveredValue = value == 'Is Delivered?' ? null : value;
-                        _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0, typeValue, isDeliveredValue, assetNameValue);
+                        _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, typeValue, isDeliveredValue, assetNameValue);
                         _futureGetAllDebitsResponse.then((value) {
                           setState(() { });
                         });

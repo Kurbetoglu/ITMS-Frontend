@@ -205,6 +205,7 @@ class _UpdateAssetState extends State<UpdateAsset> {
                     color: Color(0xfff0e8ca),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        alignment: Alignment.centerLeft,
                         primary: Color(0xfff0e8ca),
                       ),
                       onPressed: () {
@@ -282,7 +283,7 @@ class _UpdateAssetState extends State<UpdateAsset> {
                               return null;
                             }
                             else {
-                              return 'Telephone number is not valid.';
+                              return 'Email is not valid.';
                             }
                           }
                         },
@@ -344,27 +345,41 @@ class _UpdateAssetState extends State<UpdateAsset> {
                         break;
 
                         case "İnsan Kaynağı": {
-                          _futureBaseResponse = NetworkFunctions.updateAsset(
-                              widget.assetRecord.id,
-                              typeValue,
-                              nameController.text,
-                              descriptionController.text,
-                              0,
-                              personNameController.text,
-                              personSurnameController.text,
-                              personEmailController.text,
-                              _isAssigned
-                          );
+                          if(isEmailValid){
+                            _futureBaseResponse = NetworkFunctions.updateAsset(
+                                widget.assetRecord.id,
+                                typeValue,
+                                nameController.text,
+                                descriptionController.text,
+                                0,
+                                personNameController.text,
+                                personSurnameController.text,
+                                personEmailController.text,
+                                _isAssigned
+                            );
+                          }
                         }
                         break;
                       }
 
-                      _futureBaseResponse.then((value) {
-                        if(value.success){
-                          widget.parentAction(1);
-                          Navigator.pop(context);
+                      if(typeValue == "İnsan Kaynağı"){
+                        if(isEmailValid){
+                          _futureBaseResponse.then((value) {
+                            if(value.success){
+                              widget.parentAction(1);
+                              Navigator.pop(context);
+                            }
+                          });
                         }
-                      });
+                      }
+                      else {
+                        _futureBaseResponse.then((value) {
+                          if(value.success){
+                            widget.parentAction(1);
+                            Navigator.pop(context);
+                          }
+                        });
+                      }
                     },
                   ),
                 ),

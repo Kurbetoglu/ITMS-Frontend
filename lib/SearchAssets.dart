@@ -36,7 +36,7 @@ class _SearchAssetsState extends State<SearchAssets> {
   }
 
   updateWidget(int number){
-    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(null, 0, 0, null, null, null);
+    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
     _futureGetAllAssetsResponse.then((value) {
       setState(() {});
     });
@@ -74,7 +74,7 @@ class _SearchAssetsState extends State<SearchAssets> {
                     textColor: Colors.white,
                     child: Text("Search"),
                     onPressed: () {
-                      _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, null, null, null);
+                      _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
                       _futureGetAllAssetsResponse.then((value) {
                         setState(() {});
                       });
@@ -176,8 +176,8 @@ class _SearchAssetsState extends State<SearchAssets> {
                     iconEnabledColor: Colors.black,
                     items: <String>[
                       'Is Assigned?',
-                      'true',
-                      'false',
+                      'True',
+                      'False',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

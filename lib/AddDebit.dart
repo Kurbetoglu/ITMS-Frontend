@@ -25,10 +25,7 @@ class _AddDebitState extends State<AddDebit> {
 
   @override
   void initState(){
-    _futureGetAssetsByTypeResponse = NetworkFunctions.getAssetsByType(1, 1, "");
-    _futureGetAssetsByTypeResponse.then((value) {
-      setState(() { });
-    });
+    super.initState();
   }
 
   @override
@@ -36,9 +33,10 @@ class _AddDebitState extends State<AddDebit> {
     userEmailTextEditingController.dispose();
     assetIdTextEditingController.dispose();
     causeTextEditingController.dispose();
-    typeValue = "";
-    nameValue = "";
+    typeValue = null;
+    nameValue = null;
     selectedId = 0;
+    selectedDate = null;
     isEmailValid = null;
     super.dispose();
   }
@@ -119,13 +117,14 @@ class _AddDebitState extends State<AddDebit> {
                     color: Color(0xfff0e8ca),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        alignment: Alignment.centerLeft,
                         primary: Color(0xfff0e8ca),
                       ),
                       onPressed: () {
                         selectDate(context);
                       },
                       child: Text(
-                        "Pick End Date",
+                        selectedDate.day == DateTime.now().day ? "Pick End Date" : "End Date: " + selectedDate.toString(),
                         style: TextStyle(
                           color: Colors.black,
                         ),
