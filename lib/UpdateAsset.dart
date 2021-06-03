@@ -147,7 +147,10 @@ class _UpdateAssetState extends State<UpdateAsset> {
                   height: 40.0,
                   alignment: Alignment.centerLeft,
                   color: Color(0xfff0e8ca),
-                  child:Text("Added Date: " + widget.assetRecord.addedDate),
+                  child:Text(
+                      "Added Date: " + widget.assetRecord.addedDate,
+                    style: TextStyle(color: Color(0xff707070)),
+                  ),
                 ),
               ],
             ),

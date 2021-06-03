@@ -53,7 +53,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(widget.debitRecord.assigner),
+                    child: Text(widget.debitRecord.assigner, style: TextStyle(color: Color(0xff707070))),
                 )
               ],
             ),
@@ -65,7 +65,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(widget.debitRecord.user),
+                    child: Text(widget.debitRecord.user, style: TextStyle(color: Color(0xff707070))),
                 )
               ],
             ),
@@ -77,7 +77,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(widget.debitRecord.assetType),
+                    child: Text(widget.debitRecord.assetType, style: TextStyle(color: Color(0xff707070))),
                 )
               ],
             ),
@@ -89,7 +89,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(widget.debitRecord.assetName),
+                    child: Text(widget.debitRecord.assetName, style: TextStyle(color: Color(0xff707070))),
                 )
               ],
             ),
@@ -101,7 +101,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(widget.debitRecord.assetDescription),
+                    child: Text(widget.debitRecord.assetDescription, style: TextStyle(color: Color(0xff707070))),
                 )
               ],
             ),
@@ -113,7 +113,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(widget.debitRecord.cause),
+                    child: Text(widget.debitRecord.cause, style: TextStyle(color: Color(0xff707070))),
                 )
               ],
             ),
@@ -125,7 +125,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                     width: 300.0,
                     height: 30.0,
                     color: Color(0xfff0e8ca),
-                    child: Text(widget.debitRecord.startDate),
+                    child: Text("Start Date: " + widget.debitRecord.startDate, style: TextStyle(color: Color(0xff707070))),
                 )
               ],
             ),
