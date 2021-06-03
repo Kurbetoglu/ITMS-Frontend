@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'network/NetworkFunctions.dart';
 import 'DTO/BaseResponse.dart';
@@ -20,9 +21,10 @@ class _UpdateAssetState extends State<UpdateAsset> {
   TextEditingController personNameController = TextEditingController();
   TextEditingController personSurnameController = TextEditingController();
   TextEditingController personEmailController = TextEditingController();
-  bool _isAssigned;
+  bool _isAssigned, isEmailValid = false;
   DateTime selectedDate = DateTime.now();
   String typeValue;
+
   @override
   void initState(){
     typeValue = widget.assetRecord.type;
@@ -40,6 +42,7 @@ class _UpdateAssetState extends State<UpdateAsset> {
   void dispose(){
     typeValue = null;
     selectedDate = null;
+    isEmailValid = null;
     nameController.dispose();
     descriptionController.dispose();
     personNameController.dispose();
@@ -70,7 +73,7 @@ class _UpdateAssetState extends State<UpdateAsset> {
               children: [
                 Container(
                   width: 300.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
                     value: widget.assetRecord.type,
@@ -111,10 +114,11 @@ class _UpdateAssetState extends State<UpdateAsset> {
               children: [
                 Container(
                   width: 300.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child:TextField(
                     controller: nameController,
+                    style: TextStyle(fontSize: 14),
                   ),
                 ),
               ],
@@ -125,10 +129,11 @@ class _UpdateAssetState extends State<UpdateAsset> {
               children: [
                 Container(
                   width: 300.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child:TextField(
                     controller: descriptionController,
+                    style: TextStyle(fontSize: 14),
                   ),
                 ),
               ],
@@ -139,7 +144,8 @@ class _UpdateAssetState extends State<UpdateAsset> {
               children: [
                 Container(
                   width: 300.0,
-                  height: 30.0,
+                  height: 40.0,
+                  alignment: Alignment.centerLeft,
                   color: Color(0xfff0e8ca),
                   child:Text("Added Date: " + widget.assetRecord.addedDate),
                 ),
@@ -151,7 +157,7 @@ class _UpdateAssetState extends State<UpdateAsset> {
               children: [
                 Container(
                   width: 300.0,
-                  height: 50.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -192,7 +198,7 @@ class _UpdateAssetState extends State<UpdateAsset> {
                 children: [
                   Container(
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     color: Color(0xfff0e8ca),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -203,7 +209,7 @@ class _UpdateAssetState extends State<UpdateAsset> {
                       },
                       child: Text(
                         selectedDate.day == DateTime.now().day ? "Expiry Date: " + widget.assetRecord.expiryDate : "Expiry Date: " + selectedDate.toString(),
-                        style: TextStyle(color: Color(0xff707070),),
+                        style: TextStyle(color: Colors.black,),
                       ),
                     ),
                   )
@@ -218,10 +224,11 @@ class _UpdateAssetState extends State<UpdateAsset> {
                 children: [
                   Container(
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     color: Color(0xfff0e8ca),
                     child:TextField(
                       controller: personNameController,
+                      style: TextStyle(fontSize: 14),
                     ),
                   ),
                 ],
@@ -235,10 +242,11 @@ class _UpdateAssetState extends State<UpdateAsset> {
                 children: [
                   Container(
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     color: Color(0xfff0e8ca),
                     child:TextField(
                       controller: personSurnameController,
+                      style: TextStyle(fontSize: 14),
                     ),
                   ),
                 ],
@@ -252,11 +260,30 @@ class _UpdateAssetState extends State<UpdateAsset> {
                 children: [
                   Container(
                     width: 300.0,
-                    height: 30.0,
+                    height: 65.0,
+                    alignment: Alignment.bottomCenter,
                     color: Color(0xfff0e8ca),
-                    child:TextField(
-                      controller: personEmailController,
-                    ),
+                      child: TextFormField(
+                        autovalidate: true,
+                        controller: personEmailController,
+                        decoration: InputDecoration(hintText: "Telephone Number"),
+                        style: TextStyle(fontSize: 14),
+                        validator: (value) {
+                          if(value.isEmpty){
+                            isEmailValid = false;
+                            return null;
+                          }
+                          else {
+                            if(validateEmail(value)){
+                              isEmailValid = true;
+                              return null;
+                            }
+                            else {
+                              return 'Telephone number is not valid.';
+                            }
+                          }
+                        },
+                      )
                   ),
                 ],
               ),
@@ -363,6 +390,12 @@ class _UpdateAssetState extends State<UpdateAsset> {
     if (picked != null && picked!= selectedDate) {
       setState(() => selectedDate = picked);
     }
+  }
+
+  bool validateEmail(String value) {
+    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    return regex.hasMatch(value) ? true : false;
   }
 }
 

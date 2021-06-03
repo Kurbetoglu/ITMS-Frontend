@@ -146,7 +146,7 @@ class _UpdateDebitState extends State<UpdateDebit> {
                       },
                       child: Text(
                         selectedDate.day == DateTime.now().day ? "End Date: " + widget.debitRecord.endDate : "End Date: " + selectedDate.toString(),
-                        style: TextStyle(color: Color(0xff707070),),
+                        style: TextStyle(color: Colors.black,),
                       ),
                     ),
                 )

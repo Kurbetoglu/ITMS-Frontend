@@ -68,11 +68,11 @@ class _SearchDebitsState extends State<SearchDebits> {
                 Container(
                     color: Color(0xfff0e8ca),
                     width: 280,
-                    height: 30,
+                    height: 40,
                     child: TextFormField(controller: searchController,)),
                 Container(
                   width: 100.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xff4e9b2b),
                   child: MaterialButton(
                     textColor: Colors.white,
@@ -93,7 +93,7 @@ class _SearchDebitsState extends State<SearchDebits> {
               children: [
                 Container(
                   width: 120.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
                     value: typeValue,
@@ -132,8 +132,8 @@ class _SearchDebitsState extends State<SearchDebits> {
                   ),
                 ),
                 Container(
-                  width: 110.0,
-                  height: 30.0,
+                  width: 120.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
                     value: assetNameValue,
@@ -171,8 +171,8 @@ class _SearchDebitsState extends State<SearchDebits> {
                   ),
                 ),
                 Container(
-                  width: 110.0,
-                  height: 30.0,
+                  width: 130.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
                     value: isDeliveredValue,
@@ -281,100 +281,67 @@ class CustomCardWidget extends State<CustomCard> {
               Row(
                 children: [
                   labelContainer("Assigner"),
-                  Container(
-                      height: 20,
-                      child: Text(widget.debitRecord.assigner)
-                  ),
+                  valueContainer(widget.debitRecord.assigner),
                 ],
               ),
               Row(
                 children: [
                   labelContainer("User"),
-                  Container(
-                      height: 20,
-                      child: Text(widget.debitRecord.user)
-                  ),
+                  valueContainer(widget.debitRecord.user),
                 ],
               ),
               Row(
                 children: [
                   labelContainer("Asset Type"),
-                  Container(
-                      height: 20,
-                      child: Text(widget.debitRecord.assetType)
-                  ),
+                  valueContainer(widget.debitRecord.assetType),
                 ],
               ),
               Row(
                 children: [
                   labelContainer("Asset Name"),
-                  Container(
-                      height: 20,
-                      child: Text(widget.debitRecord.assetName)
-                  ),
+                  valueContainer(widget.debitRecord.assetName),
                 ],
               ),
               Row(
                 children: [
                   labelContainer("Asset Desc."),
-                  Container(
-                      height: 20,
-                      child: Text(widget.debitRecord.assetDescription)
-                  ),
+                  valueContainer(widget.debitRecord.assetDescription),
                 ],
               ),
               Row(
                 children: [
                   labelContainer("Start Date"),
-                  Container(
-                      height: 20,
-                      child: Text(widget.debitRecord.startDate)
-                  ),
+                  valueContainer(widget.debitRecord.startDate),
                 ],
               ),
               Row(
                 children: [
                   labelContainer("End Date"),
-                  Container(
-                      height: 20,
-                      child: Text(widget.debitRecord.endDate)
-                  ),
+                  valueContainer(widget.debitRecord.endDate),
                 ],
               ),
               Row(
                 children: [
                   labelContainer("Created Date"),
-                  Container(
-                      height: 20,
-                      child: Text(widget.debitRecord.createdDate)
-                  ),
+                  valueContainer(widget.debitRecord.createdDate),
                 ],
               ),
               Row(
                 children: [
                   labelContainer("Edited Date"),
-                  Container(
-                      height: 20,
-                      child: Text(widget.debitRecord.editedDate)
-                  ),
+                  valueContainer(widget.debitRecord.editedDate),
                 ],
               ),
               Row(
                 children: [
                   labelContainer("isDelivered"),
-                  Container(
-                      height: 20,
-                      child: Text(widget.debitRecord.isDelivered.toString())
-                  ),
+                  valueContainer(widget.debitRecord.isDelivered.toString()),
                 ],
               ),
               Row(
                 children: [
                   labelContainer("Cause"),
-                  Container(
-                      height: 20,
-                      child: Text(widget.debitRecord.cause)
-                  ),
+                  valueContainer(widget.debitRecord.cause),
                 ],
               ),
             ],
@@ -386,9 +353,20 @@ class CustomCardWidget extends State<CustomCard> {
   Container labelContainer(String labelName){
     return Container(
         width: 90,
-        height: 20,
+        height: 25,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsetsDirectional.only(start: 5),
         color: Color(0xff4e9b2b),
         child: Text(labelName)
+    );
+  }
+
+  Container valueContainer(String valueName){
+    return Container(
+        height: 25,
+        alignment: Alignment.center,
+        padding: EdgeInsetsDirectional.only(start: 5),
+        child: Text(valueName)
     );
   }
 }

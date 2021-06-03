@@ -27,6 +27,13 @@ class _RemoveUserState extends State<RemoveUser> {
     super.dispose();
   }
 
+  updateWidget(int number){
+    _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(searchController.text, 0, 0);
+    _futureGetAllUsersResponse.then((value) {
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -50,11 +57,11 @@ class _RemoveUserState extends State<RemoveUser> {
                     Container(
                         color: Color(0xfff0e8ca),
                         width: 280,
-                        height: 30,
+                        height: 40,
                         child: TextFormField(controller: searchController,)),
                     Container(
                       width: 100.0,
-                      height: 30.0,
+                      height: 40.0,
                       color: Color(0xff4e9b2b),
                       child: MaterialButton(
                         textColor: Colors.white,
@@ -90,7 +97,7 @@ class _RemoveUserState extends State<RemoveUser> {
           print(snapshot.error);
         }
         return snapshot.hasData
-            ? CustomDataRow(snapshot.data.records)
+            ? CustomDataRow(snapshot.data.records, updateWidget)
             : Center(child: CircularProgressIndicator());
       },
     );
@@ -98,8 +105,9 @@ class _RemoveUserState extends State<RemoveUser> {
 }
 
 class CustomDataRow extends StatefulWidget {
-  CustomDataRow(this.userRecords);
+  CustomDataRow(this.userRecords, this.parentAction);
   List<UserRecord> userRecords;
+  ValueChanged<int> parentAction;
 
   @override
   CustomDataRowWidget createState() => CustomDataRowWidget();
@@ -154,7 +162,7 @@ class CustomDataRowWidget extends State<CustomDataRow> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => RemoveUserConfirm(userRecord.id)
+                          builder: (context) => RemoveUserConfirm(userRecord.id, widget.parentAction)
                       ),
                     );
                   } ),

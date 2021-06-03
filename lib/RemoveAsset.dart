@@ -35,6 +35,13 @@ class _RemoveAssetState extends State<RemoveAsset> {
     super.dispose();
   }
 
+  updateWidget(int number){
+    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, null, null, null);
+    _futureGetAllAssetsResponse.then((value) {
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -47,7 +54,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
               onPressed: () =>
                   Navigator.popUntil(context, ModalRoute.withName("/homepage")),
             ),
-            title: Text("REMOVE ASSETS"),
+            title: Text("REMOVE ASSET"),
             backgroundColor: Color(0xff67acb0),
           ),
           body: ListView(children: <Widget>[
@@ -57,11 +64,11 @@ class _RemoveAssetState extends State<RemoveAsset> {
                 Container(
                     color: Color(0xfff0e8ca),
                     width: 280,
-                    height: 30,
+                    height: 40,
                     child: TextFormField(controller: searchController,)),
                 Container(
                   width: 100.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xff4e9b2b),
                   child: MaterialButton(
                     textColor: Colors.white,
@@ -76,15 +83,13 @@ class _RemoveAssetState extends State<RemoveAsset> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  width: 75.0,
-                  height: 30.0,
+                  width: 120.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
                     value: typeValue,
@@ -123,8 +128,8 @@ class _RemoveAssetState extends State<RemoveAsset> {
                   ),
                 ),
                 Container(
-                  width: 90.0,
-                  height: 30.0,
+                  width: 120.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
                     value: nameValue,
@@ -162,8 +167,8 @@ class _RemoveAssetState extends State<RemoveAsset> {
                   ),
                 ),
                 Container(
-                  width: 100.0,
-                  height: 30.0,
+                  width: 130.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
                     value: isAssignedValue,
@@ -202,17 +207,16 @@ class _RemoveAssetState extends State<RemoveAsset> {
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
             Container(
               padding: EdgeInsets.all(10),
               child: _futureGetAllAssetsResponse == null
                 ? Container(width: 0, height: 0,)
                 : generateCustomDataRows(),
             ),
-
-          ])),
+          ]
+          )
+      ),
     );
   }
 
@@ -224,7 +228,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
           print(snapshot.error);
         }
         return snapshot.hasData
-            ? CustomDataRow(snapshot.data.records)
+            ? CustomDataRow(snapshot.data.records, updateWidget)
             : Center(child: CircularProgressIndicator());
       },
     );
@@ -232,27 +236,15 @@ class _RemoveAssetState extends State<RemoveAsset> {
 }
 
 class CustomDataRow extends StatefulWidget {
+  CustomDataRow(this.assetRecords, this.parentAction);
+
   List<AssetRecord> assetRecords;
-
-  CustomDataRow(List<AssetRecord> assetRecords) {
-    this.assetRecords = assetRecords;
-  }
-
+  ValueChanged<int> parentAction;
   @override
-  CustomDataRowWidget createState() => CustomDataRowWidget(assetRecords);
+  CustomDataRowWidget createState() => CustomDataRowWidget();
 }
 
 class CustomDataRowWidget extends State<CustomDataRow> {
-  List<AssetRecord> assetRecords;
-
-  CustomDataRowWidget(List<AssetRecord> assetRecords) {
-    this.assetRecords = assetRecords;
-  }
-
-  updateWidget(int number){
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -293,7 +285,7 @@ class CustomDataRowWidget extends State<CustomDataRow> {
             label: Text('REMOVE', style: TextStyle(color: Colors.red),),
           ),
         ],
-        rows: assetRecords
+        rows: widget.assetRecords
             .map((assetRecord) => DataRow(
             cells: [
                   DataCell(Text(assetRecord.type)),
@@ -305,7 +297,7 @@ class CustomDataRowWidget extends State<CustomDataRow> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => RemoveAssetConfirm(assetRecord.id, updateWidget)
+                            builder: (context) => RemoveAssetConfirm(assetRecord.id, widget.parentAction)
                         ),
                     );
                   } ),

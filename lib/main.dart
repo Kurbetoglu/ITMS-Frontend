@@ -51,6 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController passwordTextEditingController = TextEditingController();
   Future<AdminLoginResponse> _futureAdminLoginResponse;
+  bool isEmailValid = false;
 
   @override
   void initState() {
@@ -66,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() {
     emailTextEditingController.dispose();
     passwordTextEditingController.dispose();
+    isEmailValid = null;
     super.dispose();
   }
 
@@ -101,6 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Column(
                         children: <Widget>[
                           TextFormField(
+                            autovalidate: true,
                             controller: emailTextEditingController,
                             decoration: InputDecoration(
                                 labelText: "Email",
@@ -108,6 +111,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                 filled: true),
                             keyboardType: TextInputType.emailAddress,
                             style: TextStyle(color: Color(0xff707070)),
+                            validator: (value) {
+                              if(value.isEmpty){
+                                isEmailValid = false;
+                                return null;
+                              }
+                              else {
+                                if(validateEmail(value)){
+                                  isEmailValid = true;
+                                  return null;
+                                }
+                                else {
+                                  return 'Email is not valid.';
+                                }
+                              }
+                            },
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 20.0),
@@ -131,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             textColor: Colors.white,
                             child: Text("LOGIN"),
                             onPressed: () {
-                              if(emailTextEditingController.text.isNotEmpty && passwordTextEditingController.text.isNotEmpty){
+                              if(isEmailValid && passwordTextEditingController.text.isNotEmpty){
                                 _futureAdminLoginResponse = NetworkFunctions.adminLogin(emailTextEditingController.text, passwordTextEditingController.text);
                                 _futureAdminLoginResponse.then((response) {
                                   if(response.success){
@@ -156,6 +174,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+  bool validateEmail(String value) {
+    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    return regex.hasMatch(value) ? true : false;
   }
 }
 

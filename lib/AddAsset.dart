@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'DTO/BaseResponse.dart';
 import 'network/NetworkFunctions.dart';
 
-String typeValue;
+
 DateTime selectedDate = DateTime.now();
 
 class AddAsset extends StatefulWidget {
@@ -20,9 +20,13 @@ class _AddAssetState extends State<AddAsset> {
   TextEditingController personSurnameTextEditingController = TextEditingController();
   TextEditingController personEmailTextEditingController = TextEditingController();
   Future<BaseResponse> _futureBaseResponse;
+  String typeValue;
+  bool isEmailValid = false;
 
   @override
   void dispose() {
+    typeValue = null;
+    isEmailValid = null;
     nameTextEditingController.dispose();
     descriptionTextEditingController.dispose();
     personNameTextEditingController.dispose();
@@ -53,7 +57,7 @@ class _AddAssetState extends State<AddAsset> {
               children: [
                 Container(
                   width: 300.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
                     value: typeValue,
@@ -94,7 +98,7 @@ class _AddAssetState extends State<AddAsset> {
               children: [
                 Container(
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     color: Color(0xfff0e8ca),
                     child: TextFormField(
                       controller: nameTextEditingController,
@@ -109,7 +113,7 @@ class _AddAssetState extends State<AddAsset> {
               children: [
                 Container(
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
@@ -128,7 +132,7 @@ class _AddAssetState extends State<AddAsset> {
                 children: [
                   Container(
                       width: 300.0,
-                      height: 30.0,
+                      height: 40.0,
                       color: Color(0xfff0e8ca),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -140,7 +144,7 @@ class _AddAssetState extends State<AddAsset> {
                         child: const Text(
                           "Pick Expiry Date",
                           style: TextStyle(
-                            color: Color(0xff707070),
+                            color: Colors.black,
                           ),
                         ),
                       )
@@ -156,7 +160,7 @@ class _AddAssetState extends State<AddAsset> {
                 children: [
                   Container(
                       width: 300.0,
-                      height: 30.0,
+                      height: 40.0,
                       color: Color(0xfff0e8ca),
                       child: Center(
                           child: TextFormField(
@@ -176,7 +180,7 @@ class _AddAssetState extends State<AddAsset> {
                 children: [
                   Container(
                       width: 300.0,
-                      height: 30.0,
+                      height: 40.0,
                       color: Color(0xfff0e8ca),
                       child: Center(
                           child: TextFormField(
@@ -196,13 +200,29 @@ class _AddAssetState extends State<AddAsset> {
                 children: [
                   Container(
                       width: 300.0,
-                      height: 30.0,
+                      height: 65.0,
+                      alignment: Alignment.bottomCenter,
                       color: Color(0xfff0e8ca),
-                      child: Center(
-                          child: TextFormField(
-                            controller: personEmailTextEditingController,
-                            decoration: InputDecoration(hintText: "Person Email"),
-                          )
+                      child: TextFormField(
+                        autovalidate: true,
+                        controller: personEmailTextEditingController,
+                        decoration: InputDecoration(hintText: "Person Email"),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if(value.isEmpty){
+                            isEmailValid = false;
+                            return null;
+                          }
+                          else {
+                            if(validateEmail(value)){
+                              isEmailValid = true;
+                              return null;
+                            }
+                            else {
+                              return 'Email is not valid.';
+                            }
+                          }
+                        },
                       )
                   )
                 ],
@@ -220,54 +240,55 @@ class _AddAssetState extends State<AddAsset> {
                     textColor: Colors.white,
                     child: Text("Add Asset"),
                     onPressed: () {
+                      if(isEmailValid){
+                        switch(typeValue){
+                          case "Fiziksel":{
+                            _futureBaseResponse = NetworkFunctions.addAsset(
+                              typeValue,
+                              nameTextEditingController.text,
+                              descriptionTextEditingController.text,
+                              0,
+                              null,
+                              null,
+                              null,
+                            );
+                          }
+                          break;
 
-                      switch(typeValue){
-                        case "Fiziksel":{
-                          _futureBaseResponse = NetworkFunctions.addAsset(
-                            typeValue,
-                            nameTextEditingController.text,
-                            descriptionTextEditingController.text,
-                            0,
-                            null,
-                            null,
-                            null,
-                          );
-                        }
-                        break;
+                          case "Dijital":{
+                            _futureBaseResponse = NetworkFunctions.addAsset(
+                              typeValue,
+                              nameTextEditingController.text,
+                              descriptionTextEditingController.text,
+                              (selectedDate.toUtc().millisecondsSinceEpoch ~/ 1000),
+                              null,
+                              null,
+                              null,
+                            );
+                          }
+                          break;
 
-                        case "Dijital":{
-                          _futureBaseResponse = NetworkFunctions.addAsset(
-                            typeValue,
-                            nameTextEditingController.text,
-                            descriptionTextEditingController.text,
-                            (selectedDate.toUtc().millisecondsSinceEpoch ~/ 1000),
-                            null,
-                            null,
-                            null,
-                          );
+                          case "İnsan Kaynağı":{
+                            _futureBaseResponse = NetworkFunctions.addAsset(
+                              typeValue,
+                              nameTextEditingController.text,
+                              descriptionTextEditingController.text,
+                              0,
+                              personNameTextEditingController.text,
+                              personSurnameTextEditingController.text,
+                              personEmailTextEditingController.text,
+                            );
+                          }
+                          break;
                         }
-                        break;
 
-                        case "İnsan Kaynağı":{
-                          _futureBaseResponse = NetworkFunctions.addAsset(
-                            typeValue,
-                            nameTextEditingController.text,
-                            descriptionTextEditingController.text,
-                            0,
-                            personNameTextEditingController.text,
-                            personSurnameTextEditingController.text,
-                            personEmailTextEditingController.text,
-                          );
-                        }
-                        break;
+                        _futureBaseResponse.then((value) {
+                          print(value.success);
+                          if (value.success) {
+                            Navigator.popUntil(context, ModalRoute.withName("/homepage"));
+                          }
+                        });
                       }
-
-                      _futureBaseResponse.then((value) {
-                        print(value.success);
-                        if (value.success) {
-                          Navigator.popUntil(context, ModalRoute.withName("/homepage"));
-                        }
-                      });
                     },
                   ),
                 ),
@@ -289,6 +310,7 @@ class _AddAssetState extends State<AddAsset> {
         )
     );
   }
+
   Future selectDate(BuildContext context) async {
     DateTime picked = await showDatePicker(
         context: context,
@@ -298,5 +320,11 @@ class _AddAssetState extends State<AddAsset> {
     if (picked != null && picked!= selectedDate) {
       setState(() => selectedDate = picked);
     }
+  }
+
+  bool validateEmail(String value) {
+    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    return regex.hasMatch(value) ? true : false;
   }
 }

@@ -4,7 +4,8 @@ import 'DTO/BaseResponse.dart';
 import 'network/NetworkFunctions.dart';
 
 class RemoveUserConfirm extends StatefulWidget {
-  RemoveUserConfirm(this.userId);
+  RemoveUserConfirm(this.userId, this.parentAction);
+  ValueChanged<int> parentAction;
   int userId;
   @override
   _RemoveUserConfirmState createState() => _RemoveUserConfirmState();
@@ -60,6 +61,7 @@ class _RemoveUserConfirmState extends State<RemoveUserConfirm> {
                       _futureBaseResponse = NetworkFunctions.removeUser(widget.userId);
                       _futureBaseResponse.then((value) async {
                         if(value.success){
+                          widget.parentAction(1);
                           Navigator.pop(context);
                         }
                       });

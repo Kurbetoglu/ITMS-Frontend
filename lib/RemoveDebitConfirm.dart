@@ -63,8 +63,8 @@ class _RemoveDebitConfirmState extends State<RemoveDebitConfirm> {
                       _futureBaseResponse = NetworkFunctions.removeDebit(widget.debitId);
                       _futureBaseResponse.then((value) async {
                         if(value.success){
-                          Navigator.popUntil(context, ModalRoute.withName("/homepage"));
                           widget.parentAction(1);
+                          Navigator.pop(context, ModalRoute.withName("/homepage"));
                         }
                       });
                     },

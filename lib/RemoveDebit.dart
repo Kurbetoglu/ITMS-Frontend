@@ -37,6 +37,13 @@ class _RemoveDebitState extends State<RemoveDebit> {
     super.dispose();
   }
 
+  updateWidget(int number){
+    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, null, null, null);
+    _futureGetAllDebitsResponse.then((value) {
+      setState(() { });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,12 +68,12 @@ class _RemoveDebitState extends State<RemoveDebit> {
                 Container(
                     color: Color(0xfff0e8ca),
                     width: 280,
-                    height: 30,
+                    height: 40,
                     child: TextFormField(controller: searchController,)
                 ),
                 Container(
                   width: 100.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xff4e9b2b),
                   child: MaterialButton(
                     textColor: Colors.white,
@@ -87,7 +94,7 @@ class _RemoveDebitState extends State<RemoveDebit> {
               children: [
                 Container(
                   width: 75.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
                     value: typeValue,
@@ -122,7 +129,7 @@ class _RemoveDebitState extends State<RemoveDebit> {
                 ),
                 Container(
                   width: 90.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
                     value: startDateValue,
@@ -156,7 +163,7 @@ class _RemoveDebitState extends State<RemoveDebit> {
                 ),
                 Container(
                   width: 100.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
                     value: endDateValue,
@@ -190,7 +197,7 @@ class _RemoveDebitState extends State<RemoveDebit> {
                 ),
                 Container(
                   width: 100.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
                     value: isDeliveredValue,
@@ -241,7 +248,7 @@ class _RemoveDebitState extends State<RemoveDebit> {
           print(snapshot.error);
         }
         return snapshot.hasData
-            ? DebitRecordList(snapshot.data.records)
+            ? DebitRecordList(snapshot.data.records, updateWidget)
             : Center(child: CircularProgressIndicator());
       },
     );
@@ -249,8 +256,9 @@ class _RemoveDebitState extends State<RemoveDebit> {
 }
 
 class DebitRecordList extends StatelessWidget {
-  DebitRecordList(this.debitRecords);
+  DebitRecordList(this.debitRecords, this.parentAction);
   List<DebitRecord> debitRecords;
+  ValueChanged<int> parentAction;
 
   @override
   Widget build(BuildContext context) {
@@ -258,7 +266,7 @@ class DebitRecordList extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       itemCount: debitRecords.length,
       itemBuilder: (BuildContext context, int index) {
-        return CustomCardWithDelete(debitRecords[index]);
+        return CustomCardWithDelete(debitRecords[index], parentAction);
       },
       separatorBuilder: (BuildContext context, int index) => const Divider(),
     );
@@ -266,18 +274,15 @@ class DebitRecordList extends StatelessWidget {
 }
 
 class CustomCardWithDelete extends StatefulWidget {
-  CustomCardWithDelete(this.debitRecord);
+  CustomCardWithDelete(this.debitRecord, this.parentAction);
   DebitRecord debitRecord;
+  ValueChanged<int> parentAction;
 
   @override
   CustomCardWithDeleteWidget createState() => CustomCardWithDeleteWidget();
 }
 
 class CustomCardWithDeleteWidget extends State<CustomCardWithDelete> {
-  updateWidget(int number){
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -290,7 +295,7 @@ class CustomCardWithDeleteWidget extends State<CustomCardWithDelete> {
               children: [
                 Container(
                   width: 387,
-                  height: 20,
+                  height: 25,
                   color: Color(0xffc53737),
                   child: MaterialButton(
                     textColor: Colors.white,
@@ -299,7 +304,7 @@ class CustomCardWithDeleteWidget extends State<CustomCardWithDelete> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RemoveDebitConfirm(widget.debitRecord.id, updateWidget)
+                              builder: (context) => RemoveDebitConfirm(widget.debitRecord.id, widget.parentAction)
                           )
                       );
                     },
@@ -310,100 +315,67 @@ class CustomCardWithDeleteWidget extends State<CustomCardWithDelete> {
             Row(
               children: [
                 labelContainer("Assigner"),
-                Container(
-                    height: 20,
-                    child: Text(widget.debitRecord.assigner)
-                ),
+                valueContainer(widget.debitRecord.assigner),
               ],
             ),
             Row(
               children: [
                 labelContainer("User"),
-                Container(
-                    height: 20,
-                    child: Text(widget.debitRecord.user)
-                ),
+                valueContainer(widget.debitRecord.user),
               ],
             ),
             Row(
               children: [
                 labelContainer("Asset Type"),
-                Container(
-                    height: 20,
-                    child: Text(widget.debitRecord.assetType)
-                ),
+                valueContainer(widget.debitRecord.assetType),
               ],
             ),
             Row(
               children: [
                 labelContainer("Asset Name"),
-                Container(
-                    height: 20,
-                    child: Text(widget.debitRecord.assetName)
-                ),
+                valueContainer(widget.debitRecord.assetName),
               ],
             ),
             Row(
               children: [
                 labelContainer("Asset Desc."),
-                Container(
-                    height: 20,
-                    child: Text(widget.debitRecord.assetDescription)
-                ),
+                valueContainer(widget.debitRecord.assetDescription),
               ],
             ),
             Row(
               children: [
                 labelContainer("Start Date"),
-                Container(
-                    height: 20,
-                    child: Text(widget.debitRecord.startDate)
-                ),
+                valueContainer(widget.debitRecord.startDate),
               ],
             ),
             Row(
               children: [
                 labelContainer("End Date"),
-                Container(
-                    height: 20,
-                    child: Text(widget.debitRecord.endDate)
-                ),
+                valueContainer(widget.debitRecord.endDate),
               ],
             ),
             Row(
               children: [
                 labelContainer("Created Date"),
-                Container(
-                    height: 20,
-                    child: Text(widget.debitRecord.createdDate)
-                ),
+                valueContainer(widget.debitRecord.createdDate),
               ],
             ),
             Row(
               children: [
                 labelContainer("Edited Date"),
-                Container(
-                    height: 20,
-                    child: Text(widget.debitRecord.editedDate)
-                ),
+                valueContainer(widget.debitRecord.editedDate),
               ],
             ),
             Row(
               children: [
                 labelContainer("isDelivered"),
-                Container(
-                    height: 20,
-                    child: Text(widget.debitRecord.isDelivered.toString())
-                ),
+                valueContainer(widget.debitRecord.isDelivered.toString()),
               ],
             ),
             Row(
               children: [
                 labelContainer("Cause"),
-                Container(
-                    height: 20,
-                    child: Text(widget.debitRecord.cause)
-                ),
+                valueContainer(widget.debitRecord.cause),
               ],
             ),
           ],
@@ -414,9 +386,20 @@ class CustomCardWithDeleteWidget extends State<CustomCardWithDelete> {
   Container labelContainer(String labelName){
     return Container(
         width: 90,
-        height: 20,
+        height: 25,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsetsDirectional.only(start: 5),
         color: Color(0xff4e9b2b),
         child: Text(labelName)
+    );
+  }
+
+  Container valueContainer(String valueName){
+    return Container(
+        height: 25,
+        alignment: Alignment.center,
+        padding: EdgeInsetsDirectional.only(start: 5),
+        child: Text(valueName)
     );
   }
 }

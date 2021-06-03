@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'DTO/BaseResponse.dart';
@@ -16,6 +17,7 @@ class _AddUserState extends State<AddUser> {
   TextEditingController surnameTextEditingController = TextEditingController();
   TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController telephoneNumberTextEditingController = TextEditingController();
+  bool isEmailValid = false, isTelephoneNumberValid = false;
 
   @override
   void dispose() {
@@ -23,6 +25,8 @@ class _AddUserState extends State<AddUser> {
     surnameTextEditingController.dispose();
     emailTextEditingController.dispose();
     telephoneNumberTextEditingController.dispose();
+    isEmailValid = null;
+    isTelephoneNumberValid = null;
     super.dispose();
   }
 
@@ -48,7 +52,7 @@ class _AddUserState extends State<AddUser> {
               children: [
                 Container(
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     color: Color(0xfff0e8ca),
                     child: TextFormField(
                       controller: nameTextEditingController,
@@ -63,7 +67,7 @@ class _AddUserState extends State<AddUser> {
               children: [
                 Container(
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     color: Color(0xfff0e8ca),
                     child: Center(
                         child: TextFormField(
@@ -80,14 +84,29 @@ class _AddUserState extends State<AddUser> {
               children: [
                 Container(
                     width: 300.0,
-                    height: 30.0,
+                    height: 65.0,
+                    alignment: Alignment.bottomCenter,
                     color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                          controller: emailTextEditingController,
-                          decoration: InputDecoration(hintText: "Email"),
-                          keyboardType: TextInputType.emailAddress,
-                        )
+                    child: TextFormField(
+                      autovalidate: true,
+                      controller: emailTextEditingController,
+                      decoration: InputDecoration(hintText: "Email"),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if(value.isEmpty){
+                          isEmailValid = false;
+                          return null;
+                        }
+                        else {
+                          if(validateEmail(value)){
+                            isEmailValid = true;
+                            return null;
+                          }
+                          else {
+                            return 'Email is not valid.';
+                          }
+                        }
+                      },
                     )
                 )
               ],
@@ -98,13 +117,28 @@ class _AddUserState extends State<AddUser> {
               children: [
                 Container(
                     width: 300.0,
-                    height: 30.0,
+                    height: 65.0,
+                    alignment: Alignment.bottomCenter,
                     color: Color(0xfff0e8ca),
-                    child: Center(
-                        child: TextFormField(
-                          controller: telephoneNumberTextEditingController,
-                          decoration: InputDecoration(hintText: "Telephone Number"),
-                        )
+                    child: TextFormField(
+                      autovalidate: true,
+                      controller: telephoneNumberTextEditingController,
+                      decoration: InputDecoration(hintText: "Telephone Number"),
+                      validator: (value) {
+                        if(value.isEmpty){
+                          isTelephoneNumberValid = false;
+                          return null;
+                        }
+                        else {
+                          if(validateTelephoneNumber(value)){
+                            isTelephoneNumberValid = true;
+                            return null;
+                          }
+                          else {
+                            return 'Telephone number is not valid.';
+                          }
+                        }
+                      },
                     )
                 )
               ],
@@ -121,17 +155,19 @@ class _AddUserState extends State<AddUser> {
                     textColor: Colors.white,
                     child: Text("Add User"),
                     onPressed: () {
-                      _futureBaseResponse = NetworkFunctions.addUser(
-                          nameTextEditingController.text,
-                          surnameTextEditingController.text,
-                          emailTextEditingController.text,
-                          telephoneNumberTextEditingController.text
-                      );
-                      _futureBaseResponse.then((value) {
-                        if (value.success){
-                          Navigator.popUntil(context, ModalRoute.withName("/users"));
-                        }
-                      });
+                      if(isEmailValid && isTelephoneNumberValid){
+                        _futureBaseResponse = NetworkFunctions.addUser(
+                            nameTextEditingController.text,
+                            surnameTextEditingController.text,
+                            emailTextEditingController.text,
+                            telephoneNumberTextEditingController.text
+                        );
+                        _futureBaseResponse.then((value) {
+                          if (value.success){
+                            Navigator.popUntil(context, ModalRoute.withName("/users"));
+                          }
+                        });
+                      }
                     },
                   ),
                 ),
@@ -150,5 +186,17 @@ class _AddUserState extends State<AddUser> {
           ],
         )
     );
+  }
+
+  bool validateEmail(String value) {
+    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    return regex.hasMatch(value) ? true : false;
+  }
+
+  bool validateTelephoneNumber(String value) {
+    Pattern pattern = r'^(?:[+0]9)?[0-9]{10,12}$';
+    RegExp regex = new RegExp(pattern);
+    return regex.hasMatch(value) ? true : false;
   }
 }

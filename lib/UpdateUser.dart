@@ -15,26 +15,29 @@ class UpdateUser extends StatefulWidget {
 
 class _UpdateUserState extends State<UpdateUser> {
   Future<BaseResponse> _futureBaseResponse;
-  TextEditingController nameController = TextEditingController();
-  TextEditingController surnameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController telephoneNumberController = TextEditingController();
+  TextEditingController nameTextEditingController = TextEditingController();
+  TextEditingController surnameTextEditingController = TextEditingController();
+  TextEditingController emailTextEditingController = TextEditingController();
+  TextEditingController telephoneNumberTextEditingController = TextEditingController();
+  bool isEmailValid = false, isTelephoneNumberValid = false;
 
   @override
   void initState(){
-    nameController.text = widget.userRecord.name;
-    surnameController.text = widget.userRecord.surname;
-    emailController.text = widget.userRecord.email;
-    telephoneNumberController.text = widget.userRecord.telephoneNumber;
+    nameTextEditingController.text = widget.userRecord.name;
+    surnameTextEditingController.text = widget.userRecord.surname;
+    emailTextEditingController.text = widget.userRecord.email;
+    telephoneNumberTextEditingController.text = widget.userRecord.telephoneNumber;
     super.initState();
   }
 
   @override
   void dispose(){
-    nameController.dispose();
-    surnameController.dispose();
-    emailController.dispose();
-    telephoneNumberController.dispose();
+    nameTextEditingController.dispose();
+    surnameTextEditingController.dispose();
+    emailTextEditingController.dispose();
+    telephoneNumberTextEditingController.dispose();
+    isEmailValid = null;
+    isTelephoneNumberValid = null;
     super.dispose();
   }
 
@@ -58,10 +61,10 @@ class _UpdateUserState extends State<UpdateUser> {
               children: [
                 Container(
                   width: 300.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child:TextField(
-                    controller: nameController,
+                    controller: nameTextEditingController,
                   ),
                 ),
               ],
@@ -72,10 +75,10 @@ class _UpdateUserState extends State<UpdateUser> {
               children: [
                 Container(
                   width: 300.0,
-                  height: 30.0,
+                  height: 40.0,
                   color: Color(0xfff0e8ca),
                   child:TextField(
-                    controller: surnameController,
+                    controller: surnameTextEditingController,
                   ),
                 ),
               ],
@@ -85,13 +88,32 @@ class _UpdateUserState extends State<UpdateUser> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  width: 300.0,
-                  height: 30.0,
-                  color: Color(0xfff0e8ca),
-                  child:TextField(
-                    controller: emailController,
-                  ),
-                ),
+                    width: 300.0,
+                    height: 65.0,
+                    alignment: Alignment.bottomCenter,
+                    color: Color(0xfff0e8ca),
+                    child: TextFormField(
+                      autovalidate: true,
+                      controller: emailTextEditingController,
+                      decoration: InputDecoration(hintText: "Email"),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if(value.isEmpty){
+                          isEmailValid = false;
+                          return null;
+                        }
+                        else {
+                          if(validateEmail(value)){
+                            isEmailValid = true;
+                            return null;
+                          }
+                          else {
+                            return 'Email is not valid.';
+                          }
+                        }
+                      },
+                    )
+                )
               ],
             ),
             Padding(padding: const EdgeInsets.only(top: 10.0),),
@@ -99,13 +121,31 @@ class _UpdateUserState extends State<UpdateUser> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  width: 300.0,
-                  height: 30.0,
-                  color: Color(0xfff0e8ca),
-                  child:TextField(
-                    controller: telephoneNumberController,
-                  ),
-                ),
+                    width: 300.0,
+                    height: 65.0,
+                    alignment: Alignment.bottomCenter,
+                    color: Color(0xfff0e8ca),
+                    child: TextFormField(
+                      autovalidate: true,
+                      controller: telephoneNumberTextEditingController,
+                      decoration: InputDecoration(hintText: "Telephone Number"),
+                      validator: (value) {
+                        if(value.isEmpty){
+                          isTelephoneNumberValid = false;
+                          return null;
+                        }
+                        else {
+                          if(validateTelephoneNumber(value)){
+                            isTelephoneNumberValid = true;
+                            return null;
+                          }
+                          else {
+                            return 'Telephone number is not valid.';
+                          }
+                        }
+                      },
+                    )
+                )
               ],
             ),
             Padding(padding: const EdgeInsets.only(top: 10.0),),
@@ -120,20 +160,22 @@ class _UpdateUserState extends State<UpdateUser> {
                     textColor: Colors.white,
                     child: Text("Save Changes", style: TextStyle(fontSize: 13),),
                     onPressed: () {
-                      _futureBaseResponse = NetworkFunctions.updateUser(
-                          widget.userRecord.id,
-                          nameController.text,
-                          surnameController.text,
-                          emailController.text,
-                          telephoneNumberController.text
-                      );
-                      _futureBaseResponse.then((value) {
-                        if(value.success){
-                          print(value.success);
-                          widget.parentAction(1);
-                          Navigator.pop(context);
-                        }
-                      });
+                      if(isEmailValid && isTelephoneNumberValid){
+                        _futureBaseResponse = NetworkFunctions.updateUser(
+                            widget.userRecord.id,
+                            nameTextEditingController.text,
+                            surnameTextEditingController.text,
+                            emailTextEditingController.text,
+                            telephoneNumberTextEditingController.text
+                        );
+                        _futureBaseResponse.then((value) {
+                          if(value.success){
+                            print(value.success);
+                            widget.parentAction(1);
+                            Navigator.pop(context);
+                          }
+                        });
+                      }
                     },
                   ),
                 ),
@@ -153,5 +195,17 @@ class _UpdateUserState extends State<UpdateUser> {
           ],
         )
     );
+  }
+
+  bool validateEmail(String value) {
+    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    return regex.hasMatch(value) ? true : false;
+  }
+
+  bool validateTelephoneNumber(String value) {
+    Pattern pattern = r'^(?:[+0]9)?[0-9]{10,12}$';
+    RegExp regex = new RegExp(pattern);
+    return regex.hasMatch(value) ? true : false;
   }
 }

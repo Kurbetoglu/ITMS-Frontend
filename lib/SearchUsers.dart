@@ -58,11 +58,11 @@ class _SearchUsersState extends State<SearchUsers> {
                     Container(
                         color: Color(0xfff0e8ca),
                         width: 280,
-                        height: 30,
+                        height: 40,
                         child: TextFormField(controller: searchController,)),
                     Container(
                       width: 100.0,
-                      height: 30.0,
+                      height: 40.0,
                       color: Color(0xff4e9b2b),
                       child: MaterialButton(
                         textColor: Colors.white,
