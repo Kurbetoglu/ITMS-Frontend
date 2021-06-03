@@ -268,7 +268,13 @@ class NetworkFunctions {
     }
   }
 
-  static Future<GetAllAssetsResponse> getAllAssets (String searchQuery, int pageNumber, int pageSize) async {
+  static Future<GetAllAssetsResponse> getAllAssets (
+      String searchQuery,
+      int pageNumber,
+      int pageSize,
+      String filterByType,
+      String filterByIsAssigned,
+      String sortByName) async {
     setCookie();
     final response = await http.post(
       Uri.parse(uri + "/GetAllAssets"),
@@ -277,6 +283,9 @@ class NetworkFunctions {
         "searchQuery": searchQuery,
         "pageNumber": pageNumber,
         "pageSize": pageSize,
+        "filterByType": filterByType,
+        "filterByIsAssigned": filterByIsAssigned,
+        "sortByName": sortByName,
       }),
     );
 
@@ -287,7 +296,13 @@ class NetworkFunctions {
     }
   }
 
-  static Future<GetAllDebitsResponse> getAllDebits (String searchQuery, int pageNumber, int pageSize) async {
+  static Future<GetAllDebitsResponse> getAllDebits (
+      String searchQuery,
+      int pageNumber,
+      int pageSize,
+      String filterByType,
+      String filterByIsDelivered,
+      String sortByAssetName) async {
     setCookie();
     final response = await http.post(
       Uri.parse(uri + "/GetAllDebits"),
@@ -296,6 +311,9 @@ class NetworkFunctions {
         "searchQuery": searchQuery,
         "pageNumber": pageNumber,
         "pageSize": pageSize,
+        "filterByType": filterByType,
+        "filterByIsDelivered": filterByIsDelivered,
+        "sortByAssetName": sortByAssetName,
       }),
     );
 

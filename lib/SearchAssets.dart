@@ -4,34 +4,39 @@ import 'UpdateAsset.dart';
 import 'DTO/GetAllAssetsResponse.dart';
 import 'network/NetworkFunctions.dart';
 
-String typeValue, addedDateValue, isAssignedValue;
-
 class SearchAssets extends StatefulWidget {
   @override
   _SearchAssetsState createState() => _SearchAssetsState();
 }
 
 class _SearchAssetsState extends State<SearchAssets> {
+  String typeValue, nameValue, isAssignedValue;
   TextEditingController searchController = TextEditingController();
   Future<GetAllAssetsResponse> _futureGetAllAssetsResponse;
 
   @override
   void initState() {
-    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(null, 0, 0);
+    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(null, 0, 0, null, null, null);
     _futureGetAllAssetsResponse.then((value) {
       setState(() {});
     });
+    typeValue = null;
+    nameValue = null;
+    isAssignedValue = null;
     super.initState();
   }
 
   @override
   void dispose() {
+    typeValue = null;
+    nameValue = null;
+    isAssignedValue = null;
     searchController.dispose();
     super.dispose();
   }
 
   updateWidget(int number){
-    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(null, 0, 0);
+    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(null, 0, 0, null, null, null);
     _futureGetAllAssetsResponse.then((value) {
       setState(() {});
     });
@@ -69,7 +74,7 @@ class _SearchAssetsState extends State<SearchAssets> {
                     textColor: Colors.white,
                     child: Text("Search"),
                     onPressed: () {
-                      _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0);
+                      _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, null, null, null);
                       _futureGetAllAssetsResponse.then((value) {
                         setState(() {});
                       });
@@ -83,7 +88,7 @@ class _SearchAssetsState extends State<SearchAssets> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  width: 75.0,
+                  width: 120.0,
                   height: 30.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
@@ -91,9 +96,10 @@ class _SearchAssetsState extends State<SearchAssets> {
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
+                      'Type',
                       'Fiziksel',
                       'Dijital',
-                      'İnsan',
+                      'İnsan Kaynağı',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -112,22 +118,27 @@ class _SearchAssetsState extends State<SearchAssets> {
                     ),
                     onChanged: (String value) {
                       setState(() {
-                        typeValue = value;
+                        typeValue = value == 'Type' ? null : value;
+                        _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
+                        _futureGetAllAssetsResponse.then((value) {
+                          setState(() {});
+                        });
                       });
                     },
                   ),
                 ),
                 Container(
-                  width: 90.0,
+                  width: 70.0,
                   height: 30.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
-                    value: addedDateValue,
+                    value: nameValue,
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
-                      'Önce Yeni',
-                      'Önce Eski',
+                      'Name',
+                      'Azalan',
+                      'Artan',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -138,7 +149,7 @@ class _SearchAssetsState extends State<SearchAssets> {
                       );
                     }).toList(),
                     hint: Text(
-                      "Start Date",
+                      "Name",
                       style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 14,
@@ -146,13 +157,17 @@ class _SearchAssetsState extends State<SearchAssets> {
                     ),
                     onChanged: (String value) {
                       setState(() {
-                        addedDateValue = value;
+                        nameValue = value == 'Name' ? null : value;
+                        _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
+                        _futureGetAllAssetsResponse.then((value) {
+                          setState(() {});
+                        });
                       });
                     },
                   ),
                 ),
                 Container(
-                  width: 100.0,
+                  width: 130.0,
                   height: 30.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
@@ -160,8 +175,9 @@ class _SearchAssetsState extends State<SearchAssets> {
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
-                      'True',
-                      'False',
+                      'Is Assigned?',
+                      'true',
+                      'false',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -172,7 +188,7 @@ class _SearchAssetsState extends State<SearchAssets> {
                       );
                     }).toList(),
                     hint: Text(
-                      "isDelivered",
+                      "Is Assigned?",
                       style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 14,
@@ -180,7 +196,11 @@ class _SearchAssetsState extends State<SearchAssets> {
                     ),
                     onChanged: (String value) {
                       setState(() {
-                        isAssignedValue = value;
+                        isAssignedValue = value == 'Is Assigned?' ? null : value;
+                        _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
+                        _futureGetAllAssetsResponse.then((value) {
+                          setState(() {});
+                        });
                       });
                     },
                   ),

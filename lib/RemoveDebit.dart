@@ -20,7 +20,7 @@ class _RemoveDebitState extends State<RemoveDebit> {
 
   @override
   void initState() {
-    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0);
+    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0, null, null, null);
     _futureGetAllDebitsResponse.then((value) {
       setState(() { });
     });
@@ -72,7 +72,7 @@ class _RemoveDebitState extends State<RemoveDebit> {
                     textColor: Colors.white,
                     child: Text("Search"),
                     onPressed: () {
-                      _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0);
+                      _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, null, null, null);
                       _futureGetAllDebitsResponse.then((value) {
                         setState(() { });
                       });

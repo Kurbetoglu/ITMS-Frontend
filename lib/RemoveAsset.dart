@@ -4,30 +4,32 @@ import 'package:flutter/material.dart';
 
 import 'DTO/GetAllAssetsResponse.dart';
 
-String typeValue, addedDateValue, isAssignedValue;
-
 class RemoveAsset extends StatefulWidget {
   @override
   _RemoveAssetState createState() => _RemoveAssetState();
 }
 
 class _RemoveAssetState extends State<RemoveAsset> {
+  String typeValue, nameValue, isAssignedValue;
   TextEditingController searchController = TextEditingController();
   Future<GetAllAssetsResponse> _futureGetAllAssetsResponse;
 
   @override
   void initState() {
-    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(null, 0, 0);
+    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(null, 0, 0, null, null, null);
     _futureGetAllAssetsResponse.then((value) {
       setState(() {});
     });
+    typeValue = null;
+    nameValue = null;
+    isAssignedValue = null;
     super.initState();
   }
 
   @override
   void dispose(){
     typeValue = null;
-    addedDateValue = null;
+    nameValue = null;
     isAssignedValue = null;
     searchController.dispose();
     super.dispose();
@@ -65,7 +67,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
                     textColor: Colors.white,
                     child: Text("Search"),
                     onPressed: () {
-                      _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0);
+                      _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, null, null, null);
                       _futureGetAllAssetsResponse.then((value) {
                         setState(() {});
                       });
@@ -89,6 +91,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
+                      'Type',
                       'Fiziksel',
                       'Dijital',
                       'İnsan',
@@ -110,7 +113,11 @@ class _RemoveAssetState extends State<RemoveAsset> {
                     ),
                     onChanged: (String value) {
                       setState(() {
-                        typeValue = value;
+                        typeValue = value == 'Type' ? null : value;
+                        _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
+                        _futureGetAllAssetsResponse.then((value) {
+                          setState(() {});
+                        });
                       });
                     },
                   ),
@@ -120,12 +127,13 @@ class _RemoveAssetState extends State<RemoveAsset> {
                   height: 30.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
-                    value: addedDateValue,
+                    value: nameValue,
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
-                      'Önce Yeni',
-                      'Önce Eski',
+                      'Name',
+                      'Azalan',
+                      'Artan',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -136,7 +144,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
                       );
                     }).toList(),
                     hint: Text(
-                      "Start Date",
+                      "Name",
                       style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 14,
@@ -144,7 +152,11 @@ class _RemoveAssetState extends State<RemoveAsset> {
                     ),
                     onChanged: (String value) {
                       setState(() {
-                        addedDateValue = value;
+                        nameValue = value == 'Name' ? null : value;
+                        _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
+                        _futureGetAllAssetsResponse.then((value) {
+                          setState(() {});
+                        });
                       });
                     },
                   ),
@@ -158,8 +170,9 @@ class _RemoveAssetState extends State<RemoveAsset> {
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
-                      'True',
-                      'False',
+                      'Is Assigned?',
+                      'true',
+                      'false',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -170,7 +183,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
                       );
                     }).toList(),
                     hint: Text(
-                      "isDelivered",
+                      "Is Assigned?",
                       style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 14,
@@ -178,7 +191,11 @@ class _RemoveAssetState extends State<RemoveAsset> {
                     ),
                     onChanged: (String value) {
                       setState(() {
-                        isAssignedValue = value;
+                        isAssignedValue = value == 'Is Assigned?' ? null : value;
+                        _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
+                        _futureGetAllAssetsResponse.then((value) {
+                          setState(() {});
+                        });
                       });
                     },
                   ),

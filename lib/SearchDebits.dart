@@ -4,8 +4,6 @@ import 'DTO/GetAllDebitsResponse.dart';
 import 'network/NetworkFunctions.dart';
 import 'UpdateDebit.dart';
 
-String typeValue, startDateValue, endDateValue, isDeliveredValue;
-
 class SearchDebits extends StatefulWidget {
   SearchDebits({Key key}) : super(key: key);
 
@@ -14,27 +12,34 @@ class SearchDebits extends StatefulWidget {
 }
 
 class _SearchDebitsState extends State<SearchDebits> {
+  String typeValue, assetNameValue, isDeliveredValue;
   TextEditingController searchController = TextEditingController();
   Future<GetAllDebitsResponse> _futureGetAllDebitsResponse;
   List<DebitRecord> debitRecords;
 
   @override
   void initState() {
-    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0);
+    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0, null, null, null);
     _futureGetAllDebitsResponse.then((value) {
       setState(() { });
     });
+    typeValue = null;
+    assetNameValue = null;
+    isDeliveredValue = null;
     super.initState();
   }
 
   @override
   void dispose() {
+    typeValue = null;
+    assetNameValue = null;
+    isDeliveredValue = null;
     searchController.dispose();
     super.dispose();
   }
 
   updateWidget(int number){
-    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0);
+    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0, null, null, null);
     _futureGetAllDebitsResponse.then((value) {
       setState(() { });
     });
@@ -73,7 +78,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                     textColor: Colors.white,
                     child: Text("Search"),
                     onPressed: () {
-                      _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0);
+                      _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, null, null, null);
                       _futureGetAllDebitsResponse.then((value) {
                         setState(() { });
                       });
@@ -87,7 +92,7 @@ class _SearchDebitsState extends State<SearchDebits> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  width: 75.0,
+                  width: 120.0,
                   height: 30.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
@@ -95,9 +100,10 @@ class _SearchDebitsState extends State<SearchDebits> {
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
+                      'Type',
                       'Fiziksel',
                       'Dijital',
-                      'İnsan',
+                      'İnsan Kaynağı',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -116,22 +122,27 @@ class _SearchDebitsState extends State<SearchDebits> {
                     ),
                     onChanged: (String value) {
                       setState(() {
-                        typeValue = value;
+                        typeValue = value == 'Type' ? null : value;
+                        _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0, typeValue, isDeliveredValue, assetNameValue);
+                        _futureGetAllDebitsResponse.then((value) {
+                          setState(() { });
+                        });
                       });
                     },
                   ),
                 ),
                 Container(
-                  width: 90.0,
+                  width: 110.0,
                   height: 30.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
-                    value: startDateValue,
+                    value: assetNameValue,
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
-                      'Önce Yeni',
-                      'Önce Eski',
+                      'Asset Name',
+                      'Azalan',
+                      'Artan',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -142,7 +153,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                       );
                     }).toList(),
                     hint: Text(
-                      "Start Date",
+                      "Asset Name",
                       style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 14,
@@ -150,47 +161,17 @@ class _SearchDebitsState extends State<SearchDebits> {
                     ),
                     onChanged: (String value) {
                       setState(() {
-                        startDateValue = value;
+                        assetNameValue = value == 'Asset Name' ? null : value;
+                        _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0, typeValue, isDeliveredValue, assetNameValue);
+                        _futureGetAllDebitsResponse.then((value) {
+                          setState(() { });
+                        });
                       });
                     },
                   ),
                 ),
                 Container(
-                  width: 90.0,
-                  height: 30.0,
-                  color: Color(0xfff0e8ca),
-                  child: DropdownButton<String>(
-                    value: endDateValue,
-                    style: TextStyle(color: Colors.white),
-                    iconEnabledColor: Colors.black,
-                    items: <String>[
-                      'Önce Yeni',
-                      'Önce Eski',
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(color: Colors.black, fontSize: 14),
-                        ),
-                      );
-                    }).toList(),
-                    hint: Text(
-                      "End Date",
-                      style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    onChanged: (String value) {
-                      setState(() {
-                        endDateValue = value;
-                      });
-                    },
-                  ),
-                ),
-                Container(
-                  width: 100.0,
+                  width: 110.0,
                   height: 30.0,
                   color: Color(0xfff0e8ca),
                   child: DropdownButton<String>(
@@ -198,8 +179,9 @@ class _SearchDebitsState extends State<SearchDebits> {
                     style: TextStyle(color: Colors.white),
                     iconEnabledColor: Colors.black,
                     items: <String>[
-                      'True',
-                      'False',
+                      'Is Delivered?',
+                      'true',
+                      'false',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -210,7 +192,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                       );
                     }).toList(),
                     hint: Text(
-                      "isDelivered",
+                      "Is Delivered?",
                       style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 14,
@@ -218,7 +200,11 @@ class _SearchDebitsState extends State<SearchDebits> {
                     ),
                     onChanged: (String value) {
                       setState(() {
-                        isDeliveredValue = value;
+                        isDeliveredValue = value == 'Is Delivered?' ? null : value;
+                        _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0, typeValue, isDeliveredValue, assetNameValue);
+                        _futureGetAllDebitsResponse.then((value) {
+                          setState(() { });
+                        });
                       });
                     },
                   ),
