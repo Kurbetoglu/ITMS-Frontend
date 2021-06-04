@@ -34,7 +34,9 @@ class _RemoveUserState extends State<RemoveUser> {
   updateWidget(int number){
     _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(searchController.text, pageCount, NetworkFunctions.maxDataPerPage);
     _futureGetAllUsersResponse.then((value) {
-      setState(() {});
+      if(value.success){
+        setState(() {});
+      }
     });
   }
 

@@ -44,7 +44,9 @@ class _SearchDebitsState extends State<SearchDebits> {
   updateWidget(int number){
     _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, pageCount, NetworkFunctions.maxDataPerPage, typeValue, isDeliveredValue, assetNameValue);
     _futureGetAllDebitsResponse.then((value) {
-      setState(() { });
+      if(value.success){
+        setState(() {});
+      }
     });
   }
 

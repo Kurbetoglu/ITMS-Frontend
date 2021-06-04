@@ -43,7 +43,9 @@ class _RemoveDebitState extends State<RemoveDebit> {
   updateWidget(int number){
     _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, pageCount, NetworkFunctions.maxDataPerPage, typeValue, isDeliveredValue, assetNameValue);
     _futureGetAllDebitsResponse.then((value) {
-      setState(() { });
+      if(value.success){
+        setState(() {});
+      }
     });
   }
 

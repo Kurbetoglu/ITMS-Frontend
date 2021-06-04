@@ -34,7 +34,9 @@ class _SearchUsersState extends State<SearchUsers> {
   updateWidget(int number){
     _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(searchController.text, pageCount, NetworkFunctions.maxDataPerPage);
     _futureGetAllUsersResponse.then((value) {
-      setState(() {});
+      if(value.success){
+        setState(() {});
+      }
     });
   }
 

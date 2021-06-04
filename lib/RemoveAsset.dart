@@ -39,7 +39,9 @@ class _RemoveAssetState extends State<RemoveAsset> {
   updateWidget(int number){
     _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, pageCount, NetworkFunctions.maxDataPerPage, typeValue, isAssignedValue, nameValue);
     _futureGetAllAssetsResponse.then((value) {
-      setState(() {});
+      if(value.success){
+        setState(() {});
+      }
     });
   }
 
