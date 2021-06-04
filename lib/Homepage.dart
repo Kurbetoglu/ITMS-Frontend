@@ -43,6 +43,7 @@ class _HomepageState extends State<Homepage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
+                    //color: Colors.white,
                     child: Image.asset('images/logo.png'),
                   ),
                 ],

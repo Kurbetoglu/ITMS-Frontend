@@ -43,6 +43,7 @@ class _RemoveUserState extends State<RemoveUser> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Color(0xff518199),
