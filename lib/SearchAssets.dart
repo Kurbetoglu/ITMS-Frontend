@@ -13,30 +13,32 @@ class _SearchAssetsState extends State<SearchAssets> {
   String typeValue, nameValue, isAssignedValue;
   TextEditingController searchController = TextEditingController();
   Future<GetAllAssetsResponse> _futureGetAllAssetsResponse;
+  int pageCount;
 
   @override
   void initState() {
-    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(null, 0, 0, null, null, null);
-    _futureGetAllAssetsResponse.then((value) {
-      setState(() {});
-    });
+    pageCount = 1;
     typeValue = null;
     nameValue = null;
     isAssignedValue = null;
+    updateWidget(1);
+
     super.initState();
   }
 
   @override
   void dispose() {
+    pageCount = 1;
     typeValue = null;
     nameValue = null;
     isAssignedValue = null;
+    _futureGetAllAssetsResponse = null;
     searchController.dispose();
     super.dispose();
   }
 
   updateWidget(int number){
-    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
+    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, pageCount, NetworkFunctions.maxDataPerPage, typeValue, isAssignedValue, nameValue);
     _futureGetAllAssetsResponse.then((value) {
       setState(() {});
     });
@@ -74,10 +76,7 @@ class _SearchAssetsState extends State<SearchAssets> {
                     textColor: Colors.white,
                     child: Text("Search"),
                     onPressed: () {
-                      _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
-                      _futureGetAllAssetsResponse.then((value) {
-                        setState(() {});
-                      });
+                      updateWidget(1);
                     },
                   ),
                 )
@@ -119,10 +118,7 @@ class _SearchAssetsState extends State<SearchAssets> {
                     onChanged: (String value) {
                       setState(() {
                         typeValue = value == 'Type' ? null : value;
-                        _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
-                        _futureGetAllAssetsResponse.then((value) {
-                          setState(() {});
-                        });
+                        updateWidget(1);
                       });
                     },
                   ),
@@ -158,10 +154,7 @@ class _SearchAssetsState extends State<SearchAssets> {
                     onChanged: (String value) {
                       setState(() {
                         nameValue = value == 'Name' ? null : value;
-                        _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
-                        _futureGetAllAssetsResponse.then((value) {
-                          setState(() {});
-                        });
+                        updateWidget(1);
                       });
                     },
                   ),
@@ -197,10 +190,7 @@ class _SearchAssetsState extends State<SearchAssets> {
                     onChanged: (String value) {
                       setState(() {
                         isAssignedValue = value == 'Is Assigned?' ? null : value;
-                        _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
-                        _futureGetAllAssetsResponse.then((value) {
-                          setState(() {});
-                        });
+                        updateWidget(1);
                       });
                     },
                   ),
@@ -214,7 +204,69 @@ class _SearchAssetsState extends State<SearchAssets> {
                 ? Container(width: 0, height: 0,)
                 : generateCustomDataRows(),
             ),
-
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  child: ElevatedButton(
+                    child: Text("<"),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                            return Color(0xff4e9b2b);
+                          }),
+                    ),
+                    onPressed: () {
+                      if(pageCount > 1){
+                        pageCount -= 1;
+                        updateWidget(1);
+                      }
+                    },
+                  ),
+                ),
+                Container(
+                  child: ElevatedButton(
+                    child: Text(
+                        pageCount.toString(),
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                            return Color(0xfff0e8ca);
+                          }),
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
+                Container(
+                  child: ElevatedButton(
+                    child: Text(">"),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                          return Color(0xff4e9b2b);
+                        }),
+                    ),
+                    onPressed: () {
+                      pageCount += 1;
+                      _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, pageCount, NetworkFunctions.maxDataPerPage, typeValue, isAssignedValue, nameValue);
+                      _futureGetAllAssetsResponse.then((value) {
+                        if(value.success){
+                          if(value.dataCount != 0){
+                            setState(() {});
+                          }
+                          else {
+                            pageCount -= 1;
+                          }
+                        }
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
           ]
           )
       ),

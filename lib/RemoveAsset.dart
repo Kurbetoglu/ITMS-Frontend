@@ -13,16 +13,15 @@ class _RemoveAssetState extends State<RemoveAsset> {
   String typeValue, nameValue, isAssignedValue;
   TextEditingController searchController = TextEditingController();
   Future<GetAllAssetsResponse> _futureGetAllAssetsResponse;
-
+  int pageCount;
   @override
   void initState() {
-    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(null, 0, 0, null, null, null);
-    _futureGetAllAssetsResponse.then((value) {
-      setState(() {});
-    });
     typeValue = null;
     nameValue = null;
     isAssignedValue = null;
+    pageCount = 1;
+
+    updateWidget(1);
     super.initState();
   }
 
@@ -31,12 +30,14 @@ class _RemoveAssetState extends State<RemoveAsset> {
     typeValue = null;
     nameValue = null;
     isAssignedValue = null;
+    pageCount = 1;
     searchController.dispose();
+    _futureGetAllAssetsResponse = null;
     super.dispose();
   }
 
   updateWidget(int number){
-    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
+    _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, pageCount, NetworkFunctions.maxDataPerPage, typeValue, isAssignedValue, nameValue);
     _futureGetAllAssetsResponse.then((value) {
       setState(() {});
     });
@@ -74,10 +75,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
                     textColor: Colors.white,
                     child: Text("Search"),
                     onPressed: () {
-                      _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
-                      _futureGetAllAssetsResponse.then((value) {
-                        setState(() {});
-                      });
+                      updateWidget(1);
                     },
                   ),
                 )
@@ -119,10 +117,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
                     onChanged: (String value) {
                       setState(() {
                         typeValue = value == 'Type' ? null : value;
-                        _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
-                        _futureGetAllAssetsResponse.then((value) {
-                          setState(() {});
-                        });
+                        updateWidget(1);
                       });
                     },
                   ),
@@ -158,10 +153,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
                     onChanged: (String value) {
                       setState(() {
                         nameValue = value == 'Name' ? null : value;
-                        _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
-                        _futureGetAllAssetsResponse.then((value) {
-                          setState(() {});
-                        });
+                        updateWidget(1);
                       });
                     },
                   ),
@@ -197,10 +189,7 @@ class _RemoveAssetState extends State<RemoveAsset> {
                     onChanged: (String value) {
                       setState(() {
                         isAssignedValue = value == 'Is Assigned?' ? null : value;
-                        _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, 0, 0, typeValue, isAssignedValue, nameValue);
-                        _futureGetAllAssetsResponse.then((value) {
-                          setState(() {});
-                        });
+                        updateWidget(1);
                       });
                     },
                   ),
@@ -213,6 +202,69 @@ class _RemoveAssetState extends State<RemoveAsset> {
               child: _futureGetAllAssetsResponse == null
                 ? Container(width: 0, height: 0,)
                 : generateCustomDataRows(),
+            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  child: ElevatedButton(
+                    child: Text("<"),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                            return Color(0xff4e9b2b);
+                          }),
+                    ),
+                    onPressed: () {
+                      if(pageCount > 1){
+                        pageCount -= 1;
+                        updateWidget(1);
+                      }
+                    },
+                  ),
+                ),
+                Container(
+                  child: ElevatedButton(
+                    child: Text(
+                      pageCount.toString(),
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                            return Color(0xfff0e8ca);
+                          }),
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
+                Container(
+                  child: ElevatedButton(
+                    child: Text(">"),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                            return Color(0xff4e9b2b);
+                          }),
+                    ),
+                    onPressed: () {
+                      pageCount += 1;
+                      _futureGetAllAssetsResponse = NetworkFunctions.getAllAssets(searchController.text, pageCount, NetworkFunctions.maxDataPerPage, typeValue, isAssignedValue, nameValue);
+                      _futureGetAllAssetsResponse.then((value) {
+                        if(value.success){
+                          if(value.dataCount != 0){
+                            setState(() {});
+                          }
+                          else {
+                            pageCount -= 1;
+                          }
+                        }
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
           ]
           )

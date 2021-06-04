@@ -12,23 +12,27 @@ class RemoveUser extends StatefulWidget {
 class _RemoveUserState extends State<RemoveUser> {
   TextEditingController searchController = TextEditingController();
   Future<GetAllUsersResponse> _futureGetAllUsersResponse;
+  int pageCount;
 
   @override
   void initState() {
-    _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(null, 0, 0);
-    _futureGetAllUsersResponse.then((value) {
-      setState(() {});
-    });
+    pageCount = 1;
+
+    updateWidget(1);
+
+    super.initState();
   }
 
   @override
   void dispose() {
+    pageCount = 1;
+    _futureGetAllUsersResponse = null;
     searchController.dispose();
     super.dispose();
   }
 
   updateWidget(int number){
-    _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(searchController.text, 0, 0);
+    _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(searchController.text, pageCount, NetworkFunctions.maxDataPerPage);
     _futureGetAllUsersResponse.then((value) {
       setState(() {});
     });
@@ -67,10 +71,7 @@ class _RemoveUserState extends State<RemoveUser> {
                         textColor: Colors.white,
                         child: Text("Search"),
                         onPressed: () {
-                          _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(searchController.text, 0, 0);
-                          _futureGetAllUsersResponse.then((value) {
-                            setState(() {});
-                          });
+                          updateWidget(1);
                         },
                       ),
                     )
@@ -82,6 +83,69 @@ class _RemoveUserState extends State<RemoveUser> {
                   child: _futureGetAllUsersResponse == null
                     ? Container(width: 0, height: 0,)
                     : generateCustomDataRows(),
+                ),
+                Padding(padding: const EdgeInsets.only(top: 10.0),),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      child: ElevatedButton(
+                        child: Text("<"),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                return Color(0xff4e9b2b);
+                              }),
+                        ),
+                        onPressed: () {
+                          if(pageCount > 1){
+                            pageCount -= 1;
+                            updateWidget(1);
+                          }
+                        },
+                      ),
+                    ),
+                    Container(
+                      child: ElevatedButton(
+                        child: Text(
+                          pageCount.toString(),
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                return Color(0xfff0e8ca);
+                              }),
+                        ),
+                        onPressed: () {},
+                      ),
+                    ),
+                    Container(
+                      child: ElevatedButton(
+                        child: Text(">"),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                return Color(0xff4e9b2b);
+                              }),
+                        ),
+                        onPressed: () {
+                          pageCount += 1;
+                          _futureGetAllUsersResponse = NetworkFunctions.getAllUsers(searchController.text, pageCount, NetworkFunctions.maxDataPerPage);
+                          _futureGetAllUsersResponse.then((value) {
+                            if(value.success){
+                              if(value.dataCount != 0){
+                                setState(() {});
+                              }
+                              else {
+                                pageCount -= 1;
+                              }
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ]
           )

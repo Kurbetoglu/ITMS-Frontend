@@ -16,16 +16,17 @@ class _SearchDebitsState extends State<SearchDebits> {
   TextEditingController searchController = TextEditingController();
   Future<GetAllDebitsResponse> _futureGetAllDebitsResponse;
   List<DebitRecord> debitRecords;
+  int pageCount;
 
   @override
   void initState() {
-    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(null, 0, 0, null, null, null);
-    _futureGetAllDebitsResponse.then((value) {
-      setState(() { });
-    });
     typeValue = null;
     assetNameValue = null;
     isDeliveredValue = null;
+    pageCount = 1;
+
+    updateWidget(1);
+
     super.initState();
   }
 
@@ -34,12 +35,14 @@ class _SearchDebitsState extends State<SearchDebits> {
     typeValue = null;
     assetNameValue = null;
     isDeliveredValue = null;
+    _futureGetAllDebitsResponse = null;
+    pageCount = 1;
     searchController.dispose();
     super.dispose();
   }
 
   updateWidget(int number){
-    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, typeValue, isDeliveredValue, assetNameValue);
+    _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, pageCount, NetworkFunctions.maxDataPerPage, typeValue, isDeliveredValue, assetNameValue);
     _futureGetAllDebitsResponse.then((value) {
       setState(() { });
     });
@@ -78,10 +81,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                     textColor: Colors.white,
                     child: Text("Search"),
                     onPressed: () {
-                      _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, typeValue, isDeliveredValue, assetNameValue);
-                      _futureGetAllDebitsResponse.then((value) {
-                        setState(() { });
-                      });
+                      updateWidget(1);
                     },
                   ),
                 )
@@ -123,10 +123,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                     onChanged: (String value) {
                       setState(() {
                         typeValue = value == 'Type' ? null : value;
-                        _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, typeValue, isDeliveredValue, assetNameValue);
-                        _futureGetAllDebitsResponse.then((value) {
-                          setState(() { });
-                        });
+                        updateWidget(1);
                       });
                     },
                   ),
@@ -162,10 +159,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                     onChanged: (String value) {
                       setState(() {
                         assetNameValue = value == 'Asset Name' ? null : value;
-                        _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, typeValue, isDeliveredValue, assetNameValue);
-                        _futureGetAllDebitsResponse.then((value) {
-                          setState(() { });
-                        });
+                        updateWidget(1);
                       });
                     },
                   ),
@@ -201,10 +195,7 @@ class _SearchDebitsState extends State<SearchDebits> {
                     onChanged: (String value) {
                       setState(() {
                         isDeliveredValue = value == 'Is Delivered?' ? null : value;
-                        _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, 0, 0, typeValue, isDeliveredValue, assetNameValue);
-                        _futureGetAllDebitsResponse.then((value) {
-                          setState(() { });
-                        });
+                        updateWidget(1);
                       });
                     },
                   ),
@@ -214,6 +205,69 @@ class _SearchDebitsState extends State<SearchDebits> {
             Padding(padding: const EdgeInsets.only(top: 10.0),),
             Flexible(
               child: _futureGetAllDebitsResponse == null ? Container(width: 0, height: 0,) : buildCustomCards(),
+            ),
+            Padding(padding: const EdgeInsets.only(top: 10.0),),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  child: ElevatedButton(
+                    child: Text("<"),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                            return Color(0xff4e9b2b);
+                          }),
+                    ),
+                    onPressed: () {
+                      if(pageCount > 1){
+                        pageCount -= 1;
+                        updateWidget(1);
+                      }
+                    },
+                  ),
+                ),
+                Container(
+                  child: ElevatedButton(
+                    child: Text(
+                      pageCount.toString(),
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                            return Color(0xfff0e8ca);
+                          }),
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
+                Container(
+                  child: ElevatedButton(
+                    child: Text(">"),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                            return Color(0xff4e9b2b);
+                          }),
+                    ),
+                    onPressed: () {
+                      pageCount += 1;
+                      _futureGetAllDebitsResponse = NetworkFunctions.getAllDebits(searchController.text, pageCount, NetworkFunctions.maxDataPerPage, typeValue, isDeliveredValue, assetNameValue);
+                      _futureGetAllDebitsResponse.then((value) {
+                        if(value.success){
+                          if(value.dataCount != 0){
+                            setState(() {});
+                          }
+                          else {
+                            pageCount -= 1;
+                          }
+                        }
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
           ]
       ),

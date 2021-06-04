@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'DTO/BaseResponse.dart';
 import 'network/NetworkFunctions.dart';
 
-
-
-
 class AddAsset extends StatefulWidget {
   const AddAsset({Key key}) : super(key: key);
 

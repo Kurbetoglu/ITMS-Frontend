@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ))),
                     child: Container(
                       width: 300.0,
-                      height: 300.0,
+                      height: 320.0,
                       color: Color(0xff67acb0),
                       padding: const EdgeInsets.all(40.0),
                       child: Column(

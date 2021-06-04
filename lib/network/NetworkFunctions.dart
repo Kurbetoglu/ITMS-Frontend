@@ -1,19 +1,23 @@
 import 'dart:convert';
+import 'dart:core';
 
 import 'package:asset_yonet/DTO/AdminLoginResponse.dart';
 import 'package:asset_yonet/DTO/BaseResponse.dart';
 import 'package:asset_yonet/DTO/GetAllAssetsResponse.dart';
 import 'package:asset_yonet/DTO/GetAllDebitsResponse.dart';
 import 'package:asset_yonet/DTO/GetAllUsersResponse.dart';
-import 'package:asset_yonet/DTO/GetAssetsByTypeResponse.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NetworkFunctions {
-  static String uri = "http://3.138.187.210:5000/api/Admin";
+  static final String ip = "3.138.187.210";
+  static final String port = "5000";
+  static final String uri = "http://" + ip + ":" + port + "/api/Admin";
   static Map<String, String> headers = {
     "Content-Type": "application/json; charset=UTF-8",
   };
+
+  static final int maxDataPerPage = 10;
 
   static Future<AdminLoginResponse> adminLogin(String email, String password) async {
     final response = await http.post(
